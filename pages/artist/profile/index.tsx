@@ -56,7 +56,7 @@ export const ArtistProfile = () => {
     >
       <Card.Section
         sx={{
-          backgroundImage: `url("/images/studio.jpeg")`,
+          backgroundImage: `url("/images/studio-profile.jpeg")`,
           height: 250,
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
@@ -77,7 +77,7 @@ export const ArtistProfile = () => {
       <Text ta="center" size={30} fw={700} mt="sm">
         {`${user?.first_name} ${user?.last_name}`}
       </Text>
-      <Text ta="center" size={20} c="dimmed">
+      <Text ta="center" size={20} c="dimmed" fw={500}>
         {user?.roles[0].toUpperCase()}
       </Text>
       <Title ta="center" fz="md" mt={20}>
@@ -101,11 +101,11 @@ export const ArtistProfile = () => {
         <WalletConnectButton />
       </Box>
 
-      <Box ta="center" mt="xl">
+      {/* <Box ta="center" mt="xl">
         <BrandFacebook size={30} />
         <BrandInstagram size={30} />
         <BrandLinkedin size={30} />
-      </Box>
+      </Box> */}
     </Card>
   );
 };
