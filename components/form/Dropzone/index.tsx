@@ -18,7 +18,7 @@ import {
 
 import { Photo, Upload, X } from "tabler-icons-react";
 
-import { MAX_FILE_SIZE } from "@/components/artist/AlbumForm/AlbumContext";
+import { MAX_FILE_SIZE } from "@/components/artist/Album/AlbumForm/AlbumContext";
 
 interface DropzoneProps extends Partial<MantineDropzoneProps> {
   title: string;
@@ -118,7 +118,7 @@ export const Dropzone = ({
               <X size={50} color="red.6" />
             </MantineDropzone.Reject>
             <MantineDropzone.Idle>
-              <Photo size={50} />
+              {/* <Photo size={50} /> */}
             </MantineDropzone.Idle>
 
             <Text size="xl" inline>
