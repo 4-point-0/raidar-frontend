@@ -1,7 +1,6 @@
-import React from "react";
-import ArtistAlbums from "@/components/artist/Album/ArtistAlbums";
+import AlbumSongs from "@/components/artist/Album/AlbumSongs";
 
-const albumList = [
+const songList = [
   {
     title: "Silhouette of Yesterday",
     description:
@@ -59,8 +58,8 @@ const albumList = [
   },
 ];
 
-export const Albums = () => {
-  return <ArtistAlbums />;
+export const Album = () => {
+  return <AlbumSongs />;
 };
 
-export default Albums;
+export default Album;
