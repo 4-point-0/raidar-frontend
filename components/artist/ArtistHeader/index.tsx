@@ -43,6 +43,32 @@ const useStyles = createStyles((theme) => ({
     }),
   },
 
+  activeLink: {
+    display: "flex",
+    alignItems: "center",
+    height: "100%",
+    paddingLeft: theme.spacing.md,
+    paddingRight: theme.spacing.md,
+    textDecoration: "none",
+    color: "red",
+    fontWeight: 500,
+    fontSize: theme.fontSizes.sm,
+
+    [theme.fn.smallerThan("sm")]: {
+      height: rem(42),
+      display: "flex",
+      alignItems: "center",
+      width: "100%",
+    },
+
+    ...theme.fn.hover({
+      backgroundColor:
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[6]
+          : theme.colors.gray[0],
+    }),
+  },
+
   subLink: {
     width: "100%",
     padding: `${theme.spacing.xs} ${theme.spacing.md}`,
@@ -85,22 +111,19 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-type ArtistHeaderProps = {
-  opened: boolean;
-};
-
 export const ArtistHeader = () => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const { classes, theme } = useStyles();
   const router = useRouter();
+  const pathname = router.pathname;
 
   const handleLogout = () => {
     signOut({ callbackUrl: "/login" });
   };
 
   return (
-    <Box pb={80}>
+    <Box pb={40}>
       <Header height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
           <Image src="/images/berklee-college.png" width={150} />
@@ -109,13 +132,32 @@ export const ArtistHeader = () => {
             spacing={0}
             className={classes.hiddenMobile}
           >
-            <a href="/marketplace" className={classes.link}>
+            <a
+              href="/marketplace"
+              className={`${
+                pathname === "/marketplace" ? classes.activeLink : classes.link
+              }`}
+            >
               Marketplace
             </a>
-            <a href="/artist/collection" className={classes.link}>
+            <a
+              href="/artist/albums"
+              className={`${
+                pathname === "/artist/albums"
+                  ? classes.activeLink
+                  : classes.link
+              }`}
+            >
               My Albums
             </a>
-            <a href="/artist/profile" className={classes.link}>
+            <a
+              href="/artist/profile"
+              className={`${
+                pathname === "/artist/profile"
+                  ? classes.activeLink
+                  : classes.link
+              }`}
+            >
               Profile
             </a>
           </Group>
@@ -156,7 +198,7 @@ export const ArtistHeader = () => {
           <a href="/marketplace" className={classes.link}>
             Marketplace
           </a>
-          <a href="#" className={classes.link}>
+          <a href="/artist/albums" className={classes.link}>
             My Collection
           </a>
           <a href="/artist/profile" className={classes.link}>
@@ -169,7 +211,11 @@ export const ArtistHeader = () => {
           />
 
           <Group position="center" grow pb="xl" px="md">
-            <Button leftIcon={<Logout size={14} />} onClick={handleLogout}>
+            <Button
+              leftIcon={<Logout size={14} />}
+              color="red"
+              onClick={handleLogout}
+            >
               Log Out
             </Button>
           </Group>
