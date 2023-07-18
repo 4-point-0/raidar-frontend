@@ -34,18 +34,18 @@ export default function App({
 
       <SessionProvider>
         <QueryClientProvider client={queryClient}>
-          <WalletSelectorContextProvider>
-            <UserContextProvider>
-              <MantineProvider withGlobalStyles withNormalizeCSS>
-                <ModalsProvider>
-                  <Notifications />
-                  <AppLayout>
-                    <Component {...pageProps} />
-                  </AppLayout>
-                </ModalsProvider>
-              </MantineProvider>
-            </UserContextProvider>
-          </WalletSelectorContextProvider>
+          {/* <WalletSelectorContextProvider> */}
+          {/* <UserContextProvider> */}
+          <MantineProvider withGlobalStyles withNormalizeCSS>
+            <ModalsProvider>
+              <Notifications />
+              <AppLayout>
+                <Component {...pageProps} />
+              </AppLayout>
+            </ModalsProvider>
+          </MantineProvider>
+          {/* </UserContextProvider> */}
+          {/* </WalletSelectorContextProvider> */}
         </QueryClientProvider>
       </SessionProvider>
     </>
