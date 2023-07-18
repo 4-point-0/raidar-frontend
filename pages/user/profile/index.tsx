@@ -98,7 +98,7 @@ export const ArtistProfile = () => {
       </Text>
 
       <Box ta="center" mt="xl">
-        <WalletConnectButton />
+        {/* <WalletConnectButton /> */}
       </Box>
 
       {/* <Box ta="center" mt="xl">
