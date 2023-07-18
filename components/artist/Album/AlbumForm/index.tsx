@@ -7,7 +7,6 @@ import {
   Card,
   rem,
   createStyles,
-  Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { FileWithPath } from "@mantine/dropzone";
@@ -24,7 +23,7 @@ import {
   CreateFormValues,
   FormProvider,
   ALBUM_IMAGE_TYPES,
-} from "@/components/artist/AlbumForm/AlbumContext";
+} from "@/components/artist/Album/AlbumForm/AlbumContext";
 import {
   useAlbumControllerCreate,
   useFileControllerUpdateFile,
@@ -33,9 +32,9 @@ import {
 
 import { useIsMutating } from "@tanstack/react-query";
 
-import { getImageUrl } from "@/utils/file";
+import { getFileUrl } from "@/utils/file";
 
-import { Check, Disc } from "tabler-icons-react";
+import { Check } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -65,21 +64,20 @@ export const AlbumForm = (): any => {
       cover_id: "",
       image: undefined,
     },
+    //TODO: needs to check why validations doesn't work
     // validate: getEditFormValidateInput(),
   });
 
   const createAlbum = useAlbumControllerCreate({
     onMutate: () => {
-      console.log("creating album");
       notifications.create({ title: "Creating album" });
     },
     onSuccess: () => {
-      // notifications.success({ title: "Album created" });
-      // router.push("artist/collection");
-      console.log("album created");
+      notifications.success({ title: "Album created" });
+      router.push("/artist/albums");
     },
     onError: () => {
-      // notifications.error({ title: "Error while creating album" });
+      notifications.error({ title: "Error while creating album" });
       console.error("Error while creating album");
     },
   });
@@ -167,8 +165,6 @@ export const AlbumForm = (): any => {
   };
 
   const handleSubmit = async (values: CreateFormValues) => {
-    console.log("evo me doma");
-
     form.validate();
 
     if (!form.isValid) {
@@ -186,9 +182,6 @@ export const AlbumForm = (): any => {
     //   ...documents.map(({ response }: any) => response.id),
     // ].filter(Boolean) as string[];
 
-    console.log("title", title);
-    console.log("pka", pka);
-
     try {
       await createAlbum.mutateAsync({
         body: {
@@ -198,14 +191,14 @@ export const AlbumForm = (): any => {
         },
       });
 
-      // notifications.success({
-      //   title: "Album sucessfully created",
-      // });
+      notifications.success({
+        title: "Album sucessfully created",
+      });
     } catch (error) {
       console.error(error);
-      // notifications.error({
-      //   title: "Error while creating album",
-      // });
+      notifications.error({
+        title: "Error while creating album",
+      });
     }
   };
 
@@ -218,10 +211,6 @@ export const AlbumForm = (): any => {
       className={classes.card}
     >
       <FormProvider form={form}>
-        <Box ta="center" mt="lg">
-          <Disc size={50} />
-        </Box>
-
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack>
             <Box my="xl">
@@ -229,7 +218,7 @@ export const AlbumForm = (): any => {
                 title="Upload Image"
                 description="Drag'n' drop the campaing banner here. Max file size is 20MB, supported formats are PNG and JPEG"
                 label="Select Image"
-                previewUrl={getImageUrl(form.values.image?.response)}
+                previewUrl={getFileUrl(form.values.image?.response)}
                 error={form.getInputProps("image").error}
                 isLoading={isMutating > 0}
                 dropzone={{
