@@ -173,19 +173,19 @@ export const WalletSelectorContextProvider = ({ children }: any) => {
         }),
       ],
     });
-    const _modal = setupModal(_selector, {
-      contractId: RAIDAR_CONTRACT_ID as string,
-      // theme: "light", // doesn't work, need to open an issue on github
-    });
+    // const _modal = setupModal(_selector, {
+    //   contractId: RAIDAR_CONTRACT_ID as string,
+    //   // theme: "light", // doesn't work, need to open an issue on github
+    // });
     const state = _selector.store.getState();
 
     setAccounts(state.accounts);
 
     window.selector = _selector;
-    window.modal = _modal;
+    // window.modal = _modal;
 
     setSelector(_selector);
-    setModal(_modal);
+    // setModal(_modal);
   }, []);
 
   useEffect(() => {
