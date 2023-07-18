@@ -4,9 +4,56 @@ import type * as Schemas from "@/services/api/artist/artistSchemas";
 import { Fetch } from "@/services/api/fetcher";
 import { useContext, Context } from "@/services/api/context";
 
-export type AlbumControllerCreateError = Fetcher.ErrorWrapper<undefined>;
+/** ============================ SONG ================================ */
+
+/** ============================ /api/v1/song ================================ */
+
+export type SongControllerCreateError = Fetcher.ErrorWrapper<undefined>;
+
+export type SongControllerCreateVariables = {
+  body: Schemas.CreateSongDto;
+} & Context["fetcherOptions"];
+
+export const fetchSongControllerCreate = (
+  variables: SongControllerCreateVariables,
+  signal?: AbortSignal
+) =>
+  Fetch<
+    Schemas.SongDto,
+    SongControllerCreateError,
+    Schemas.CreateSongDto,
+    {},
+    {},
+    {}
+  >({ url: "/api/v1/song", method: "post", ...variables, signal });
+
+export const useSongControllerCreate = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.SongDto,
+      SongControllerCreateError,
+      SongControllerCreateVariables
+    >,
+    "mutationFn"
+  >
+) => {
+  const { fetcherOptions } = useContext();
+  return reactQuery.useMutation<
+    Schemas.SongDto,
+    SongControllerCreateError,
+    SongControllerCreateVariables
+  >(
+    (variables: SongControllerCreateVariables) =>
+      fetchSongControllerCreate({ ...fetcherOptions, ...variables }),
+    options
+  );
+};
+
+/** ============================ ALBUM ================================ */
 
 /** ============================ /api/v1/album ================================ */
+
+export type AlbumControllerCreateError = Fetcher.ErrorWrapper<undefined>;
 
 export type AlbumControllerCreateVariables = {
   body: Schemas.CreateAlbumDto;
@@ -46,6 +93,128 @@ export const useAlbumControllerCreate = (
     options
   );
 };
+
+/** ============================ /api/v1/album ================================ */
+
+export type AlbumControllerFindAllQueryParams = {
+  name?: string;
+  offset?: number;
+  limit?: number;
+};
+
+export type AlbumControllerFindAllError = Fetcher.ErrorWrapper<undefined>;
+
+export type AlbumControllerFindAllResponse = {
+  total: number;
+  limit: number;
+  offset: number;
+  count: number;
+  results: Schemas.AlbumDto[];
+};
+
+export type AlbumControllerFindAllVariables = {
+  queryParams?: AlbumControllerFindAllQueryParams;
+} & Context["fetcherOptions"];
+
+export const fetchAlbumControllerFindAll = (
+  variables: AlbumControllerFindAllVariables,
+  signal?: AbortSignal
+) =>
+  Fetch<
+    AlbumControllerFindAllResponse,
+    AlbumControllerFindAllError,
+    undefined,
+    {},
+    AlbumControllerFindAllQueryParams,
+    {}
+  >({ url: "/api/v1/album", method: "get", ...variables, signal });
+
+export const useAlbumControllerFindAll = <
+  TData = AlbumControllerFindAllResponse
+>(
+  variables: AlbumControllerFindAllVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      AlbumControllerFindAllResponse,
+      AlbumControllerFindAllError,
+      TData
+    >,
+    "queryKey" | "queryFn"
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } = useContext(options);
+  return reactQuery.useQuery<
+    AlbumControllerFindAllResponse,
+    AlbumControllerFindAllError,
+    TData
+  >(
+    queryKeyFn({
+      path: "/api/v1/album",
+      operationId: "albumControllerFindAll",
+      variables,
+    }),
+    ({ signal }) =>
+      fetchAlbumControllerFindAll({ ...fetcherOptions, ...variables }, signal),
+    {
+      ...options,
+      ...queryOptions,
+    }
+  );
+};
+
+/** ============================ /api/v1/album/{id} ================================ */
+
+export type AlbumControllerFindOnePathParams = {
+  id: string;
+};
+
+export type AlbumControllerFindOneError = Fetcher.ErrorWrapper<undefined>;
+export type AlbumControllerFindOneVariables = {
+  pathParams: AlbumControllerFindOnePathParams;
+} & Context["fetcherOptions"];
+
+export const fetchAlbumControllerFindOne = (
+  variables: AlbumControllerFindOneVariables,
+  signal?: AbortSignal
+) =>
+  Fetch<
+    Schemas.AlbumDto,
+    AlbumControllerFindOneError,
+    undefined,
+    {},
+    {},
+    AlbumControllerFindOnePathParams
+  >({ url: "/api/v1/album/{id}", method: "get", ...variables, signal });
+
+export const useAlbumControllerFindOne = <TData = Schemas.AlbumDto>(
+  variables: AlbumControllerFindOneVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.AlbumDto,
+      AlbumControllerFindOneError,
+      TData
+    >,
+    "queryKey" | "queryFn"
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } = useContext(options);
+  return reactQuery.useQuery<
+    Schemas.AlbumDto,
+    AlbumControllerFindOneError,
+    TData
+  >(
+    queryKeyFn({
+      path: "/api/v1/album/{id}",
+      operationId: "albumControllerFindOne",
+      variables,
+    }),
+    ({ signal }) =>
+      fetchAlbumControllerFindOne({ ...fetcherOptions, ...variables }, signal),
+    { ...options, ...queryOptions }
+  );
+};
+
+/** ============================ FILE ================================ */
 
 /** ============================ /api/v1/file/{id} ================================ */
 

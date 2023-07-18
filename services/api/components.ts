@@ -6,6 +6,10 @@ import type * as Fetcher from "./fetcher";
 import { Fetch } from "./fetcher";
 
 import type * as Schemas from "./schemas";
+import {
+  AlbumControllerFindAllVariables,
+  AlbumControllerFindOneVariables,
+} from "./artist/artistComponents";
 
 /** ============================ /api/v1/google/sign-in-backend ================================ */
 
@@ -101,10 +105,10 @@ export const useGoogleControllerAuthenticate = (
 
 export type controllerFindMeError = Fetcher.ErrorWrapper<undefined>;
 
-export type controllerFindMeVariables = Context["fetcherOptions"];
+export type ControllerFindMeVariables = Context["fetcherOptions"];
 
 export const fetchControllerFindMe = (
-  variables: controllerFindMeVariables,
+  variables: ControllerFindMeVariables,
   signal?: AbortSignal
 ) =>
   Fetch<Schemas.UserDto, controllerFindMeError, undefined, {}, {}, {}>({
@@ -115,7 +119,7 @@ export const fetchControllerFindMe = (
   });
 
 export const useControllerFindMe = <TData = Schemas.UserDto>(
-  variables: controllerFindMeVariables,
+  variables: ControllerFindMeVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<Schemas.UserDto, controllerFindMeError, TData>,
     "queryKey" | "queryFn"
@@ -180,6 +184,8 @@ export const useAuthControllerNearLogin = (
   );
 };
 
+/** ============================ /api/v1/marketplace/songs ================================ */
+
 /** ============================ QueryOperation ================================ */
 
 export type QueryOperation =
@@ -191,5 +197,15 @@ export type QueryOperation =
   | {
       path: "/api/v1/user/me";
       operationId: "controllerFindMe";
-      variables: controllerFindMeVariables;
+      variables: ControllerFindMeVariables;
+    }
+  | {
+      path: "/api/v1/album";
+      operationId: "albumControllerFindAll";
+      variables: AlbumControllerFindAllVariables;
+    }
+  | {
+      path: "/api/v1/album/{id}";
+      operationId: "albumControllerFindOne";
+      variables: AlbumControllerFindOneVariables;
     };
