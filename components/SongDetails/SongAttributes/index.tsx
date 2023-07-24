@@ -1,7 +1,6 @@
 import React from "react";
 import { List, Text } from "@mantine/core";
-import { IconCheck } from "@tabler/icons-react";
-import { rem, ThemeIcon } from "@mantine/core";
+import { ThemeIcon } from "@mantine/core";
 
 interface SongAttributeItem {
   label?: string;
@@ -10,7 +9,7 @@ interface SongAttributeItem {
 }
 
 interface SongAttributeProps {
-  children?: React.ReactNode; // Add children prop here
+  children?: React.ReactNode;
   songAttributes: SongAttributeItem[];
 }
 
@@ -21,7 +20,6 @@ const SongAttribute = ({ songAttributes }: SongAttributeProps) => {
         <List.Item key={index}>
           <Text>
             <ThemeIcon size={30} radius="xl" color="red" mr={10}>
-              {/* <IconCheck size={rem(12)} stroke={1.5} /> */}
               {songAttribute.icon}
             </ThemeIcon>
             <b>{songAttribute.label}</b>: {songAttribute.value}
