@@ -4,11 +4,7 @@ import {
   Image,
   Container,
   Title,
-  Button,
-  Group,
   Text,
-  List,
-  ThemeIcon,
   rem,
 } from "@mantine/core";
 import { AiOutlineClockCircle } from "react-icons/ai";
@@ -20,10 +16,12 @@ import {
 } from "react-icons/bs";
 import { GiMusicSpell, GiMusicalKeyboard } from "react-icons/gi";
 import { GiCuckooClock, GiMusicalNotes } from "react-icons/gi";
-import { GrLanguage, GrLocation } from "react-icons/gr";
-import { TbUserShare } from "react-icons/tb";
+import { TfiLocationPin } from "react-icons/tfi";
+import { TbUserShare, TbLanguage } from "react-icons/tb";
 
 import SongAttributes from "./SongAttributes";
+import formatDuration from "@/utils/formatDuration";
+import { Song } from "@/services/api/schemas";
 
 const useStyles = createStyles((theme) => ({
   inner: {
@@ -66,6 +64,7 @@ const useStyles = createStyles((theme) => ({
     [theme.fn.smallerThan("md")]: {
       display: "none",
     },
+    margin: "auto",
   },
 
   highlight: {
@@ -79,78 +78,6 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-interface LastListing {
-  id: string;
-  seller: {
-    id: string;
-    email: string;
-    first_name: string;
-    last_name: string;
-    roles: string[];
-    provider: string;
-    provider_id: string;
-    wallet_address: null;
-    created_at: string;
-    updated_at: string;
-  };
-  buyer: null;
-  tx_hash: null;
-  price: string;
-  created_at: string;
-  updated_at: string;
-  created_by_id: string;
-  updated_by_id: string;
-}
-
-interface Music {
-  id: string;
-  name: string;
-  url: string;
-  key: string;
-  mime_type: string;
-  url_expiry: string | null;
-  created_at: string;
-  updated_at: string;
-  created_by_id: string;
-  updated_by_id: string;
-}
-
-interface Art {
-  id: string;
-  name: string;
-  url: string;
-  key: string;
-  mime_type: string;
-  url_expiry: string | null;
-  created_at: string;
-  updated_at: string;
-  created_by_id: string;
-  updated_by_id: string;
-}
-
-interface Song {
-  id: string;
-  user_id: string;
-  title: string;
-  length: number;
-  genre: string;
-  mood: string[];
-  tags: string[];
-  bpm: number;
-  instrumental: boolean;
-  languages: string[];
-  vocal_ranges: string[];
-  musical_key: string;
-  recording_date: string;
-  recording_location: string;
-  recording_country: string;
-  pka: string;
-  last_listing: LastListing;
-  music: Music;
-  art: Art;
-  album: string | null;
-}
-
 interface SongDetailsProps {
   song: Song;
 }
@@ -161,13 +88,8 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
   const songAttributes = [
     {
       label: "Length",
-      value: song.length,
+      value: formatDuration(song.length),
       icon: <AiOutlineClockCircle />,
-    },
-    {
-      label: "Genre",
-      value: song.genre,
-      icon: <BsMusicPlayer />,
     },
     {
       label: "Mood",
@@ -192,7 +114,7 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
     {
       label: "Languages",
       value: song.languages,
-      icon: <GrLanguage />,
+      icon: <TbLanguage />,
     },
     {
       label: "Vocal Ranges",
@@ -212,7 +134,7 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
     {
       label: "Recording Location",
       value: song.recording_location,
-      icon: <GrLocation />,
+      icon: <TfiLocationPin />,
     },
     {
       label: "Recording Country",
@@ -223,7 +145,7 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
 
   return (
     <div>
-      <Container>
+      <Container sx={{ backgroundColor: "#F8F8FF", borderRadius: "20px" }}>
         <div className={classes.inner}>
           <div className={classes.content}>
             <Title className={classes.title}>{song.title}</Title>
