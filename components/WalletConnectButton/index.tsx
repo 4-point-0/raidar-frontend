@@ -3,7 +3,7 @@ import { Button } from "@mantine/core";
 import * as nearApi from "near-api-js";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
-import { useUserContext } from "../../context/userContext";
+import { useUserContext } from "../../context/UserContext";
 import { useWalletSelector } from "../../context/WalletSelectorContext";
 import { fetchAuthControllerNearLogin } from "../../services/api/components";
 import { getConnectionConfig } from "../../utils/near";
