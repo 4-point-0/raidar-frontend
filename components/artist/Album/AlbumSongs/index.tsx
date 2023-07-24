@@ -123,7 +123,7 @@ const AlbumSongs = () => {
         <Text fw={700} fz="md" className={classes.itemTitle} c="dimmed">
           {formatDuration(song.length)}
         </Text>
-        <Anchor href={`/artist/album`} color="red" fw={700}>
+        <Anchor href={`/artist/song/${song.id}`} color="red" fw={700}>
           Check Song
         </Anchor>
       </div>
