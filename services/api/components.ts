@@ -187,6 +187,75 @@ export const useAuthControllerNearLogin = (
 
 /** ============================ /api/v1/marketplace/songs ================================ */
 
+export type MarketplaceControllerFindAllQueryParams = {
+  name?: string;
+  offset?: number;
+  limit?: number;
+};
+
+export type MarketplaceControllerFindAllError = Fetcher.ErrorWrapper<undefined>;
+
+export type MarketplaceControllerFindAllResponse = {
+  total: number;
+  limit: number;
+  offset: number;
+  count: number;
+  results: Schemas.MarketplaceDto[];
+};
+
+export type MarketplaceControllerFindAllVariables = {
+  queryParams?: MarketplaceControllerFindAllQueryParams;
+} & Context["fetcherOptions"];
+
+export const fetchMarketplaceControllerFindAll = (
+  variables: MarketplaceControllerFindAllVariables,
+  signal?: AbortSignal
+) =>
+  Fetch<
+    MarketplaceControllerFindAllResponse,
+    MarketplaceControllerFindAllError,
+    undefined,
+    {},
+    MarketplaceControllerFindAllQueryParams,
+    {}
+  >({ url: "/api/v1/marketplace/songs", method: "get", ...variables, signal });
+
+export const useMarketplaceControllerFindAll = <
+  TData = MarketplaceControllerFindAllResponse
+>(
+  variables: MarketplaceControllerFindAllVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      MarketplaceControllerFindAllResponse,
+      MarketplaceControllerFindAllError,
+      TData
+    >,
+    "queryKey" | "queryFn"
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } = useContext(options);
+  return reactQuery.useQuery<
+    MarketplaceControllerFindAllResponse,
+    MarketplaceControllerFindAllError,
+    TData
+  >(
+    queryKeyFn({
+      path: "/api/v1/album",
+      operationId: "albumControllerFindAll",
+      variables,
+    }),
+    ({ signal }) =>
+      fetchMarketplaceControllerFindAll(
+        { ...fetcherOptions, ...variables },
+        signal
+      ),
+    {
+      ...options,
+      ...queryOptions,
+    }
+  );
+};
+
 /** ============================ QueryOperation ================================ */
 
 export type QueryOperation =
@@ -214,4 +283,9 @@ export type QueryOperation =
       path: "/api/v1/song/{id}";
       operationId: "songControllerFindOne";
       variables: SongControllerFindOneVariables;
+    }
+  | {
+      path: "/api/v1/marketplace/songs";
+      operationId: "marketplaceControllerFindAll";
+      variables: MarketplaceControllerFindAllVariables;
     };

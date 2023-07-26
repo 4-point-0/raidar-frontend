@@ -101,3 +101,11 @@ export type SongDto = {
   art: Art;
   album: string | null;
 };
+
+export type MarketplaceDto = {
+  total: number;
+  take: number;
+  skip: number;
+  count: number;
+  results: SongDto[];
+};
