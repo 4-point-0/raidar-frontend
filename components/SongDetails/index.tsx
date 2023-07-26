@@ -8,12 +8,7 @@ import {
   rem,
 } from "@mantine/core";
 import { AiOutlineClockCircle } from "react-icons/ai";
-import {
-  BsMusicPlayer,
-  BsTags,
-  BsCalendar2Date,
-  BsGlobe,
-} from "react-icons/bs";
+import { BsTags, BsCalendar2Date, BsGlobe } from "react-icons/bs";
 import { GiMusicSpell, GiMusicalKeyboard } from "react-icons/gi";
 import { GiCuckooClock, GiMusicalNotes } from "react-icons/gi";
 import { TfiLocationPin } from "react-icons/tfi";
@@ -21,19 +16,21 @@ import { TbUserShare, TbLanguage } from "react-icons/tb";
 
 import SongAttributes from "./SongAttributes";
 import formatDuration from "@/utils/formatDuration";
-import { Song } from "@/services/api/schemas";
+import { formatDate } from "@/utils/formatDate";
+import { SongDto } from "@/services/api/artist/artistSchemas";
 
 const useStyles = createStyles((theme) => ({
   inner: {
     display: "flex",
     justifyContent: "space-between",
-    paddingTop: `calc(${theme.spacing.xl} * 4)`,
-    paddingBottom: `calc(${theme.spacing.xl} * 4)`,
+    paddingTop: `calc(${theme.spacing.sm} * 4)`,
+    paddingBottom: `calc(${theme.spacing.sm} * 4)`,
+    borderRadius: theme.radius.md,
   },
 
   content: {
-    maxWidth: rem(480),
-    marginRight: `calc(${theme.spacing.xl} * 3)`,
+    maxWidth: rem(500),
+    marginLeft: `calc(${theme.spacing.xl} * 3)`,
 
     [theme.fn.smallerThan("md")]: {
       maxWidth: "100%",
@@ -46,18 +43,18 @@ const useStyles = createStyles((theme) => ({
     fontFamily: `Greycliff CF, ${theme.fontFamily}`,
     fontSize: rem(44),
     lineHeight: 1.2,
-    fontWeight: 900,
+    fontWeight: 700,
 
     [theme.fn.smallerThan("xs")]: {
       fontSize: rem(28),
     },
   },
 
-  control: {
-    [theme.fn.smallerThan("xs")]: {
-      flex: 1,
-    },
-  },
+  //   control: {
+  //     [theme.fn.smallerThan("xs")]: {
+  //       flex: 1,
+  //     },
+  //   },
 
   image: {
     flex: 1,
@@ -67,19 +64,19 @@ const useStyles = createStyles((theme) => ({
     margin: "auto",
   },
 
-  highlight: {
-    position: "relative",
-    backgroundColor: theme.fn.variant({
-      variant: "light",
-      color: theme.primaryColor,
-    }).background,
-    borderRadius: theme.radius.sm,
-    padding: `${rem(4)} ${rem(12)}`,
-  },
+  //   highlight: {
+  //     position: "relative",
+  //     backgroundColor: theme.fn.variant({
+  //       variant: "light",
+  //       color: theme.primaryColor,
+  //     }).background,
+  //     borderRadius: theme.radius.sm,
+  //     padding: `${rem(4)} ${rem(12)}`,
+  //   },
 }));
 
 interface SongDetailsProps {
-  song: Song;
+  song: SongDto;
 }
 
 export const SongDetails = ({ song }: SongDetailsProps) => {
@@ -128,7 +125,7 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
     },
     {
       label: "Recording Date",
-      value: song.recording_date,
+      value: formatDate(song.recording_date),
       icon: <BsCalendar2Date />,
     },
     {
@@ -155,8 +152,11 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
 
             <SongAttributes songAttributes={songAttributes} />
           </div>
-
-          <Image src={`${song.art.url}`} className={classes.image} />
+          <Image
+            src={`${song.art.url}`}
+            className={classes.image}
+            radius="xl"
+          />
         </div>
       </Container>
     </div>
