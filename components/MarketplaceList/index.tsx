@@ -11,8 +11,11 @@ import {
   Grid,
   Group,
   Avatar,
+  Box,
+  AspectRatio,
 } from "@mantine/core";
-import { Box, PigMoney } from "tabler-icons-react";
+import { PigMoney } from "tabler-icons-react";
+import { MarketplaceDto } from "@/services/api/schemas";
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -31,7 +34,7 @@ const useStyles = createStyles((theme) => ({
     "&::after": {
       content: '""',
       display: "block",
-      backgroundColor: theme.fn.primaryColor(),
+      backgroundColor: "red",
       width: rem(45),
       height: rem(2),
       marginTop: theme.spacing.sm,
@@ -50,7 +53,7 @@ const useStyles = createStyles((theme) => ({
     "&::after": {
       content: '""',
       display: "block",
-      backgroundColor: theme.fn.primaryColor(),
+      backgroundColor: "red",
       width: rem(45),
       height: rem(2),
       marginTop: theme.spacing.sm,
@@ -66,13 +69,15 @@ interface Songs {
 }
 
 interface MarketplaceSongs {
-  songList: Songs[];
+  songList: any;
 }
 
 export const MarketplaceList = ({ songList }: MarketplaceSongs) => {
   const { classes } = useStyles();
 
-  const features = songList.map((song: any) => (
+  console.log(songList);
+
+  const features = songList.results.map((song: any) => (
     <Card
       key={song.title}
       shadow="md"
@@ -80,12 +85,23 @@ export const MarketplaceList = ({ songList }: MarketplaceSongs) => {
       className={classes.card}
       padding="xl"
     >
-      <Image src={song.src} mx={"auto"} />
-      <Text fz="lg" fw={500} className={classes.cardTitle} mt="md">
+      {/* <Image src={song.art.url} radius="md" fit="contain" /> */}
+
+      {/* <AspectRatio ratio={720 / 1080} maw={300} mx="auto"></AspectRatio> */}
+      <Image
+        width={300}
+        height={300}
+        fit="contain"
+        mx="auto"
+        src={song.art.url}
+      />
+
+      <Text fz="lg" fw={600} className={classes.cardTitle} mt="md">
         {song.title}
       </Text>
       <Text fz="sm" c="dimmed" mt="sm">
-        {`${song.description.slice(0, 60)}...`}
+        <b>Genre</b>
+        {` ${song.genre}`}
       </Text>
       <Group>
         <Avatar
@@ -95,7 +111,7 @@ export const MarketplaceList = ({ songList }: MarketplaceSongs) => {
           mt="md"
         />
         <Text fz="sm" mt="sm">
-          {song.artist_name}
+          {song.album.pka}
         </Text>
       </Group>
       <Group>
@@ -104,7 +120,7 @@ export const MarketplaceList = ({ songList }: MarketplaceSongs) => {
           <Text ml="sm">Buy</Text>
         </Button>
         <Text mt={25} ml="30%" fw={600}>
-          {song.price}
+          {song.last_listing.price}
         </Text>
         <Image width={15} mt={25} src={"/images/near-protocol-logo.png"} />
       </Group>
