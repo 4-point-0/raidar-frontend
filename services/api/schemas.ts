@@ -79,7 +79,7 @@ type Art = {
   updated_by_id: string;
 };
 
-export type Song = {
+export type SongDto = {
   id: string;
   user_id: string;
   title: string;

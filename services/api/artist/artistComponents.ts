@@ -49,6 +49,58 @@ export const useSongControllerCreate = (
   );
 };
 
+/** ============================ /api/v1/song/{id} ================================ */
+
+export type SongControllerFindOnePathParams = {
+  id: string;
+};
+
+export type SongControllerFindOneError = Fetcher.ErrorWrapper<undefined>;
+export type SongControllerFindOneVariables = {
+  pathParams: SongControllerFindOnePathParams;
+} & Context["fetcherOptions"];
+
+export const fetchSongControllerFindOne = (
+  variables: SongControllerFindOneVariables,
+  signal?: AbortSignal
+) =>
+  Fetch<
+    Schemas.SongDto,
+    SongControllerFindOneError,
+    undefined,
+    {},
+    {},
+    SongControllerFindOnePathParams
+  >({ url: "/api/v1/song/{id}", method: "get", ...variables, signal });
+
+export const useSongControllerFindOne = <TData = Schemas.SongDto>(
+  variables: SongControllerFindOneVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.SongDto,
+      SongControllerFindOneError,
+      TData
+    >,
+    "queryKey" | "queryFn"
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } = useContext(options);
+  return reactQuery.useQuery<
+    Schemas.SongDto,
+    SongControllerFindOneError,
+    TData
+  >(
+    queryKeyFn({
+      path: "/api/v1/song/{id}",
+      operationId: "songControllerFindOne",
+      variables,
+    }),
+    ({ signal }) =>
+      fetchSongControllerFindOne({ ...fetcherOptions, ...variables }, signal),
+    { ...options, ...queryOptions }
+  );
+};
+
 /** ============================ ALBUM ================================ */
 
 /** ============================ /api/v1/album ================================ */
@@ -210,7 +262,7 @@ export const useAlbumControllerFindOne = <TData = Schemas.AlbumDto>(
     }),
     ({ signal }) =>
       fetchAlbumControllerFindOne({ ...fetcherOptions, ...variables }, signal),
-    { ...options, ...queryOptions }
+    { ...options, ...queryOptions, staleTime: 1000 * 60 * 10 }
   );
 };
 
