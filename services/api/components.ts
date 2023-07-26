@@ -9,6 +9,7 @@ import type * as Schemas from "./schemas";
 import {
   AlbumControllerFindAllVariables,
   AlbumControllerFindOneVariables,
+  SongControllerFindOneVariables,
 } from "./artist/artistComponents";
 
 /** ============================ /api/v1/google/sign-in-backend ================================ */
@@ -208,4 +209,9 @@ export type QueryOperation =
       path: "/api/v1/album/{id}";
       operationId: "albumControllerFindOne";
       variables: AlbumControllerFindOneVariables;
+    }
+  | {
+      path: "/api/v1/song/{id}";
+      operationId: "songControllerFindOne";
+      variables: SongControllerFindOneVariables;
     };

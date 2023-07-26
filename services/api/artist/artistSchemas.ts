@@ -71,27 +71,74 @@ export type CreateSongDto = {
   price: number;
 };
 
+type LastListing = {
+  id: string;
+  seller: {
+    id: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+    roles: string[];
+    provider: string;
+    provider_id: string;
+    wallet_address: null;
+    created_at: string;
+    updated_at: string;
+  };
+  buyer: null;
+  tx_hash: null;
+  price: string;
+  created_at: string;
+  updated_at: string;
+  created_by_id: string;
+  updated_by_id: string;
+};
+
+type Music = {
+  id: string;
+  name: string;
+  url: string;
+  key: string;
+  mime_type: string;
+  url_expiry: string | null;
+  created_at: string;
+  updated_at: string;
+  created_by_id: string;
+  updated_by_id: string;
+};
+
+type Art = {
+  id: string;
+  name: string;
+  url: string;
+  key: string;
+  mime_type: string;
+  url_expiry: string | null;
+  created_at: string;
+  updated_at: string;
+  created_by_id: string;
+  updated_by_id: string;
+};
+
 export type SongDto = {
   id: string;
+  user_id: string;
   title: string;
-  album_id: string;
+  length: number;
   genre: string;
   mood: string[];
   tags: string[];
-  length: number;
   bpm: number;
   instrumental: boolean;
   languages: string[];
   vocal_ranges: string[];
   musical_key: string;
-  music_id: string;
-  /**
-   * @format date-time
-   */
   recording_date: string;
   recording_location: string;
   recording_country: string;
-  art_id: string;
   pka: string;
-  price: number;
+  last_listing: LastListing;
+  music: Music;
+  art: Art;
+  album: string | null;
 };
