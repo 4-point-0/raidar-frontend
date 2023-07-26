@@ -27,7 +27,6 @@ import {
   CreateFormValues,
   FormProvider,
   SONG_IMAGE_TYPES,
-  SONG_AUDIO_TYPES,
 } from "@/components/artist/Song/SongForm/SongContext";
 import {
   useAlbumControllerFindOne,
@@ -41,7 +40,7 @@ import { useIsMutating } from "@tanstack/react-query";
 import { getFileUrl } from "@/utils/file";
 
 import { Check } from "tabler-icons-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import dayjs from "dayjs";
 
 const useStyles = createStyles((theme) => ({
@@ -65,13 +64,13 @@ export const SongForm = (): any => {
   const { classes } = useStyles();
   const albumId = router.query.id;
 
-  const { data: albumData } = useAlbumControllerFindOne({
+  const albumDataQuery = useAlbumControllerFindOne({
     pathParams: {
       id: albumId as string,
     },
   });
 
-  console.log("data", albumData);
+  const albumData = useMemo(() => albumDataQuery.data, [albumDataQuery.data]);
 
   const isMutating = useIsMutating();
 
@@ -269,8 +268,6 @@ export const SongForm = (): any => {
       languages,
       vocalRanges,
       musicalKey,
-      musicId,
-      recordingDate,
       recordingCountry,
       recordingLocation,
       price,
@@ -278,23 +275,27 @@ export const SongForm = (): any => {
       song,
     } = values;
 
-    console.log("title", title);
-    console.log("genre", genre);
-    console.log("mood", mood);
-    console.log("title", title);
-    console.log("tags", tags);
-    console.log("length", length);
-    console.log("bpm", bpm);
-    console.log("instrumental", instrumental);
-    console.log("languages", languages);
-    console.log("vocal_ranges", vocalRanges);
-    console.log("musical_key", musicalKey);
-    console.log("recording_date", selectedDate[0]);
-    console.log("recording_country", recordingCountry);
-    console.log("recording_location", recordingLocation);
-    console.log("price", price);
-    console.log("image", image);
-    console.log("song", song);
+    const formattedDate = new Date(selectedDate[0]).toISOString();
+
+    // console.log("title", title);
+    // console.log("genre", genre);
+    // console.log("mood", mood);
+    // console.log("title", title);
+    // console.log("tags", tags);
+    // console.log("length", length);
+    // console.log("bpm", bpm);
+    // console.log("instrumental", instrumental);
+    // console.log("languages", languages);
+    // console.log("vocal_ranges", vocalRanges);
+    // console.log("musical_key", musicalKey);
+    // console.log("recording_date", selectedDate[0]);
+    // console.log("recording_country", recordingCountry);
+    // console.log("recording_location", recordingLocation);
+    // console.log("price", price);
+    // console.log("image", image);
+    // console.log("song", song);
+
+    // console.log("formattedDate", formattedDate);
 
     // const fileIds = [
     //   image?.response?.id,
@@ -316,12 +317,12 @@ export const SongForm = (): any => {
           vocal_ranges: [vocalRanges],
           musical_key: musicalKey,
           music_id: song?.response?.id as string,
-          recording_date: `2023-07-17T10:39:43.582Z`,
+          recording_date: formattedDate,
           recording_country: recordingCountry,
           recording_location: recordingLocation,
           art_id: image?.response?.id as string,
-          pka: albumData?.pka || "",
-          price: 10.0,
+          pka: albumData?.pka || "Missing PKA info",
+          price: price as unknown as number,
         },
       });
 
@@ -367,14 +368,13 @@ export const SongForm = (): any => {
             <Box my="xl">
               <Dropzone
                 title="Upload Song"
-                description="Drag'n' drop the audio file here. Max file size is 20MB, supported formats are PNG and JPEG"
+                description="Drag'n' drop the audio file here. Max file size is 20MB, supported formats are .waw"
                 label="Select Audio"
                 previewUrl={getFileUrl(form.values.song?.response)}
                 error={form.getInputProps("song").error}
                 isLoading={isMutating > 0}
                 dropzone={{
                   multiple: false,
-                  // accept: SONG_AUDIO_TYPES,
                   onDrop: handleSongDrop,
                   disabled: isMutating > 0,
                 }}
@@ -384,7 +384,7 @@ export const SongForm = (): any => {
               <Field withAsterisk label="Song Title">
                 <TextInput
                   mt="xs"
-                  placeholder="Song Title"
+                  placeholder="Title"
                   {...form.getInputProps("title")}
                 />
               </Field>
@@ -392,7 +392,7 @@ export const SongForm = (): any => {
               <Field withAsterisk label="Genre">
                 <TextInput
                   mt="xs"
-                  placeholder="Genre"
+                  placeholder="E.g. Rock, Pop, Hip Hop"
                   {...form.getInputProps("genre")}
                 />
               </Field>
@@ -401,7 +401,7 @@ export const SongForm = (): any => {
             <Field withAsterisk label="Mood">
               <TextInput
                 mt="xs"
-                placeholder="mood"
+                placeholder="E.g. Happy, Epic, Euphoric"
                 {...form.getInputProps("mood")}
               />
             </Field>
@@ -409,7 +409,7 @@ export const SongForm = (): any => {
             <Field withAsterisk label="tags">
               <TextInput
                 mt="xs"
-                placeholder="tags"
+                placeholder="E.g. Hard Beats, Bass Boosted, Synthesizer"
                 {...form.getInputProps("tags")}
               />
             </Field>
@@ -418,7 +418,7 @@ export const SongForm = (): any => {
               <Field withAsterisk label="length">
                 <TextInput
                   mt="xs"
-                  placeholder="length"
+                  placeholder="Duration in seconds (0 to 500)"
                   {...form.getInputProps("length")}
                 />
               </Field>
@@ -426,7 +426,7 @@ export const SongForm = (): any => {
               <Field withAsterisk label="bpm">
                 <TextInput
                   mt="xs"
-                  placeholder="bpm"
+                  placeholder="From 0 to 200"
                   {...form.getInputProps("bpm")}
                 />
               </Field>
@@ -453,7 +453,7 @@ export const SongForm = (): any => {
             <Field withAsterisk label="Languages">
               <TextInput
                 mt="xs"
-                placeholder="Languages"
+                placeholder="E.g. English, Spanish, French"
                 {...form.getInputProps("languages")}
               />
             </Field>
@@ -461,7 +461,7 @@ export const SongForm = (): any => {
             <Field withAsterisk label="Vocal Ranges">
               <TextInput
                 mt="xs"
-                placeholder="Vocal Ranges"
+                placeholder="E.g. Soprano, Alt, Tenor"
                 {...form.getInputProps("vocalRanges")}
               />
             </Field>
@@ -470,7 +470,7 @@ export const SongForm = (): any => {
               <Field withAsterisk label="Musical key">
                 <TextInput
                   mt="xs"
-                  placeholder="Musical key"
+                  placeholder="E.g. G Minor, C Major"
                   {...form.getInputProps("musicalKey")}
                 />
               </Field>
@@ -482,7 +482,7 @@ export const SongForm = (): any => {
               <Field withAsterisk label="Recording Country">
                 <TextInput
                   mt="xs"
-                  placeholder="Recording Country"
+                  placeholder="E.g. examples USA, UK"
                   {...form.getInputProps("recordingCountry")}
                 />
               </Field>
@@ -490,7 +490,7 @@ export const SongForm = (): any => {
               <Field withAsterisk label="Recording Location">
                 <TextInput
                   mt="xs"
-                  placeholder="Recording Location"
+                  placeholder="E.g. Los Angeles, New York"
                   {...form.getInputProps("recordingLocation")}
                 />
               </Field>
