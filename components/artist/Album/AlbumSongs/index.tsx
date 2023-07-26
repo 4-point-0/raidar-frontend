@@ -9,14 +9,14 @@ import {
   rem,
   Button,
   Anchor,
-  Card,
   Paper,
 } from "@mantine/core";
-import { Disc, Plus } from "tabler-icons-react";
+import { Plus } from "tabler-icons-react";
 
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAlbumControllerFindOne } from "@/services/api/artist/artistComponents";
+import formatDuration from "@/utils/formatDuration";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -95,13 +95,6 @@ const AlbumSongs = () => {
     },
   });
 
-  const formatDuration = (duration: number) => {
-    const minutes = Math.floor(duration / 60);
-    const seconds = Math.floor(duration % 60);
-
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-  };
-
   const items = album?.songs.map((song: any, i: number) => (
     <div className={classes.item} key={i}>
       <ThemeIcon
@@ -123,7 +116,7 @@ const AlbumSongs = () => {
         <Text fw={700} fz="md" className={classes.itemTitle} c="dimmed">
           {formatDuration(song.length)}
         </Text>
-        <Anchor href={`/artist/album`} color="red" fw={700}>
+        <Anchor href={`/artist/song/${song.id}`} color="red" fw={700}>
           Check Song
         </Anchor>
       </div>
