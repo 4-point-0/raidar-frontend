@@ -12,10 +12,12 @@ import {
   Group,
   Avatar,
   Box,
-  AspectRatio,
 } from "@mantine/core";
-import { PigMoney } from "tabler-icons-react";
+import { PigMoney, Stack } from "tabler-icons-react";
 import { MarketplaceDto } from "@/services/api/schemas";
+import { MantineLogo } from "@mantine/ds";
+import { MarketplaceFilters } from "@/components/MarketplaceFilters";
+import { MarketplaceFiltersAccordion } from "@/components/MarketplaceFiltersAccordion/Index";
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -59,25 +61,26 @@ const useStyles = createStyles((theme) => ({
       marginTop: theme.spacing.sm,
     },
   },
+
+  item: {
+    marginTop: theme.spacing.lg,
+    borderRadius: theme.radius.md,
+    marginBottom: theme.spacing.lg,
+    border: `${rem(1)} solid ${
+      theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[3]
+    }`,
+  },
 }));
 
-interface Songs {
-  image?: string;
-  title?: React.ReactNode;
-  description?: React.ReactNode;
-  src?: string;
-}
+// interface MarketplaceSongs {
+//   songList: MarketplaceDto;
+// }
 
-interface MarketplaceSongs {
-  songList: any;
-}
-
-export const MarketplaceList = ({ songList }: MarketplaceSongs) => {
+export const MarketplaceList = (results: any) => {
   const { classes } = useStyles();
+  console.log("results", results.results);
 
-  console.log(songList);
-
-  const features = songList.results.map((song: any) => (
+  const features = results.results.results.map((song: any) => (
     <Card
       key={song.title}
       shadow="md"
@@ -85,16 +88,17 @@ export const MarketplaceList = ({ songList }: MarketplaceSongs) => {
       className={classes.card}
       padding="xl"
     >
-      {/* <Image src={song.art.url} radius="md" fit="contain" /> */}
-
-      {/* <AspectRatio ratio={720 / 1080} maw={300} mx="auto"></AspectRatio> */}
-      <Image
-        width={300}
-        height={300}
-        fit="contain"
-        mx="auto"
-        src={song.art.url}
-      />
+      <Box mx="auto">
+        <img
+          src={song.art.url}
+          alt=""
+          style={{
+            width: "300px",
+            height: "300px",
+            objectFit: "contain",
+          }}
+        />
+      </Box>
 
       <Text fz="lg" fw={600} className={classes.cardTitle} mt="md">
         {song.title}
@@ -128,26 +132,31 @@ export const MarketplaceList = ({ songList }: MarketplaceSongs) => {
   ));
 
   return (
-    <Container size="lg" py="sm">
-      <Title order={2} className={classes.title} ta="center" mt="sm">
-        Explore the Marketplace
-      </Title>
+    <>
+      <MarketplaceFilters />
+      <Container size="lg" py="sm">
+        <Title order={2} className={classes.title} ta="center" mt="sm">
+          Explore the Marketplace
+        </Title>
 
-      <Text c="dimmed" className={classes.description} ta="center" mt="md">
-        Explore and purchase licenses for a diverse selection of songs from
-        talented artists in our marketplace, all powered by the convenience and
-        security of cryptocurrencies.
-      </Text>
+        <Text c="dimmed" className={classes.description} ta="center" mt="md">
+          Explore and purchase licenses for a diverse selection of songs from
+          talented artists in our marketplace, all powered by the convenience
+          and security of cryptocurrencies.
+        </Text>
 
-      <SimpleGrid
-        cols={3}
-        spacing="xl"
-        mt={50}
-        breakpoints={[{ maxWidth: "md", cols: 1 }]}
-      >
-        {features}
-      </SimpleGrid>
-    </Container>
+        <MarketplaceFiltersAccordion />
+
+        <SimpleGrid
+          cols={3}
+          spacing="xl"
+          mt={50}
+          breakpoints={[{ maxWidth: "md", cols: 1 }]}
+        >
+          {features}
+        </SimpleGrid>
+      </Container>
+    </>
   );
 };
 
