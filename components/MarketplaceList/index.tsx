@@ -15,9 +15,9 @@ import {
 } from "@mantine/core";
 import { PigMoney, Stack } from "tabler-icons-react";
 import { MarketplaceDto } from "@/services/api/schemas";
-import { MantineLogo } from "@mantine/ds";
 import { MarketplaceFilters } from "@/components/MarketplaceFilters";
 import { MarketplaceFiltersAccordion } from "@/components/MarketplaceFiltersAccordion/Index";
+import { useState } from "react";
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -76,11 +76,15 @@ const useStyles = createStyles((theme) => ({
 //   songList: MarketplaceDto;
 // }
 
-export const MarketplaceList = (results: any) => {
+export const MarketplaceList = ({ results }: any) => {
   const { classes } = useStyles();
-  console.log("results", results.results);
+  const [currentResults, setCurrentResults] = useState<any[]>(results.results);
 
-  const features = results.results.results.map((song: any) => (
+  const updatingResults = (data: any) => {
+    setCurrentResults(data.results);
+  };
+
+  const features = currentResults.map((song: any) => (
     <Card
       key={song.title}
       shadow="md"
@@ -145,7 +149,7 @@ export const MarketplaceList = (results: any) => {
           and security of cryptocurrencies.
         </Text>
 
-        <MarketplaceFiltersAccordion />
+        <MarketplaceFiltersAccordion onUpdatedResults={updatingResults} />
 
         <SimpleGrid
           cols={3}
