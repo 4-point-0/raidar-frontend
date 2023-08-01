@@ -1,16 +1,15 @@
 import FormData from "form-data";
-import fetch from "isomorphic-fetch";
 import { getSession } from "next-auth/react";
+import { RaidarContext } from "./raidarContext";
 
-import { Context } from "./context";
-
-const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+const baseUrl =
+  "http://raidardev.eba-pgpaxsx2.eu-central-1.elasticbeanstalk.com"; // TODO add your baseUrl
 
 export type ErrorWrapper<TError> =
   | TError
   | { status: "unknown"; payload: string };
 
-export type FetcherOptions<TBody, THeaders, TQueryParams, TPathParams> = {
+export type RaidarFetcherOptions<TBody, THeaders, TQueryParams, TPathParams> = {
   url: string;
   method: string;
   body?: TBody;
@@ -18,15 +17,15 @@ export type FetcherOptions<TBody, THeaders, TQueryParams, TPathParams> = {
   queryParams?: TQueryParams;
   pathParams?: TPathParams;
   signal?: AbortSignal;
-} & Context["fetcherOptions"];
+} & RaidarContext["fetcherOptions"];
 
-export async function Fetch<
+export async function raidarFetch<
   TData,
   TError,
   TBody extends {} | FormData | undefined | null,
   THeaders extends {},
   TQueryParams extends {},
-  TPathParams extends {}
+  TPathParams extends {},
 >({
   url,
   method,
@@ -35,7 +34,12 @@ export async function Fetch<
   pathParams,
   queryParams,
   signal,
-}: FetcherOptions<TBody, THeaders, TQueryParams, TPathParams>): Promise<TData> {
+}: RaidarFetcherOptions<
+  TBody,
+  THeaders,
+  TQueryParams,
+  TPathParams
+>): Promise<TData> {
   try {
     const requestHeaders: HeadersInit = {
       "Content-Type": "application/json",
@@ -50,7 +54,7 @@ export async function Fetch<
         requestHeaders.hasOwnProperty("Authorization")
       )
     ) {
-      requestHeaders["authorization"] = session?.token
+      requestHeaders["Authorization"] = session?.token
         ? `Bearer ${session.token}`
         : "";
     }

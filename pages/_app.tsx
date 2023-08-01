@@ -10,6 +10,7 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { Notifications } from "@mantine/notifications";
 import { WalletSelectorContextProvider } from "@/context/WalletSelectorContext";
 import { UserContextProvider } from "../context/UserContext";
+import { PlayerContextProvider } from "@/context/PlayerContext";
 
 export default function App({
   Component,
@@ -36,14 +37,16 @@ export default function App({
         <QueryClientProvider client={queryClient}>
           {/* <WalletSelectorContextProvider> */}
           {/* <UserContextProvider> */}
-          <MantineProvider withGlobalStyles withNormalizeCSS>
-            <ModalsProvider>
-              <Notifications />
-              <AppLayout>
-                <Component {...pageProps} />
-              </AppLayout>
-            </ModalsProvider>
-          </MantineProvider>
+          <PlayerContextProvider>
+            <MantineProvider withGlobalStyles withNormalizeCSS>
+              <ModalsProvider>
+                <Notifications />
+                <AppLayout>
+                  <Component {...pageProps} />
+                </AppLayout>
+              </ModalsProvider>
+            </MantineProvider>
+          </PlayerContextProvider>
           {/* </UserContextProvider> */}
           {/* </WalletSelectorContextProvider> */}
         </QueryClientProvider>

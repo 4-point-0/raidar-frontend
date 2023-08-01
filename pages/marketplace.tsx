@@ -1,17 +1,15 @@
 import { MarketplaceList } from "@/components/MarketplaceList";
-import { useMarketplaceControllerFindAll } from "@/services/api/components";
+import { useMarketplaceControllerFindAll } from "@/services/api/raidar/raidarComponents";
 import { Loader } from "@mantine/core";
 
 export const Marketplace = () => {
   const { data: marketplaceData } = useMarketplaceControllerFindAll({});
 
-  console.log(marketplaceData);
-
   if (!marketplaceData) {
     return <Loader color="red" />;
   }
 
-  return <MarketplaceList results={marketplaceData} />;
+  return <MarketplaceList data={marketplaceData} />;
 };
 
 export default Marketplace;

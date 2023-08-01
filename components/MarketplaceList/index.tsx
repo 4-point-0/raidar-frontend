@@ -12,12 +12,16 @@ import {
   Group,
   Avatar,
   Box,
+  ActionIcon,
+  Overlay,
 } from "@mantine/core";
-import { PigMoney, Stack } from "tabler-icons-react";
-import { MarketplaceDto } from "@/services/api/schemas";
+import { PlayerPlay } from "tabler-icons-react";
 import { MarketplaceFilters } from "@/components/MarketplaceFilters";
 import { MarketplaceFiltersAccordion } from "@/components/MarketplaceFiltersAccordion/Index";
 import { useState } from "react";
+import { userPlayerContext } from "@/context/PlayerContext";
+import { MarketplaceControllerFindAllResponse } from "@/services/api/raidar/raidarComponents";
+import { SongDto } from "@/services/api/raidar/raidarSchemas";
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -72,36 +76,85 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-// interface MarketplaceSongs {
-//   songList: MarketplaceDto;
-// }
+interface MarketplaceListProps {
+  data: MarketplaceControllerFindAllResponse;
+}
 
-export const MarketplaceList = ({ results }: any) => {
+export const MarketplaceList = ({ data }: MarketplaceListProps) => {
   const { classes } = useStyles();
-  const [currentResults, setCurrentResults] = useState<any[]>(results.results);
+  const [currentResults, setCurrentResults] = useState<SongDto[]>(data.results);
+
+  const { setSong } = userPlayerContext();
 
   const updatingResults = (data: any) => {
     setCurrentResults(data.results);
   };
 
-  const features = currentResults.map((song: any) => (
-    <Card
+  const features = currentResults.map((song: SongDto) => (
+    <Box
       key={song.title}
-      shadow="md"
-      radius="md"
-      className={classes.card}
-      padding="xl"
+      mb="lg"
+      p="md"
+      sx={(theme) => ({
+        ":hover": {
+          cursor: "pointer",
+          backgroundColor: theme.colors.gray[1],
+          borderRadius: "8px",
+          transition: "all 0.2s ease-in-out",
+        },
+        ":hover .song-image": {
+          filter: "brightness(1.3)",
+          transition: "all 0.2s ease-in-out",
+        },
+        ":hover .play-overlay": {
+          display: "block",
+        },
+      })}
     >
       <Box mx="auto">
-        <img
-          src={song.art.url}
-          alt=""
-          style={{
-            width: "300px",
+        <Card
+          shadow="lg"
+          p="0"
+          sx={{
             height: "300px",
-            objectFit: "contain",
           }}
-        />
+        >
+          <Image
+            sx={{
+              position: "relative",
+            }}
+            className="song-image"
+            src={song.art.url}
+            alt={song.title}
+            fit="cover"
+            height={300}
+          />
+
+          <Overlay
+            sx={{ display: "none", zIndex: 1 }}
+            className="play-overlay"
+            opacity={0}
+          >
+            <Group position="center" sx={{ height: "100%" }}>
+              <ActionIcon
+                radius="xl"
+                sx={{
+                  width: "60px",
+                  height: "60px",
+                  backgroundColor: "rgba(255, 255, 255, 0.5)",
+                  ":hover": {
+                    backgroundColor: "rgba(255, 255, 255, 1)",
+                  },
+                  transition: "all 0.2s ease-in-out",
+                }}
+                variant="light"
+                onClick={() => setSong(song)}
+              >
+                <PlayerPlay size={40} strokeWidth={2} color={"black"} />
+              </ActionIcon>
+            </Group>
+          </Overlay>
+        </Card>
       </Box>
 
       <Text fz="lg" fw={600} className={classes.cardTitle} mt="md">
@@ -119,20 +172,18 @@ export const MarketplaceList = ({ results }: any) => {
           mt="md"
         />
         <Text fz="sm" mt="sm" fw={500}>
-          {song.album.pka}
+          {song.album?.pka}
         </Text>
       </Group>
       <Group>
         <Button mt="xl" color="red">
-          <PigMoney size={20} />
-          <Text ml="sm">Buy</Text>
+          <Group spacing="xs">
+            <Text>Buy for {song.last_listing?.price}</Text>{" "}
+            <Image width={14} src={"/images/near-logo-white.svg"} />
+          </Group>
         </Button>
-        <Text mt={25} ml="30%" fw={600}>
-          {song.last_listing.price}
-        </Text>
-        <Image width={15} mt={25} src={"/images/near-protocol-logo.png"} />
       </Group>
-    </Card>
+    </Box>
   ));
 
   return (
