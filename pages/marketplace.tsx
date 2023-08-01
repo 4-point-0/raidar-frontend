@@ -3,13 +3,15 @@ import { useMarketplaceControllerFindAll } from "@/services/api/components";
 import { Loader } from "@mantine/core";
 
 export const Marketplace = () => {
-  const { data: marketplaceSongList } = useMarketplaceControllerFindAll({});
+  const { data: marketplaceData } = useMarketplaceControllerFindAll({});
 
-  if (!marketplaceSongList) {
-    return <Loader />;
+  console.log(marketplaceData);
+
+  if (!marketplaceData) {
+    return <Loader color="red" />;
   }
 
-  return <MarketplaceList songList={marketplaceSongList} />;
+  return <MarketplaceList results={marketplaceData} />;
 };
 
 export default Marketplace;

@@ -118,7 +118,7 @@ export const MarketplaceList = ({ results }: any) => {
           radius={80}
           mt="md"
         />
-        <Text fz="sm" mt="sm">
+        <Text fz="sm" mt="sm" fw={500}>
           {song.album.pka}
         </Text>
       </Group>
