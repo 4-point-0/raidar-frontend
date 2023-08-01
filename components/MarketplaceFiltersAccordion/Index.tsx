@@ -9,6 +9,7 @@ import {
   RangeSlider,
   Title,
   Text,
+  Slider,
 } from "@mantine/core";
 import { useState } from "react";
 import { useMarketplaceControllerFindAll } from "../../services/api/components";
@@ -29,7 +30,8 @@ const useStyles = createStyles((theme) => ({
 export const MarketplaceFiltersAccordion = ({ onUpdatedResults }: any) => {
   const { classes } = useStyles();
   const session = useSession();
-  const [selectedFilters, setSelectedFilters] = useState({
+
+  const initialState = {
     title: "",
     artist: "",
     minLength: "",
@@ -37,11 +39,13 @@ export const MarketplaceFiltersAccordion = ({ onUpdatedResults }: any) => {
     genre: "",
     mood: "",
     tags: "",
-    minBpm: "",
-    maxBpm: "",
-    instrumental: null,
+    minBpm: 0,
+    maxBpm: 0,
+    instrumental: "",
     musicalKey: "",
-  });
+  };
+
+  const [selectedFilters, setSelectedFilters] = useState(initialState);
 
   const handleFilterButtonClick = () => {
     const filters = {
@@ -52,8 +56,8 @@ export const MarketplaceFiltersAccordion = ({ onUpdatedResults }: any) => {
       genre: selectedFilters.genre || "",
       mood: selectedFilters.mood || "",
       tags: selectedFilters.tags || "",
-      minBpm: selectedFilters.minBpm || "",
-      maxBpm: selectedFilters.maxBpm || "",
+      minBpm: selectedFilters.minBpm || 0,
+      maxBpm: selectedFilters.maxBpm || 0,
       instrumental: selectedFilters.instrumental || "",
       musical_key: selectedFilters.musicalKey || "",
     };
@@ -67,37 +71,24 @@ export const MarketplaceFiltersAccordion = ({ onUpdatedResults }: any) => {
 
     const filterQueryString = filterParams.join("&");
 
-    console.log(
-      `http://raidardev.eba-pgpaxsx2.eu-central-1.elasticbeanstalk.com/api/v1/marketplace/songs?${filterQueryString}`
-    );
-
-    // fetch(
-    //   `http://raidardev.eba-pgpaxsx2.eu-central-1.elasticbeanstalk.com/api/v1/marketplace/songs?${filterQueryString}`,
-    //   {
-    //     method: "GET",
-    //     headers: {
-    //       Authorization: `Bearer ${session.data?.token}`,
-    //       accept: "application/json",
-    //     },
-    //   }
-    // )
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     console.log("song", data);
-    //     onUpdatedResults(data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error fetching data:", error);
-    //   });
+    fetch(
+      `http://raidardev.eba-pgpaxsx2.eu-central-1.elasticbeanstalk.com/api/v1/marketplace/songs?${filterQueryString}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${session.data?.token}`,
+          accept: "application/json",
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        onUpdatedResults(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   };
-
-  // const { data: song } = useMarketplaceControllerFindAll({
-  //   queryParams: {
-  //     title: "Sunset Melodies" as string,
-  //   },
-  // });
-
-  console.log(selectedFilters.title);
 
   return (
     <Accordion>
@@ -152,9 +143,16 @@ export const MarketplaceFiltersAccordion = ({ onUpdatedResults }: any) => {
                 radius="sm"
                 placeholder="Instrumental"
                 data={[
-                  { value: true, label: "Yes" },
-                  { value: false, label: "No" },
+                  { value: "true", label: "Yes" },
+                  { value: "false", label: "No" },
                 ]}
+                value={selectedFilters.instrumental}
+                onChange={(event) => {
+                  setSelectedFilters({
+                    ...selectedFilters,
+                    instrumental: event || "",
+                  });
+                }}
               />
             </Grid.Col>
             <Grid.Col span={4}>
@@ -185,47 +183,45 @@ export const MarketplaceFiltersAccordion = ({ onUpdatedResults }: any) => {
             </Grid.Col>
             <Grid.Col span={4}>
               <Select
+                placeholder="Select musical key"
                 radius="sm"
-                placeholder="Musical Key"
                 data={musicalKeys}
                 value={selectedFilters.musicalKey}
                 onChange={(event) => {
                   setSelectedFilters({
                     ...selectedFilters,
-                    musicalKey: event?.data.value,
+                    musicalKey: event || "",
                   });
                 }}
               />
             </Grid.Col>
-            {/* <Grid.Col span={4}>
-              {" "}
-              <Select
-                placeholder="Select song title"
-                radius="sm"
-                data={[{ value: "Sunset Melodies", label: "Sunset Melodies" }]}
-                value={selectedFilters.title}
-                onChange={(value) =>
-                  setSelectedFilters({ ...selectedFilters, title: value })
-                }
-              />
-            </Grid.Col> */}
           </Grid>
           <Grid mt="sm">
             <Grid.Col span={6}>
               <Text>BPM</Text>
-              <RangeSlider
-                color="red"
-                defaultValue={[20, 80]}
-                marks={[
-                  { value: 20, label: "20%" },
-                  { value: 50, label: "50%" },
-                  { value: 80, label: "80%" },
-                ]}
+              <Slider
+                thumbSize={16}
+                defaultValue={20}
+                max={200}
+                value={selectedFilters.maxBpm}
+                onChange={(event) => {
+                  setSelectedFilters({
+                    ...selectedFilters,
+                    maxBpm: event,
+                  });
+                }}
               />
             </Grid.Col>
           </Grid>
           <Button color="red" mt="xl" onClick={() => handleFilterButtonClick()}>
             Apply Filters
+          </Button>
+          <Button
+            ml="5px"
+            color="dark"
+            onClick={() => setSelectedFilters(initialState)}
+          >
+            Reset Filters
           </Button>
         </Accordion.Panel>
       </Accordion.Item>

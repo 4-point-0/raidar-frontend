@@ -1,7 +1,7 @@
 import SongDetails from "@/components/SongDetails";
 import { useRouter } from "next/router";
-import { useSongControllerFindOne } from "@/services/api/artist/artistComponents";
 import { Loader } from "@mantine/core";
+import { useSongControllerFindOne } from "../../../services/api/raidar/raidarComponents";
 
 export const Song = () => {
   const router = useRouter();

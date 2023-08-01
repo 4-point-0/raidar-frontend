@@ -188,7 +188,6 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
 
   return (
     <>
-      <MarketplaceFilters />
       <Container size="lg" py="sm">
         <Title order={2} className={classes.title} ta="center" mt="sm">
           Explore the Marketplace
@@ -200,7 +199,9 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
           and security of cryptocurrencies.
         </Text>
 
-        <MarketplaceFiltersAccordion onUpdatedResults={updatingResults} />
+        <MarketplaceFilters onUpdatedResults={updatingResults} />
+
+        {/* <MarketplaceFiltersAccordion onUpdatedResults={updatingResults} /> */}
 
         <SimpleGrid
           cols={3}

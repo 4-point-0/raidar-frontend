@@ -10,11 +10,13 @@ import {
   ScrollArea,
   rem,
   Image,
+  Input,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Logout } from "tabler-icons-react";
+import { useState } from "react";
+import { Logout, Search } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -114,6 +116,8 @@ const useStyles = createStyles((theme) => ({
 export const ArtistHeader = () => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
+  // const [searchFocused, setSearchFocused] = useState(false);
+
   const { classes, theme } = useStyles();
   const router = useRouter();
   const pathname = router.pathname;
@@ -163,6 +167,17 @@ export const ArtistHeader = () => {
           </Group>
 
           <Group className={classes.hiddenMobile}>
+            {/* <Input
+              icon={<Search size={15} />}
+              placeholder="Search powered by Algoila"
+              className={classes.search}
+              onFocus={() => setSearchFocused(true)}
+              onBlur={() => setSearchFocused(false)}
+              style={{
+                borderColor: searchFocused ? "red" : undefined,
+                width: searchFocused ? "50%" : "20%",
+              }}
+            /> */}
             <Button
               color="red"
               leftIcon={<Logout size={14} />}

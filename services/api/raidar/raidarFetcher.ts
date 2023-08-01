@@ -65,11 +65,7 @@ export async function raidarFetch<
      * the correct boundary.
      * https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects#sending_files_using_a_formdata_object
      */
-    if (
-      requestHeaders["Content-Type"]
-        .toLowerCase()
-        .includes("multipart/form-data")
-    ) {
+    if (requestHeaders["Content-Type"].toLowerCase().includes(" ")) {
       delete requestHeaders["Content-Type"];
     }
 

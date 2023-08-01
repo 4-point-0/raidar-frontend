@@ -17,7 +17,7 @@ import { TbUserShare, TbLanguage } from "react-icons/tb";
 import SongAttributes from "./SongAttributes";
 import formatDuration from "@/utils/formatDuration";
 import { formatDate } from "@/utils/formatDate";
-import { SongDto } from "@/services/api/artist/artistSchemas";
+import { Song, SongDto } from "../../services/api/schemas";
 
 const useStyles = createStyles((theme) => ({
   inner: {
@@ -79,7 +79,7 @@ interface SongDetailsProps {
   song: SongDto;
 }
 
-export const SongDetails = ({ song }: SongDetailsProps) => {
+export const SongDetails = ({ song }: any) => {
   const { classes } = useStyles();
 
   const songAttributes = [

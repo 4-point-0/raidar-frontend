@@ -1,171 +1,286 @@
+import { useDisclosure } from "@mantine/hooks";
+import { Drawer, Group, Button, Input, Select, Slider } from "@mantine/core";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
-import {
-  createStyles,
-  Navbar,
-  Group,
-  Code,
-  getStylesRef,
-  rem,
-  Title,
-  Button,
-} from "@mantine/core";
-import {
-  IconBellRinging,
-  IconFingerprint,
-  IconKey,
-  IconSettings,
-  Icon2fa,
-  IconDatabaseImport,
-  IconReceipt2,
-  IconSwitchHorizontal,
-  IconLogout,
-} from "@tabler/icons-react";
-import { ArrowBarRight, ArrowBarLeft } from "tabler-icons-react";
-import { MantineLogo } from "@mantine/ds";
+import { musicalKeys } from "@/datasets/filters/musical-keys";
 
-const useStyles = createStyles((theme) => ({
-  navbar: {
-    backgroundColor: "white",
-  },
+export const MarketplaceFilters = ({ onUpdatedResults }: any) => {
+  const [opened, { open, close }] = useDisclosure(false);
+  const session = useSession();
 
-  button: {
-    backgroundColor: "#fa5252",
-    "&:hover": {
-      backgroundColor: theme.fn.lighten(
-        theme.fn.variant({ variant: "filled", color: "dark" }).background!,
-        0.1
-      ),
-    },
-  },
-
-  header: {
-    paddingBottom: theme.spacing.md,
-    marginBottom: `calc(${theme.spacing.md} * 1.5)`,
-    borderBottom: `${rem(1)} solid ${theme.fn.lighten(
-      theme.fn.variant({ variant: "filled", color: "red" }).background!,
-      0.1
-    )}`,
-  },
-
-  footer: {
-    paddingTop: theme.spacing.md,
-    marginTop: theme.spacing.md,
-    borderTop: `${rem(1)} solid ${theme.fn.lighten(
-      theme.fn.variant({ variant: "filled", color: theme.primaryColor })
-        .background!,
-      0.1
-    )}`,
-  },
-
-  link: {
-    ...theme.fn.focusStyles(),
-    display: "flex",
-    alignItems: "center",
-    textDecoration: "none",
-    fontSize: theme.fontSizes.sm,
-    color: "dark",
-    padding: `${theme.spacing.xs} ${theme.spacing.sm}`,
-    borderRadius: theme.radius.sm,
-    fontWeight: 500,
-
-    "&:hover": {
-      backgroundColor: theme.fn.lighten(
-        theme.fn.variant({ variant: "filled", color: theme.primaryColor })
-          .background!,
-        0.1
-      ),
-    },
-  },
-
-  linkIcon: {
-    ref: getStylesRef("icon"),
-    color: theme.white,
-    opacity: 0.75,
-    marginRight: theme.spacing.sm,
-  },
-
-  linkActive: {
-    "&, &:hover": {
-      backgroundColor: theme.fn.lighten(
-        theme.fn.variant({ variant: "filled", color: theme.primaryColor })
-          .background!,
-        0.15
-      ),
-      [`& .${getStylesRef("icon")}`]: {
-        opacity: 0.9,
-      },
-    },
-  },
-  title: {
-    color: "dark",
-  },
-}));
-
-const data = [
-  { link: "", label: "Genre", icon: IconBellRinging },
-  { link: "", label: "Artist", icon: IconReceipt2 },
-  { link: "", label: "Min. length", icon: IconFingerprint },
-  { link: "", label: "Max. Length", icon: IconKey },
-  { link: "", label: "Genre", icon: IconDatabaseImport },
-  { link: "", label: "Mood", icon: Icon2fa },
-  { link: "", label: "Min. Bpm", icon: IconSettings },
-  { link: "", label: "Max. Bpm", icon: IconSettings },
-  { link: "", label: "Instrumental", icon: IconSettings },
-  { link: "", label: "Musical key", icon: IconSettings },
-];
-
-export const MarketplaceFilters = () => {
-  const [navbarOpen, setNavbarOpen] = useState(false); // Add a new state variable for the Navbar open/close state
-
-  const handleNavbarToggle = () => {
-    setNavbarOpen(!navbarOpen); // Toggle the Navbar open/close state when the button is clicked
+  const initialState = {
+    title: "",
+    artist: "",
+    minLength: "",
+    maxLength: "",
+    genre: "",
+    mood: "",
+    tags: "",
+    minBpm: 0,
+    maxBpm: 0,
+    instrumental: "",
+    musicalKey: "",
   };
 
-  const { classes, cx } = useStyles();
-  const [active, setActive] = useState("Billing");
+  const [selectedFilters, setSelectedFilters] = useState(initialState);
 
-  const links = data.map((item) => (
-    <a
-      className={cx(classes.link, {
-        [classes.linkActive]: item.label === active,
-      })}
-      href={item.link}
-      key={item.label}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(item.label);
-      }}
-    >
-      <item.icon className={classes.linkIcon} stroke={1.5} />
-      <span>{item.label}</span>
-    </a>
-  ));
+  const handleFilterButtonClick = () => {
+    const filters = {
+      title: selectedFilters.title || "",
+      artist: selectedFilters.artist || "",
+      minLength: selectedFilters.minLength || null,
+      maxLength: selectedFilters.maxLength || null,
+      genre: selectedFilters.genre || "",
+      mood: selectedFilters.mood || "",
+      tags: selectedFilters.tags || "",
+      minBpm: selectedFilters.minBpm || 0,
+      maxBpm: selectedFilters.maxBpm || 0,
+      instrumental: selectedFilters.instrumental || "",
+      musical_key: selectedFilters.musicalKey || "",
+    };
+
+    const filterParams: string[] = [];
+    for (const key in filters) {
+      if (filters[key]) {
+        filterParams.push(`${key}=${encodeURIComponent(filters[key])}`);
+      }
+    }
+
+    const filterQueryString = filterParams.join("&");
+
+    fetch(
+      `http://raidardev.eba-pgpaxsx2.eu-central-1.elasticbeanstalk.com/api/v1/marketplace/songs?${filterQueryString}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${session.data?.token}`,
+          accept: "application/json",
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        onUpdatedResults(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+  const toggleDrawer = () => {
+    //TODO: Fix closing the drawer
+    return close;
+  };
 
   return (
-    <Navbar
-      height="100%"
-      width={{ sm: navbarOpen ? 300 : 100 }} // Set the width based on whether the Navbar is open or closed
-      p="md"
-      className={classes.navbar}
-    >
-      <Navbar.Section grow>
-        <Group className={classes.header} position="apart">
-          <Title order={4} className={classes.title}>
-            Filters
-          </Title>
-          <Button className={classes.button} onClick={handleNavbarToggle}>
-            {/* Display different icons based on whether the Navbar is open or closed */}
-            {navbarOpen
-              ? //   <ArrowBarLeft color="white" />
-                "Close"
-              : //   <ArrowBarRight color="white" />
-                "Open"}
+    <>
+      <Drawer
+        opened={opened}
+        onClose={toggleDrawer()}
+        title="Filter Songs"
+        overlayProps={{ opacity: 0.5, blur: 4 }}
+      >
+        <Input.Wrapper
+          mt="sm"
+          label="Song Title"
+          required
+          maw={320}
+          mx="auto"
+          withAsterisk={false}
+        >
+          <Input
+            radius="sm"
+            value={selectedFilters.title}
+            onChange={(event) =>
+              setSelectedFilters({
+                ...selectedFilters,
+                title: event.target.value,
+              })
+            }
+          />
+        </Input.Wrapper>
+
+        <Input.Wrapper
+          mt="sm"
+          label="Song Artist"
+          required
+          maw={320}
+          mx="auto"
+          withAsterisk={false}
+        >
+          <Input
+            radius="sm"
+            value={selectedFilters.artist}
+            onChange={(event) => {
+              setSelectedFilters({
+                ...selectedFilters,
+                artist: event.target.value,
+              });
+            }}
+          />
+        </Input.Wrapper>
+
+        <Input.Wrapper
+          mt="sm"
+          label="Song Genre"
+          required
+          maw={320}
+          mx="auto"
+          withAsterisk={false}
+        >
+          <Input
+            radius="sm"
+            value={selectedFilters.genre}
+            onChange={(event) => {
+              setSelectedFilters({
+                ...selectedFilters,
+                genre: event?.target.value,
+              });
+            }}
+          />
+        </Input.Wrapper>
+
+        <Input.Wrapper
+          mt="sm"
+          label="Instrumental"
+          required
+          maw={320}
+          mx="auto"
+          withAsterisk={false}
+        >
+          <Select
+            radius="sm"
+            data={[
+              { value: "true", label: "Yes" },
+              { value: "false", label: "No" },
+            ]}
+            value={selectedFilters.instrumental}
+            onChange={(event) => {
+              setSelectedFilters({
+                ...selectedFilters,
+                instrumental: event || "",
+              });
+            }}
+          />
+        </Input.Wrapper>
+
+        <Input.Wrapper
+          mt="sm"
+          label="Mood"
+          required
+          maw={320}
+          mx="auto"
+          withAsterisk={false}
+        >
+          <Input
+            radius="sm"
+            value={selectedFilters.mood}
+            onChange={(event) => {
+              setSelectedFilters({
+                ...selectedFilters,
+                mood: event.target.value,
+              });
+            }}
+          />
+        </Input.Wrapper>
+
+        <Input.Wrapper
+          mt="sm"
+          label="Tags"
+          required
+          maw={320}
+          mx="auto"
+          withAsterisk={false}
+        >
+          <Input
+            radius="sm"
+            value={selectedFilters.tags}
+            onChange={(event) => {
+              setSelectedFilters({
+                ...selectedFilters,
+                tags: event.target.value,
+              });
+            }}
+          />
+        </Input.Wrapper>
+
+        <Input.Wrapper
+          mt="sm"
+          label="Musical Key"
+          required
+          maw={320}
+          mx="auto"
+          withAsterisk={false}
+        >
+          <Select
+            radius="sm"
+            data={musicalKeys}
+            value={selectedFilters.musicalKey}
+            onChange={(event) => {
+              setSelectedFilters({
+                ...selectedFilters,
+                musicalKey: event || "",
+              });
+            }}
+          />
+        </Input.Wrapper>
+
+        <Input.Wrapper
+          mt="md"
+          label="BPM"
+          required
+          maw={320}
+          mx="auto"
+          withAsterisk={false}
+        >
+          <Slider
+            mt="sm"
+            thumbSize={16}
+            defaultValue={20}
+            max={200}
+            value={selectedFilters.maxBpm}
+            color="red"
+            onChange={(event) => {
+              setSelectedFilters({
+                ...selectedFilters,
+                maxBpm: event,
+              });
+            }}
+          />
+        </Input.Wrapper>
+
+        <Input.Wrapper
+          mt="sm"
+          required
+          maw={320}
+          mx="auto"
+          withAsterisk={false}
+        >
+          <Button
+            color="red"
+            mt="xl"
+            onClick={() =>
+              // handleFilterButtonClick()
+              toggleDrawer()
+            }
+          >
+            Apply Filters
           </Button>
-        </Group>
-        {navbarOpen && links} {/* Render links only when the Navbar is open */}
-      </Navbar.Section>
-    </Navbar>
+          <Button
+            ml="5px"
+            color="dark"
+            onClick={() => setSelectedFilters(initialState)}
+          >
+            Reset Filters
+          </Button>
+        </Input.Wrapper>
+      </Drawer>
+
+      <Group position="center">
+        <Button mt={20} color="red" onClick={open}>
+          Filter the songs
+        </Button>
+      </Group>
+    </>
   );
 };
-
-export default MarketplaceFilters;
