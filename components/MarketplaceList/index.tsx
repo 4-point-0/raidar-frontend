@@ -17,7 +17,6 @@ import {
 } from "@mantine/core";
 import { PlayerPlay } from "tabler-icons-react";
 import { MarketplaceFilters } from "@/components/MarketplaceFilters";
-import { MarketplaceFiltersAccordion } from "@/components/MarketplaceFiltersAccordion/Index";
 import { useState } from "react";
 import { userPlayerContext } from "@/context/PlayerContext";
 import { MarketplaceControllerFindAllResponse } from "@/services/api/raidar/raidarComponents";
@@ -200,8 +199,6 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
         </Text>
 
         <MarketplaceFilters onUpdatedResults={updatingResults} />
-
-        {/* <MarketplaceFiltersAccordion onUpdatedResults={updatingResults} /> */}
 
         <SimpleGrid
           cols={3}
