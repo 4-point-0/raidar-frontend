@@ -1,6 +1,6 @@
+import { fetchUserControllerFindMe } from "@/services/api/raidar/raidarComponents";
+import { UserDto } from "@/services/api/raidar/raidarSchemas";
 import React, { useContext, useEffect, useState } from "react";
-import { fetchControllerFindMe } from "@/services/api/components";
-import { UserDto } from "@/services/api/schemas";
 
 interface UserContextValue {
   user: UserDto | null;
@@ -14,30 +14,30 @@ const UserContext = React.createContext<UserContextValue | null>(null);
 export const UserContextProvider = ({ children }: any) => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<UserDto | null>(null);
-  const [roles, setRoles] = useState<string[]>([]);
+  const [roles, setRoles] = useState<"user" | "artist" | null>(null);
 
   const getUser = async () => {
     try {
-      const userData = await fetchControllerFindMe({});
+      const userData = await fetchUserControllerFindMe({});
       localStorage.setItem("user", JSON.stringify(userData));
       setRoles(userData.roles);
       setUser(userData);
     } catch {
       setUser(null);
-      setRoles([]);
+      setRoles(null);
     }
   };
 
   useEffect(() => {
     const getUser = async () => {
       try {
-        const userData = await fetchControllerFindMe({});
+        const userData = await fetchUserControllerFindMe({});
         localStorage.setItem("user", JSON.stringify(userData));
         setRoles(userData.roles);
         setUser(userData);
       } catch {
         setUser(null);
-        setRoles([]);
+        setRoles(null);
       }
     };
 
@@ -45,7 +45,7 @@ export const UserContextProvider = ({ children }: any) => {
       getUser();
     } else {
       setUser(null);
-      setRoles([]);
+      setRoles(null);
     }
   }, [token]);
 
@@ -78,7 +78,7 @@ export const UserContextProvider = ({ children }: any) => {
           localStorage.removeItem("user");
           setToken(null);
           setUser(null);
-          setRoles([]);
+          setRoles(null);
         },
         getUser,
       }}

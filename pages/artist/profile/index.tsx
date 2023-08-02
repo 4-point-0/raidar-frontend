@@ -28,7 +28,7 @@ import { useSession } from "next-auth/react";
 
 const useStyles = createStyles((theme) => ({
   card: {
-    backgroundColor: "#F8F8FF",
+    backgroundColor: theme.colors.red[5],
     width: "50%",
     margin: "auto",
   },

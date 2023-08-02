@@ -39,7 +39,7 @@ const useStyles = createStyles((theme) => ({
     "&::after": {
       content: '""',
       display: "block",
-      backgroundColor: "red",
+      backgroundColor: theme.colors.red[5],
       width: rem(45),
       height: rem(2),
       marginTop: theme.spacing.sm,
@@ -58,7 +58,7 @@ const useStyles = createStyles((theme) => ({
     "&::after": {
       content: '""',
       display: "block",
-      backgroundColor: "red",
+      backgroundColor: theme.colors.red[5],
       width: rem(45),
       height: rem(2),
       marginTop: theme.spacing.sm,

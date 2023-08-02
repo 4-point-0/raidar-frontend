@@ -1,3 +1,4 @@
+import ThemeTogglerButton from "@/components/ThemeTogglerButton";
 import {
   createStyles,
   Header,
@@ -11,8 +12,11 @@ import {
   rem,
   Image,
   Input,
+  useMantineColorScheme,
+  ActionIcon,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { IconMoonStars, IconSun } from "@tabler/icons-react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -178,6 +182,8 @@ export const ArtistHeader = () => {
                 width: searchFocused ? "50%" : "20%",
               }}
             /> */}
+            <ThemeTogglerButton />
+
             <Button
               color="red"
               leftIcon={<Logout size={14} />}
