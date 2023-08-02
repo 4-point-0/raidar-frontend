@@ -3,6 +3,7 @@ import { Drawer, Group, Button, Input, Select, Slider } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { musicalKeys } from "@/datasets/filters/musical-keys";
+import { intrumentalKeys } from "@/datasets/filters/intrumental-keys";
 
 interface FiltersProps {
   title: string;
@@ -87,7 +88,7 @@ export const MarketplaceFilters = ({ onUpdatedResults }: any) => {
       >
         <Input.Wrapper
           mt="sm"
-          label="Song Title"
+          label="Title"
           required
           maw={320}
           mx="auto"
@@ -107,7 +108,7 @@ export const MarketplaceFilters = ({ onUpdatedResults }: any) => {
 
         <Input.Wrapper
           mt="sm"
-          label="Song Artist"
+          label="Artist"
           required
           maw={320}
           mx="auto"
@@ -127,7 +128,7 @@ export const MarketplaceFilters = ({ onUpdatedResults }: any) => {
 
         <Input.Wrapper
           mt="sm"
-          label="Song Genre"
+          label="Genre"
           required
           maw={320}
           mx="auto"
@@ -155,10 +156,7 @@ export const MarketplaceFilters = ({ onUpdatedResults }: any) => {
         >
           <Select
             radius="sm"
-            data={[
-              { value: "true", label: "Yes" },
-              { value: "false", label: "No" },
-            ]}
+            data={intrumentalKeys}
             value={selectedFilters.instrumental}
             onChange={(event) => {
               setSelectedFilters({

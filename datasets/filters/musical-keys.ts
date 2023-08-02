@@ -1,4 +1,5 @@
 export const musicalKeys = [
+  { value: "", label: "All" },
   { value: "C Major", label: "C Major" },
   { value: "G Major", label: "G Major" },
   { value: "D Major", label: "D Major" },
