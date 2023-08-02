@@ -15,12 +15,10 @@ const ConnectAccount = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  console.log("selector", selector);
-
   useEffect(() => {
     if (accountId && !loading) {
       setIsLoading(true);
-      signMessage();
+      // signMessage();
     }
   }, [accountId]);
 

@@ -1,3 +1,4 @@
+import { AccountDetails } from "@/components/AccountDetails";
 import ThemeTogglerButton from "@/components/ThemeTogglerButton";
 import {
   createStyles,
@@ -182,6 +183,9 @@ export const ArtistHeader = () => {
                 width: searchFocused ? "50%" : "20%",
               }}
             /> */}
+
+            <AccountDetails />
+
             <ThemeTogglerButton />
 
             <Button

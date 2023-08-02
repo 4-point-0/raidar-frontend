@@ -130,9 +130,7 @@ export const MusicPlayer = () => {
         </Grid.Col>
         <Grid.Col span={3}>
           <Group position="right">
-            <ActionIcon variant="transparent" size="xl" onClick={closePlayer}>
-              <CloseButton size={30} />
-            </ActionIcon>
+            <CloseButton size={30} onClick={closePlayer}/>
           </Group>
         </Grid.Col>
       </Grid>

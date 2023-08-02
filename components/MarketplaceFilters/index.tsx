@@ -281,7 +281,7 @@ export const MarketplaceFilters = ({ onUpdatedResults }: any) => {
 
       <Group position="center">
         <Button mt={20} color="red" onClick={open}>
-          Filter the songs
+          Filter songs
         </Button>
       </Group>
     </>

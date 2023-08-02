@@ -18,6 +18,9 @@ import { PlayerContextProvider } from "@/context/PlayerContext";
 import { useColorScheme, useLocalStorage } from "@mantine/hooks";
 import { raidarTheme } from "@/styles/theme";
 
+import "@near-wallet-selector/modal-ui/styles.css";
+import { AccountProvider } from "@/context/AccountContext";
+
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
@@ -52,8 +55,9 @@ export default function App({
 
       <SessionProvider>
         <QueryClientProvider client={queryClient}>
-          {/* <WalletSelectorContextProvider> */}
-          {/* <UserContextProvider> */}
+          <WalletSelectorContextProvider>
+            <AccountProvider>
+          <UserContextProvider>
           <PlayerContextProvider>
             <ColorSchemeProvider
               colorScheme={colorScheme}
@@ -73,8 +77,9 @@ export default function App({
               </MantineProvider>
             </ColorSchemeProvider>
           </PlayerContextProvider>
-          {/* </UserContextProvider> */}
-          {/* </WalletSelectorContextProvider> */}
+          </UserContextProvider>
+          </AccountProvider>
+          </WalletSelectorContextProvider>
         </QueryClientProvider>
       </SessionProvider>
     </>

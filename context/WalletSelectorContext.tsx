@@ -28,6 +28,8 @@ import {
   NO_DEPOSIT,
   THIRTY_TGAS,
 } from "../utils/near";
+import { setupLedger } from "@near-wallet-selector/ledger";
+import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
 
 declare global {
   interface Window {
@@ -144,48 +146,39 @@ export const WalletSelectorContextProvider = ({ children }: any) => {
     setNearConnection(nearConnection);
 
     const _selector = await setupWalletSelector({
-      network: IS_TESTNET ? "testnet" : "mainnet",
-      debug: IS_TESTNET,
+      network: "testnet",
       modules: [
-        ...(await setupDefaultWallets()),
         setupNearWallet(),
-        setupSender(),
-        setupMathWallet(),
-        setupNightly(),
-        setupMeteorWallet(),
-        setupWalletConnect({
-          projectId: "test...",
-          metadata: {
-            name: "NEAR Wallet Selector",
-            description: "Example dApp used by NEAR Wallet Selector",
-            url: "https://github.com/near/wallet-selector",
-            icons: ["https://avatars.githubusercontent.com/u/37784886"],
-          },
-        }),
-        setupNightlyConnect({
-          url: "wss://relay.nightly.app/app",
-          appMetadata: {
-            additionalInfo: "",
-            application: "NEAR Wallet Selector",
-            description: "Example dApp used by NEAR Wallet Selector",
-            icon: "https://near.org/wp-content/uploads/2020/09/cropped-favicon-192x192.png",
-          },
-        }),
+    setupMyNearWallet(),
+    setupSender(),
+    setupMathWallet(),
+    setupNightly(),
+    setupMeteorWallet(),
+    setupLedger(),
+    setupNightlyConnect({
+      url: "wss://relay.nightly.app/app",
+      appMetadata: {
+        additionalInfo: "",
+        application: "NEAR Wallet Selector",
+        description: "Example dApp used by NEAR Wallet Selector",
+        icon: "https://near.org/wp-content/uploads/2020/09/cropped-favicon-192x192.png",
+      },
+    }),
       ],
     });
-    // const _modal = setupModal(_selector, {
-    //   contractId: RAIDAR_CONTRACT_ID as string,
-    //   // theme: "light", // doesn't work, need to open an issue on github
-    // });
+
+    const _modal = setupModal(_selector, {
+      contractId: "guest-book.testnet",
+    });
     const state = _selector.store.getState();
 
     setAccounts(state.accounts);
 
     window.selector = _selector;
-    // window.modal = _modal;
+    window.modal = _modal;
 
     setSelector(_selector);
-    // setModal(_modal);
+    setModal(_modal);
   }, []);
 
   useEffect(() => {

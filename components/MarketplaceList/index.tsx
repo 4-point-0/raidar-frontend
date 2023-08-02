@@ -21,6 +21,8 @@ import { useState } from "react";
 import { userPlayerContext } from "@/context/PlayerContext";
 import { MarketplaceControllerFindAllResponse } from "@/services/api/raidar/raidarComponents";
 import { SongDto } from "@/services/api/raidar/raidarSchemas";
+import ImageWithBlurredShadow from "../ImageBlurShadow";
+import Tilt from 'react-parallax-tilt';
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -97,8 +99,10 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
       sx={(theme) => ({
         ":hover": {
           cursor: "pointer",
-          backgroundColor: theme.colors.gray[1],
-          borderRadius: "8px",
+          backgroundColor: theme.colorScheme === "dark"
+              ? theme.colors.dark[6]
+              : theme.colors.gray[2],
+          borderRadius: theme.radius.md,
           transition: "all 0.2s ease-in-out",
         },
         ":hover .song-image": {
@@ -110,26 +114,18 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
         },
       })}
     >
-      <Box mx="auto">
-        <Card
-          shadow="lg"
-          p="0"
-          sx={{
-            height: "300px",
-          }}
-        >
-          <Image
-            sx={{
-              position: "relative",
-            }}
-            className="song-image"
+      <Tilt className="song-image" tiltMaxAngleX={10} tiltMaxAngleY={10} scale={1}>
+
+          <ImageWithBlurredShadow
             src={song.art.url}
             alt={song.title}
-            fit="cover"
             height={300}
+            blur={16}
+            shadowOffset={-16}
           />
 
           <Overlay
+          radius="md"
             sx={{ display: "none", zIndex: 1 }}
             className="play-overlay"
             opacity={0}
@@ -153,10 +149,9 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
               </ActionIcon>
             </Group>
           </Overlay>
-        </Card>
-      </Box>
+      </Tilt>
 
-      <Text fz="lg" fw={600} className={classes.cardTitle} mt="md">
+      <Text fz="lg" fw={600} className={classes.cardTitle} mt="xl">
         {song.title}
       </Text>
       <Text fz="sm" c="dimmed" mt="sm">

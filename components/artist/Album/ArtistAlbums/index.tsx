@@ -12,11 +12,15 @@ import {
   Card,
   Group,
   Paper,
+  Box,
+  useMantineTheme,
 } from "@mantine/core";
 import { Disc, Music, ClockPlay, Plus } from "tabler-icons-react";
 
 import Link from "next/link";
 import { useAlbumControllerFindAll } from "@/services/api/raidar/raidarComponents";
+import ImageWithBlurredShadow from "@/components/ImageBlurShadow";
+import { useRouter } from "next/router";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -74,7 +78,7 @@ const useStyles = createStyles((theme) => ({
     "&::after": {
       content: '""',
       display: "block",
-      backgroundColor: theme.fn.primaryColor(),
+      backgroundColor: theme.colors.red[5],
       width: rem(45),
       height: rem(2),
       marginTop: theme.spacing.sm,
@@ -109,19 +113,100 @@ const useStyles = createStyles((theme) => ({
 const ArtistAlbums = () => {
   const { classes } = useStyles();
   const { data: albums } = useAlbumControllerFindAll({});
+  const theme = useMantineTheme();
+  const router = useRouter();
+
+  const addNewAlbumItem = () => {
+    return (
+      <Group
+        onClick={() => {
+          router.push("/artist/album/create");
+        }}
+        mb="lg"
+        p="lg"
+        sx={(theme) => ({
+          ":hover": {
+            cursor: "pointer",
+            backgroundColor:
+              theme.colorScheme === "dark"
+                ? theme.colors.dark[6]
+                : theme.colors.gray[2],
+            borderRadius: theme.radius.md,
+            transition: "all 0.2s ease-in-out",
+          },
+        })}
+      >
+        <Box sx={{ position: "relative" }}>
+          <ImageWithBlurredShadow
+            src={
+              "https://images.unsplash.com/photo-1619983081593-e2ba5b543168?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bXVzaWMlMjByZWNvcmR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60"
+            }
+            alt={"Add new album"}
+            height={140}
+            width={140}
+            blur={16}
+            shadowOffset={-16}
+          />
+          <Box
+            sx={(theme) => ({
+              position: "absolute",
+              zIndex: 9999,
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor:
+                theme.colorScheme === "dark"
+                  ? theme.fn.rgba(theme.colors.dark[6], 0.8)
+                  : theme.fn.rgba(theme.colors.gray[2], 0.8),
+              height: 140,
+              width: 140,
+              borderRadius: theme.radius.md,
+            })}
+          >
+            <Plus size={60} />
+          </Box>
+        </Box>
+
+        <Box ml="md">
+          <Text fw={700} fz="lg" className={classes.itemTitle}>
+            Add new Album
+          </Text>
+        </Box>
+      </Group>
+    );
+  };
 
   const items = albums?.results.map((album: any, i: any) => (
-    <div className={classes.item} key={i}>
-      <ThemeIcon
-        variant="light"
-        className={classes.itemIcon}
-        size={140}
-        radius="md"
-      >
-        <Image src={album.cover.url} />
-      </ThemeIcon>
+    <Group
+      // className={classes.item}
+      key={i}
+      mb="lg"
+      p="lg"
+      sx={(theme) => ({
+        ":hover": {
+          backgroundColor:
+            theme.colorScheme === "dark"
+              ? theme.colors.dark[6]
+              : theme.colors.gray[2],
+          borderRadius: theme.radius.md,
+          transition: "all 0.2s ease-in-out",
+        },
+      })}
+    >
+      <ImageWithBlurredShadow
+        src={album.cover.url}
+        alt={album.title}
+        height={140}
+        width={140}
+        blur={16}
+        shadowOffset={-16}
+      />
 
-      <div>
+      <Box ml="md">
         <Text fw={700} fz="lg" className={classes.itemTitle}>
           {album.title}
         </Text>
@@ -131,64 +216,14 @@ const ArtistAlbums = () => {
         </Text>
 
         <Anchor href={`/artist/album/${album.id}`} color="red" fw={700}>
-          Songs
+          View Songs
         </Anchor>
-      </div>
-    </div>
+      </Box>
+    </Group>
   ));
 
   return (
-    <Container size={1000} className={classes.wrapper}>
-      {/* <Title className={classes.title} order={2} mb={50}>
-        My Albums
-      </Title> */}
-      {/* <Card withBorder radius="xl" p="xl" className={classes.descriptionCard}>
-        <Group>
-          <Paper className={classes.paper} shadow="md">
-            <Disc size={30} color="white" />
-            <Text
-              fz="lg"
-              tt="uppercase"
-              fw={700}
-              className={classes.descriptionStats}
-            >
-              Albums
-            </Text>
-            <Text fz="lg" fw={500} className={classes.descriptionStats}>
-              {albums?.results ? albums?.results.length : 0}
-            </Text>
-          </Paper>
-          <Paper className={classes.paper} shadow="md">
-            <Music size={30} color="white" />
-            <Text
-              fz="lg"
-              tt="uppercase"
-              fw={700}
-              className={classes.descriptionStats}
-            >
-              Songs
-            </Text>
-            <Text fz="lg" fw={500} className={classes.descriptionStats}>
-              20
-            </Text>
-          </Paper>
-          <Paper className={classes.paper} shadow="md">
-            <ClockPlay size={30} color="white" />
-            <Text
-              fz="lg"
-              tt="uppercase"
-              fw={700}
-              className={classes.descriptionStats}
-            >
-              MINUTES
-            </Text>
-            <Text fz="lg" fw={500} className={classes.descriptionStats}>
-              120
-            </Text>
-          </Paper>
-        </Group>
-      </Card> */}
-
+    <Container>
       <Title order={2} className={classes.title} ta="center" mt="sm">
         My Albums
       </Title>
@@ -197,22 +232,16 @@ const ArtistAlbums = () => {
         You have {albums?.results ? albums?.results.length : 0} published albums
       </Text>
 
-      <Button
-        component={Link}
-        href="/artist/album/create"
-        color="red"
-        mt={50}
-        leftIcon={<Plus size={20} />}
-      >
-        New Album
-      </Button>
-
       <SimpleGrid
-        cols={3}
-        spacing={60}
-        breakpoints={[{ maxWidth: 550, cols: 1, spacing: 40 }]}
-        style={{ marginTop: 30 }}
+        mt="xl"
+        cols={2}
+        spacing="lg"
+        breakpoints={[
+          { maxWidth: theme.breakpoints.sm, cols: 1, spacing: "md" },
+          { maxWidth: theme.breakpoints.md, cols: 2, spacing: "md" },
+        ]}
       >
+        {addNewAlbumItem()}
         {items}
       </SimpleGrid>
     </Container>
