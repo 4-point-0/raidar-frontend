@@ -4,6 +4,18 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { musicalKeys } from "@/datasets/filters/musical-keys";
 
+interface FiltersProps {
+  title: string;
+  artist: string;
+  genre: string;
+  mood: string;
+  tags: string;
+  minBpm: number;
+  maxBpm: number;
+  instrumental: string;
+  musical_key: string;
+}
+
 export const MarketplaceFilters = ({ onUpdatedResults }: any) => {
   const [opened, { open, close }] = useDisclosure(false);
   const session = useSession();
@@ -11,38 +23,36 @@ export const MarketplaceFilters = ({ onUpdatedResults }: any) => {
   const initialState = {
     title: "",
     artist: "",
-    minLength: "",
-    maxLength: "",
     genre: "",
     mood: "",
     tags: "",
     minBpm: 0,
     maxBpm: 0,
     instrumental: "",
-    musicalKey: "",
+    musical_key: "",
   };
 
   const [selectedFilters, setSelectedFilters] = useState(initialState);
 
   const handleFilterButtonClick = () => {
-    const filters = {
+    const filters: FiltersProps = {
       title: selectedFilters.title || "",
       artist: selectedFilters.artist || "",
-      minLength: selectedFilters.minLength || null,
-      maxLength: selectedFilters.maxLength || null,
       genre: selectedFilters.genre || "",
       mood: selectedFilters.mood || "",
       tags: selectedFilters.tags || "",
       minBpm: selectedFilters.minBpm || 0,
       maxBpm: selectedFilters.maxBpm || 0,
       instrumental: selectedFilters.instrumental || "",
-      musical_key: selectedFilters.musicalKey || "",
+      musical_key: selectedFilters.musical_key || "",
     };
 
     const filterParams: string[] = [];
     for (const key in filters) {
-      if (filters[key]) {
-        filterParams.push(`${key}=${encodeURIComponent(filters[key])}`);
+      if ((filters as any)[key]) {
+        filterParams.push(
+          `${key}=${encodeURIComponent((filters as any)[key])}`
+        );
       }
     }
 
@@ -67,16 +77,11 @@ export const MarketplaceFilters = ({ onUpdatedResults }: any) => {
       });
   };
 
-  const toggleDrawer = () => {
-    //TODO: Fix closing the drawer
-    return close;
-  };
-
   return (
     <>
       <Drawer
         opened={opened}
-        onClose={toggleDrawer()}
+        onClose={close}
         title="Filter Songs"
         overlayProps={{ opacity: 0.5, blur: 4 }}
       >
@@ -215,11 +220,11 @@ export const MarketplaceFilters = ({ onUpdatedResults }: any) => {
           <Select
             radius="sm"
             data={musicalKeys}
-            value={selectedFilters.musicalKey}
+            value={selectedFilters.musical_key}
             onChange={(event) => {
               setSelectedFilters({
                 ...selectedFilters,
-                musicalKey: event || "",
+                musical_key: event || "",
               });
             }}
           />
@@ -259,10 +264,10 @@ export const MarketplaceFilters = ({ onUpdatedResults }: any) => {
           <Button
             color="red"
             mt="xl"
-            onClick={() =>
-              // handleFilterButtonClick()
-              toggleDrawer()
-            }
+            onClick={() => {
+              handleFilterButtonClick();
+              close();
+            }}
           >
             Apply Filters
           </Button>
