@@ -15,8 +15,8 @@ import { Plus } from "tabler-icons-react";
 
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useAlbumControllerFindOne } from "@/services/api/artist/artistComponents";
 import formatDuration from "@/utils/formatDuration";
+import { useAlbumControllerFindOne } from "../../../../services/api/raidar/raidarComponents";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {

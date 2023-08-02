@@ -21,19 +21,12 @@ import { notifications } from "@/utils/notifications";
 import { useRouter } from "next/router";
 
 import { getEditFormValidateInput } from "@/utils/validations";
-import { CreateSongDto, FileDto } from "@/services/api/artist/artistSchemas";
 import {
   UploadedFileValue,
   CreateFormValues,
   FormProvider,
   SONG_IMAGE_TYPES,
 } from "@/components/artist/Song/SongForm/SongContext";
-import {
-  useAlbumControllerFindOne,
-  useFileControllerUpdateFile,
-  useFileControllerUploadFile,
-  useSongControllerCreate,
-} from "@/services/api/artist/artistComponents";
 
 import { useIsMutating } from "@tanstack/react-query";
 
@@ -42,10 +35,17 @@ import { getFileUrl } from "@/utils/file";
 import { Check } from "tabler-icons-react";
 import { useMemo, useState } from "react";
 import dayjs from "dayjs";
+import {
+  useAlbumControllerFindOne,
+  useFileControllerUpdateFile,
+  useFileControllerUploadFile,
+  useSongControllerCreateSong,
+} from "@/services/api/raidar/raidarComponents";
+import { FileDto } from "@/services/api/raidar/raidarSchemas";
 
 const useStyles = createStyles((theme) => ({
   card: {
-    backgroundColor: "#F8F8FF",
+    backgroundColor: theme.colors.red[5],
     width: "80%",
     margin: "auto",
   },
@@ -111,7 +111,7 @@ export const SongForm = (): any => {
     // validate: getEditFormValidateInput(),
   });
 
-  const createSong = useSongControllerCreate({
+  const createSong = useSongControllerCreateSong({
     onMutate: () => {
       notifications.create({ title: "Creating song" });
     },
@@ -141,14 +141,14 @@ export const SongForm = (): any => {
           pathParams: {
             id: previousResponse.id,
           },
-          body: { file, tags: ["image"] },
+          body: { file, tags: ["image"] } as any,
         });
       } else {
         response = await uploadFile.mutateAsync({
           body: {
             file,
             tags: ["image"],
-          },
+          } as any,
         });
       }
 
@@ -156,7 +156,7 @@ export const SongForm = (): any => {
         body: {
           file,
           tags: ["image"],
-        },
+        } as any,
       });
 
       form.setFieldValue("image", {
@@ -182,7 +182,7 @@ export const SongForm = (): any => {
           body: {
             file,
             tags: ["document"],
-          },
+          } as any,
         });
       })
     );
@@ -218,14 +218,14 @@ export const SongForm = (): any => {
           pathParams: {
             id: previousResponse.id,
           },
-          body: { file, tags: ["song"] },
+          body: { file, tags: ["song"] } as any,
         });
       } else {
         response = await uploadFile.mutateAsync({
           body: {
             file,
             tags: ["song"],
-          },
+          } as any,
         });
       }
 
@@ -233,7 +233,7 @@ export const SongForm = (): any => {
         body: {
           file,
           tags: ["song"],
-        },
+        } as any,
       });
 
       form.setFieldValue("song", {

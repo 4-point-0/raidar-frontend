@@ -17,24 +17,24 @@ import { notifications } from "@/utils/notifications";
 import { useRouter } from "next/router";
 
 import { getEditFormValidateInput } from "@/utils/validations";
-import { CreateAlbumDto, FileDto } from "@/services/api/artist/artistSchemas";
 import {
   UploadedFileValue,
   CreateFormValues,
   FormProvider,
   ALBUM_IMAGE_TYPES,
 } from "@/components/artist/Album/AlbumForm/AlbumContext";
-import {
-  useAlbumControllerCreate,
-  useFileControllerUpdateFile,
-  useFileControllerUploadFile,
-} from "@/services/api/artist/artistComponents";
 
 import { useIsMutating } from "@tanstack/react-query";
 
 import { getFileUrl } from "@/utils/file";
 
 import { Check } from "tabler-icons-react";
+import {
+  useAlbumControllerCreateAlbum,
+  useFileControllerUpdateFile,
+  useFileControllerUploadFile,
+} from "@/services/api/raidar/raidarComponents";
+import { FileDto } from "@/services/api/raidar/raidarSchemas";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -68,7 +68,7 @@ export const AlbumForm = (): any => {
     // validate: getEditFormValidateInput(),
   });
 
-  const createAlbum = useAlbumControllerCreate({
+  const createAlbum = useAlbumControllerCreateAlbum({
     onMutate: () => {
       notifications.create({ title: "Creating album" });
     },
@@ -99,14 +99,14 @@ export const AlbumForm = (): any => {
           pathParams: {
             id: previousResponse.id,
           },
-          body: { file, tags: ["image"] },
+          body: { file, tags: ["image"] } as any,
         });
       } else {
         response = await uploadFile.mutateAsync({
           body: {
             file,
             tags: ["image"],
-          },
+          } as any,
         });
       }
 
@@ -114,7 +114,7 @@ export const AlbumForm = (): any => {
         body: {
           file,
           tags: ["image"],
-        },
+        } as any,
       });
 
       form.setFieldValue("image", {
@@ -140,7 +140,7 @@ export const AlbumForm = (): any => {
           body: {
             file,
             tags: ["document"],
-          },
+          } as any,
         });
       })
     );
@@ -187,7 +187,7 @@ export const AlbumForm = (): any => {
         body: {
           title: title,
           pka: pka,
-          cover_id: image?.response?.id || null,
+          cover_id: image?.response?.id || "",
         },
       });
 

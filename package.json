@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "api:codegen:client": "npx openapi-codegen gen raidar"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -53,6 +54,13 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
+    "@openapi-codegen/cli": "^2.0.0",
+    "@openapi-codegen/typescript": "^6.1.0",
+    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
+    "@types/bn.js": "^5.1.1",
+    "@types/file-saver": "^2.0.5",
+    "@types/http-proxy": "^1.17.9",
+    "eslint-config-prettier": "^8.8.0",
     "@types/isomorphic-fetch": "^0.0.36",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.24",

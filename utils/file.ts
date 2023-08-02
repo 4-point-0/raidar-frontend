@@ -1,4 +1,4 @@
-import { FileDto } from "@/services/api/artist/artistSchemas";
+import { FileDto } from "@/services/api/raidar/raidarSchemas";
 
 export function getFileUrl(file?: FileDto) {
   if (!file) return;

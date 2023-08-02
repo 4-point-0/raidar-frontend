@@ -6,6 +6,7 @@ import {
   Title,
   Text,
   rem,
+  useMantineTheme,
 } from "@mantine/core";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { BsTags, BsCalendar2Date, BsGlobe } from "react-icons/bs";
@@ -17,7 +18,7 @@ import { TbUserShare, TbLanguage } from "react-icons/tb";
 import SongAttributes from "./SongAttributes";
 import formatDuration from "@/utils/formatDuration";
 import { formatDate } from "@/utils/formatDate";
-import { SongDto } from "@/services/api/artist/artistSchemas";
+import { SongDto } from "@/services/api/raidar/raidarSchemas";
 
 const useStyles = createStyles((theme) => ({
   inner: {
@@ -79,7 +80,7 @@ interface SongDetailsProps {
   song: SongDto;
 }
 
-export const SongDetails = ({ song }: SongDetailsProps) => {
+export const SongDetails = ({ song }: any) => {
   const { classes } = useStyles();
 
   const songAttributes = [
@@ -140,9 +141,13 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
     },
   ];
 
+  const theme = useMantineTheme();
+
   return (
     <div>
-      <Container sx={{ backgroundColor: "#F8F8FF", borderRadius: "20px" }}>
+      <Container
+        sx={{ backgroundColor: theme.colors.red[5], borderRadius: "20px" }}
+      >
         <div className={classes.inner}>
           <div className={classes.content}>
             <Title className={classes.title}>{song.title}</Title>

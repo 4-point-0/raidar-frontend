@@ -11,8 +11,16 @@ import {
   Grid,
   Group,
   Avatar,
+  Box,
+  ActionIcon,
+  Overlay,
 } from "@mantine/core";
-import { Box, PigMoney } from "tabler-icons-react";
+import { PlayerPlay } from "tabler-icons-react";
+import { MarketplaceFilters } from "@/components/MarketplaceFilters";
+import { useState } from "react";
+import { userPlayerContext } from "@/context/PlayerContext";
+import { MarketplaceControllerFindAllResponse } from "@/services/api/raidar/raidarComponents";
+import { SongDto } from "@/services/api/raidar/raidarSchemas";
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -31,7 +39,7 @@ const useStyles = createStyles((theme) => ({
     "&::after": {
       content: '""',
       display: "block",
-      backgroundColor: theme.fn.primaryColor(),
+      backgroundColor: theme.colors.red[5],
       width: rem(45),
       height: rem(2),
       marginTop: theme.spacing.sm,
@@ -50,42 +58,110 @@ const useStyles = createStyles((theme) => ({
     "&::after": {
       content: '""',
       display: "block",
-      backgroundColor: theme.fn.primaryColor(),
+      backgroundColor: theme.colors.red[5],
       width: rem(45),
       height: rem(2),
       marginTop: theme.spacing.sm,
     },
   },
+
+  item: {
+    marginTop: theme.spacing.lg,
+    borderRadius: theme.radius.md,
+    marginBottom: theme.spacing.lg,
+    border: `${rem(1)} solid ${
+      theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[3]
+    }`,
+  },
 }));
 
-interface Songs {
-  image?: string;
-  title?: React.ReactNode;
-  description?: React.ReactNode;
-  src?: string;
+interface MarketplaceListProps {
+  data: MarketplaceControllerFindAllResponse;
 }
 
-interface MarketplaceSongs {
-  songList: Songs[];
-}
-
-export const MarketplaceList = ({ songList }: MarketplaceSongs) => {
+export const MarketplaceList = ({ data }: MarketplaceListProps) => {
   const { classes } = useStyles();
+  const [currentResults, setCurrentResults] = useState<SongDto[]>(data.results);
 
-  const features = songList.map((song: any) => (
-    <Card
+  const { setSong } = userPlayerContext();
+
+  const updatingResults = (data: any) => {
+    setCurrentResults(data.results);
+  };
+
+  const features = currentResults.map((song: SongDto) => (
+    <Box
       key={song.title}
-      shadow="md"
-      radius="md"
-      className={classes.card}
-      padding="xl"
+      mb="lg"
+      p="md"
+      sx={(theme) => ({
+        ":hover": {
+          cursor: "pointer",
+          backgroundColor: theme.colors.gray[1],
+          borderRadius: "8px",
+          transition: "all 0.2s ease-in-out",
+        },
+        ":hover .song-image": {
+          filter: "brightness(1.3)",
+          transition: "all 0.2s ease-in-out",
+        },
+        ":hover .play-overlay": {
+          display: "block",
+        },
+      })}
     >
-      <Image src={song.src} mx={"auto"} />
-      <Text fz="lg" fw={500} className={classes.cardTitle} mt="md">
+      <Box mx="auto">
+        <Card
+          shadow="lg"
+          p="0"
+          sx={{
+            height: "300px",
+          }}
+        >
+          <Image
+            sx={{
+              position: "relative",
+            }}
+            className="song-image"
+            src={song.art.url}
+            alt={song.title}
+            fit="cover"
+            height={300}
+          />
+
+          <Overlay
+            sx={{ display: "none", zIndex: 1 }}
+            className="play-overlay"
+            opacity={0}
+          >
+            <Group position="center" sx={{ height: "100%" }}>
+              <ActionIcon
+                radius="xl"
+                sx={{
+                  width: "60px",
+                  height: "60px",
+                  backgroundColor: "rgba(255, 255, 255, 0.5)",
+                  ":hover": {
+                    backgroundColor: "rgba(255, 255, 255, 1)",
+                  },
+                  transition: "all 0.2s ease-in-out",
+                }}
+                variant="light"
+                onClick={() => setSong(song)}
+              >
+                <PlayerPlay size={40} strokeWidth={2} color={"black"} />
+              </ActionIcon>
+            </Group>
+          </Overlay>
+        </Card>
+      </Box>
+
+      <Text fz="lg" fw={600} className={classes.cardTitle} mt="md">
         {song.title}
       </Text>
       <Text fz="sm" c="dimmed" mt="sm">
-        {`${song.description.slice(0, 60)}...`}
+        <b>Genre</b>
+        {` ${song.genre}`}
       </Text>
       <Group>
         <Avatar
@@ -94,44 +170,46 @@ export const MarketplaceList = ({ songList }: MarketplaceSongs) => {
           radius={80}
           mt="md"
         />
-        <Text fz="sm" mt="sm">
-          {song.artist_name}
+        <Text fz="sm" mt="sm" fw={500}>
+          {song.album?.pka}
         </Text>
       </Group>
       <Group>
         <Button mt="xl" color="red">
-          <PigMoney size={20} />
-          <Text ml="sm">Buy</Text>
+          <Group spacing="xs">
+            <Text>Buy for {song.last_listing?.price}</Text>{" "}
+            <Image width={14} src={"/images/near-logo-white.svg"} />
+          </Group>
         </Button>
-        <Text mt={25} ml="30%" fw={600}>
-          {song.price}
-        </Text>
-        <Image width={15} mt={25} src={"/images/near-protocol-logo.png"} />
       </Group>
-    </Card>
+    </Box>
   ));
 
   return (
-    <Container size="lg" py="sm">
-      <Title order={2} className={classes.title} ta="center" mt="sm">
-        Explore the Marketplace
-      </Title>
+    <>
+      <Container size="lg" py="sm">
+        <Title order={2} className={classes.title} ta="center" mt="sm">
+          Explore the Marketplace
+        </Title>
 
-      <Text c="dimmed" className={classes.description} ta="center" mt="md">
-        Explore and purchase licenses for a diverse selection of songs from
-        talented artists in our marketplace, all powered by the convenience and
-        security of cryptocurrencies.
-      </Text>
+        <Text c="dimmed" className={classes.description} ta="center" mt="md">
+          Explore and purchase licenses for a diverse selection of songs from
+          talented artists in our marketplace, all powered by the convenience
+          and security of cryptocurrencies.
+        </Text>
 
-      <SimpleGrid
-        cols={3}
-        spacing="xl"
-        mt={50}
-        breakpoints={[{ maxWidth: "md", cols: 1 }]}
-      >
-        {features}
-      </SimpleGrid>
-    </Container>
+        <MarketplaceFilters onUpdatedResults={updatingResults} />
+
+        <SimpleGrid
+          cols={3}
+          spacing="xl"
+          mt={50}
+          breakpoints={[{ maxWidth: "md", cols: 1 }]}
+        >
+          {features}
+        </SimpleGrid>
+      </Container>
+    </>
   );
 };
 

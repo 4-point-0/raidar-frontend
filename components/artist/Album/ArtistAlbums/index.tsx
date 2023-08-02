@@ -16,7 +16,7 @@ import {
 import { Disc, Music, ClockPlay, Plus } from "tabler-icons-react";
 
 import Link from "next/link";
-import { useAlbumControllerFindAll } from "@/services/api/artist/artistComponents";
+import { useAlbumControllerFindAll } from "@/services/api/raidar/raidarComponents";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
