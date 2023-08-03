@@ -17,7 +17,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Logout } from "tabler-icons-react";
+import { Logout, Wallet } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -53,7 +53,7 @@ const useStyles = createStyles((theme) => ({
     paddingLeft: theme.spacing.md,
     paddingRight: theme.spacing.md,
     textDecoration: "none",
-    color: "red",
+    color: theme.colors.red[5],
     fontWeight: 500,
     fontSize: theme.fontSizes.sm,
 
@@ -111,6 +111,12 @@ const useStyles = createStyles((theme) => ({
     [theme.fn.largerThan("sm")]: {
       display: "none",
     },
+  },
+  button: {
+    backgroundColor: theme.colors.red[5],
+    ...theme.fn.hover({
+      backgroundColor: theme.colors.red[8],
+    }),
   },
 }));
 
@@ -170,7 +176,9 @@ export const ArtistHeader = () => {
             <ThemeTogglerButton />
             <Popover width="auto" position="bottom" withArrow shadow="md">
               <Popover.Target>
-                <Button color="red">NEAR Wallet</Button>
+                <Button className={classes.button} leftIcon={<Wallet />}>
+                  Wallet
+                </Button>
               </Popover.Target>
               <Popover.Dropdown>
                 <AccountDetails />
@@ -178,7 +186,7 @@ export const ArtistHeader = () => {
             </Popover>
 
             <Button
-              color="red"
+              className={classes.button}
               leftIcon={<Logout size={14} />}
               onClick={handleLogout}
             >
@@ -209,13 +217,28 @@ export const ArtistHeader = () => {
             color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
           />
 
-          <a href="/marketplace" className={classes.link}>
+          <a
+            href="/marketplace"
+            className={`${
+              pathname === "/marketplace" ? classes.activeLink : classes.link
+            }`}
+          >
             Marketplace
           </a>
-          <a href="/artist/albums" className={classes.link}>
+          <a
+            href="/artist/albums"
+            className={`${
+              pathname === "/artist/albums" ? classes.activeLink : classes.link
+            }`}
+          >
             My Collection
           </a>
-          <a href="/artist/profile" className={classes.link}>
+          <a
+            href="/artist/profile"
+            className={`${
+              pathname === "/artist/profile" ? classes.activeLink : classes.link
+            }`}
+          >
             My Profile
           </a>
 
@@ -225,7 +248,20 @@ export const ArtistHeader = () => {
           />
 
           <Group position="center" grow pb="xl" px="md">
+            <ThemeTogglerButton />
+            <Popover width="auto" position="bottom" withArrow shadow="md">
+              <Popover.Target>
+                <Button className={classes.button} leftIcon={<Wallet />}>
+                  Wallet
+                </Button>
+              </Popover.Target>
+              <Popover.Dropdown>
+                <AccountDetails />
+              </Popover.Dropdown>
+            </Popover>
+
             <Button
+              className={classes.button}
               leftIcon={<Logout size={14} />}
               color="red"
               onClick={handleLogout}
