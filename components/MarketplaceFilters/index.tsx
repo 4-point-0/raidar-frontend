@@ -1,5 +1,13 @@
 import { useDisclosure } from "@mantine/hooks";
-import { Drawer, Group, Button, Input, Select, Slider } from "@mantine/core";
+import {
+  Drawer,
+  Group,
+  Button,
+  Input,
+  Select,
+  Slider,
+  createStyles,
+} from "@mantine/core";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { musicalKeys } from "@/datasets/filters/musical-keys";
@@ -17,8 +25,18 @@ interface FiltersProps {
   musical_key: string;
 }
 
+const useStyles = createStyles((theme) => ({
+  button: {
+    backgroundColor: theme.colors.red[5],
+    ...theme.fn.hover({
+      backgroundColor: theme.colors.red[8],
+    }),
+  },
+}));
+
 export const MarketplaceFilters = ({ onUpdatedResults }: any) => {
   const [opened, { open, close }] = useDisclosure(false);
+  const { classes } = useStyles();
   const session = useSession();
 
   const initialState = {
@@ -280,7 +298,7 @@ export const MarketplaceFilters = ({ onUpdatedResults }: any) => {
       </Drawer>
 
       <Group position="center">
-        <Button mt={20} color="red" onClick={open}>
+        <Button mt={20} className={classes.button} onClick={open}>
           Filter songs
         </Button>
       </Group>
