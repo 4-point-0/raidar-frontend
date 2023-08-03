@@ -12,16 +12,12 @@ import {
   ScrollArea,
   rem,
   Image,
-  Input,
-  useMantineColorScheme,
-  ActionIcon,
+  Popover,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconMoonStars, IconSun } from "@tabler/icons-react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import { Logout, Search } from "tabler-icons-react";
+import { Logout } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -121,7 +117,6 @@ const useStyles = createStyles((theme) => ({
 export const ArtistHeader = () => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
-  // const [searchFocused, setSearchFocused] = useState(false);
 
   const { classes, theme } = useStyles();
   const router = useRouter();
@@ -172,21 +167,15 @@ export const ArtistHeader = () => {
           </Group>
 
           <Group className={classes.hiddenMobile}>
-            {/* <Input
-              icon={<Search size={15} />}
-              placeholder="Search powered by Algoila"
-              className={classes.search}
-              onFocus={() => setSearchFocused(true)}
-              onBlur={() => setSearchFocused(false)}
-              style={{
-                borderColor: searchFocused ? "red" : undefined,
-                width: searchFocused ? "50%" : "20%",
-              }}
-            /> */}
-
-            <AccountDetails />
-
             <ThemeTogglerButton />
+            <Popover width="auto" position="bottom" withArrow shadow="md">
+              <Popover.Target>
+                <Button color="red">NEAR Wallet</Button>
+              </Popover.Target>
+              <Popover.Dropdown>
+                <AccountDetails />
+              </Popover.Dropdown>
+            </Popover>
 
             <Button
               color="red"

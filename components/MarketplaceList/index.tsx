@@ -22,7 +22,7 @@ import { userPlayerContext } from "@/context/PlayerContext";
 import { MarketplaceControllerFindAllResponse } from "@/services/api/raidar/raidarComponents";
 import { SongDto } from "@/services/api/raidar/raidarSchemas";
 import ImageWithBlurredShadow from "../ImageBlurShadow";
-import Tilt from 'react-parallax-tilt';
+import Tilt from "react-parallax-tilt";
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -99,7 +99,8 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
       sx={(theme) => ({
         ":hover": {
           cursor: "pointer",
-          backgroundColor: theme.colorScheme === "dark"
+          backgroundColor:
+            theme.colorScheme === "dark"
               ? theme.colors.dark[6]
               : theme.colors.gray[2],
           borderRadius: theme.radius.md,
@@ -114,41 +115,45 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
         },
       })}
     >
-      <Tilt className="song-image" tiltMaxAngleX={10} tiltMaxAngleY={10} scale={1}>
+      <Tilt
+        className="song-image"
+        tiltMaxAngleX={10}
+        tiltMaxAngleY={10}
+        scale={1}
+      >
+        <ImageWithBlurredShadow
+          src={song.art.url}
+          alt={song.title}
+          height={300}
+          blur={16}
+          shadowOffset={-16}
+        />
 
-          <ImageWithBlurredShadow
-            src={song.art.url}
-            alt={song.title}
-            height={300}
-            blur={16}
-            shadowOffset={-16}
-          />
-
-          <Overlay
+        <Overlay
           radius="md"
-            sx={{ display: "none", zIndex: 1 }}
-            className="play-overlay"
-            opacity={0}
-          >
-            <Group position="center" sx={{ height: "100%" }}>
-              <ActionIcon
-                radius="xl"
-                sx={{
-                  width: "60px",
-                  height: "60px",
-                  backgroundColor: "rgba(255, 255, 255, 0.5)",
-                  ":hover": {
-                    backgroundColor: "rgba(255, 255, 255, 1)",
-                  },
-                  transition: "all 0.2s ease-in-out",
-                }}
-                variant="light"
-                onClick={() => setSong(song)}
-              >
-                <PlayerPlay size={40} strokeWidth={2} color={"black"} />
-              </ActionIcon>
-            </Group>
-          </Overlay>
+          sx={{ display: "none", zIndex: 1 }}
+          className="play-overlay"
+          opacity={0}
+        >
+          <Group position="center" sx={{ height: "100%" }}>
+            <ActionIcon
+              radius="xl"
+              sx={{
+                width: "60px",
+                height: "60px",
+                backgroundColor: "rgba(255, 255, 255, 0.5)",
+                ":hover": {
+                  backgroundColor: "rgba(255, 255, 255, 1)",
+                },
+                transition: "all 0.2s ease-in-out",
+              }}
+              variant="light"
+              onClick={() => setSong(song)}
+            >
+              <PlayerPlay size={40} strokeWidth={2} color={"black"} />
+            </ActionIcon>
+          </Group>
+        </Overlay>
       </Tilt>
 
       <Text fz="lg" fw={600} className={classes.cardTitle} mt="xl">
