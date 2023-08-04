@@ -34,6 +34,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
+//TODO: resolve any types
 export const MarketplaceFilters = ({ onUpdatedResults }: any) => {
   const [opened, { open, close }] = useDisclosure(false);
   const { classes } = useStyles();
