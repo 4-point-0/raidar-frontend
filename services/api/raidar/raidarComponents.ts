@@ -428,6 +428,76 @@ export const useSongControllerFindAllUserSongs = <
   );
 };
 
+export type AlbumControllerFindAllArtistAlbumsQueryParams = {
+  take?: number;
+  skip?: number;
+};
+
+export type AlbumControllerFindAllArtistAlbumsError =
+  Fetcher.ErrorWrapper<undefined>;
+
+export type AlbumControllerFindAllArtistAlbumsResponse = {
+  total: number;
+  take: number;
+  skip: number;
+  count: number;
+  results: Schemas.AlbumDto[];
+};
+
+export type AlbumControllerFindAllArtistAlbumsVariables = {
+  queryParams?: AlbumControllerFindAllArtistAlbumsQueryParams;
+} & RaidarContext["fetcherOptions"];
+
+export const fetchAlbumControllerFindAllArtistAlbums = (
+  variables: AlbumControllerFindAllArtistAlbumsVariables,
+  signal?: AbortSignal
+) =>
+  raidarFetch<
+    AlbumControllerFindAllArtistAlbumsResponse,
+    AlbumControllerFindAllArtistAlbumsError,
+    undefined,
+    {},
+    AlbumControllerFindAllArtistAlbumsQueryParams,
+    {}
+  >({ url: "/api/v1/album/me", method: "get", ...variables, signal });
+
+export const useAlbumControllerFindAllArtistAlbums = <
+  TData = AlbumControllerFindAllArtistAlbumsResponse
+>(
+  variables: AlbumControllerFindAllArtistAlbumsVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      AlbumControllerFindAllArtistAlbumsResponse,
+      AlbumControllerFindAllArtistAlbumsError,
+      TData
+    >,
+    "queryKey" | "queryFn"
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } =
+    useRaidarContext(options);
+  return reactQuery.useQuery<
+    AlbumControllerFindAllArtistAlbumsResponse,
+    AlbumControllerFindAllArtistAlbumsError,
+    TData
+  >(
+    queryKeyFn({
+      path: "/api/v1/album/me",
+      operationId: "albumControllerFindAllArtistAlbums",
+      variables,
+    }),
+    ({ signal }) =>
+      fetchAlbumControllerFindAllArtistAlbums(
+        { ...fetcherOptions, ...variables },
+        signal
+      ),
+    {
+      ...options,
+      ...queryOptions,
+    }
+  );
+};
+
 export type AlbumControllerCreateAlbumError = Fetcher.ErrorWrapper<undefined>;
 
 export type AlbumControllerCreateAlbumVariables = {
@@ -905,6 +975,11 @@ export type QueryOperation =
       path: "/api/v1/song/user/songs";
       operationId: "songControllerFindAllUserSongs";
       variables: SongControllerFindAllUserSongsVariables;
+    }
+  | {
+      path: "/api/v1/album/me";
+      operationId: "albumControllerFindAllArtistAlbums";
+      variables: AlbumControllerFindAllArtistAlbumsVariables;
     }
   | {
       path: "/api/v1/album";
