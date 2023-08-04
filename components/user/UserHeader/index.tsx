@@ -10,11 +10,14 @@ import {
   ScrollArea,
   rem,
   Image,
+  Popover,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Logout } from "tabler-icons-react";
+import { Logout, Wallet } from "tabler-icons-react";
+import ThemeTogglerButton from "@/components/ThemeTogglerButton";
+import { AccountDetails } from "@/components/AccountDetails";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -50,7 +53,7 @@ const useStyles = createStyles((theme) => ({
     paddingLeft: theme.spacing.md,
     paddingRight: theme.spacing.md,
     textDecoration: "none",
-    color: "red",
+    color: theme.colors.red[5],
     fontWeight: 500,
     fontSize: theme.fontSizes.sm,
 
@@ -69,35 +72,6 @@ const useStyles = createStyles((theme) => ({
     }),
   },
 
-  subLink: {
-    width: "100%",
-    padding: `${theme.spacing.xs} ${theme.spacing.md}`,
-    borderRadius: theme.radius.md,
-
-    ...theme.fn.hover({
-      backgroundColor:
-        theme.colorScheme === "dark"
-          ? theme.colors.dark[7]
-          : theme.colors.gray[0],
-    }),
-
-    "&:active": theme.activeStyles,
-  },
-
-  dropdownFooter: {
-    backgroundColor:
-      theme.colorScheme === "dark"
-        ? theme.colors.dark[7]
-        : theme.colors.gray[0],
-    margin: `calc(${theme.spacing.md} * -1)`,
-    marginTop: theme.spacing.sm,
-    padding: `${theme.spacing.md} calc(${theme.spacing.md} * 2)`,
-    paddingBottom: theme.spacing.xl,
-    borderTop: `${rem(1)} solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[1]
-    }`,
-  },
-
   hiddenMobile: {
     [theme.fn.smallerThan("sm")]: {
       display: "none",
@@ -108,6 +82,12 @@ const useStyles = createStyles((theme) => ({
     [theme.fn.largerThan("sm")]: {
       display: "none",
     },
+  },
+  button: {
+    backgroundColor: theme.colors.red[5],
+    ...theme.fn.hover({
+      backgroundColor: theme.colors.red[8],
+    }),
   },
 }));
 
@@ -141,21 +121,17 @@ export const UserHeader = () => {
               Marketplace
             </a>
             <a
-              href="/artist/albums"
+              href="/user/songs"
               className={`${
-                pathname === "/artist/albums"
-                  ? classes.activeLink
-                  : classes.link
+                pathname === "/user/albums" ? classes.activeLink : classes.link
               }`}
             >
-              My Albums
+              My Songs
             </a>
             <a
-              href="/artist/profile"
+              href="/user/profile"
               className={`${
-                pathname === "/artist/profile"
-                  ? classes.activeLink
-                  : classes.link
+                pathname === "/user/profile" ? classes.activeLink : classes.link
               }`}
             >
               Profile
@@ -163,6 +139,17 @@ export const UserHeader = () => {
           </Group>
 
           <Group className={classes.hiddenMobile}>
+            <ThemeTogglerButton />
+            <Popover width="auto" position="bottom" withArrow shadow="md">
+              <Popover.Target>
+                <Button className={classes.button} leftIcon={<Wallet />}>
+                  Wallet
+                </Button>
+              </Popover.Target>
+              <Popover.Dropdown>
+                <AccountDetails />
+              </Popover.Dropdown>
+            </Popover>
             <Button
               color="red"
               leftIcon={<Logout size={14} />}
@@ -195,13 +182,28 @@ export const UserHeader = () => {
             color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
           />
 
-          <a href="/marketplace" className={classes.link}>
+          <a
+            href="/marketplace"
+            className={`${
+              pathname === "/marketplace" ? classes.activeLink : classes.link
+            }`}
+          >
             Marketplace
           </a>
-          <a href="/artist/albums" className={classes.link}>
-            My Collection
+          <a
+            href="/user/songs"
+            className={`${
+              pathname === "/user/songs" ? classes.activeLink : classes.link
+            }`}
+          >
+            My Songs
           </a>
-          <a href="/artist/profile" className={classes.link}>
+          <a
+            href="/user/profile"
+            className={`${
+              pathname === "/user/profile" ? classes.activeLink : classes.link
+            }`}
+          >
             My Profile
           </a>
 
@@ -211,6 +213,17 @@ export const UserHeader = () => {
           />
 
           <Group position="center" grow pb="xl" px="md">
+            <ThemeTogglerButton />
+            <Popover width="auto" position="bottom" withArrow shadow="md">
+              <Popover.Target>
+                <Button className={classes.button} leftIcon={<Wallet />}>
+                  Wallet
+                </Button>
+              </Popover.Target>
+              <Popover.Dropdown>
+                <AccountDetails />
+              </Popover.Dropdown>
+            </Popover>
             <Button
               leftIcon={<Logout size={14} />}
               color="red"
