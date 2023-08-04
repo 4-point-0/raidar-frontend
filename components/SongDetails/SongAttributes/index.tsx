@@ -15,6 +15,9 @@ import { useDisclosure } from "@mantine/hooks";
 const useStyles = createStyles((theme) => ({
   button: {
     backgroundColor: theme.colors.red[5],
+    // ...theme.fn.hover({
+    //   backgroundColor: theme.colors.red[8],
+    // }),
   },
 }));
 interface SongAttributeItem {

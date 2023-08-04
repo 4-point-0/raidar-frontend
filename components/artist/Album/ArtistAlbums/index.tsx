@@ -1,54 +1,28 @@
 import {
-  Image,
   Text,
   Container,
-  ThemeIcon,
   Title,
   SimpleGrid,
   createStyles,
   rem,
-  Button,
   Anchor,
-  Card,
   Group,
-  Paper,
   Box,
   useMantineTheme,
 } from "@mantine/core";
-import { Disc, Music, ClockPlay, Plus } from "tabler-icons-react";
+import { Plus } from "tabler-icons-react";
 
-import Link from "next/link";
-import { useAlbumControllerFindAll } from "@/services/api/raidar/raidarComponents";
+import { useAlbumControllerFindAllArtistAlbums } from "@/services/api/raidar/raidarComponents";
 import ImageWithBlurredShadow from "@/components/ImageBlurShadow";
 import { useRouter } from "next/router";
 
 const useStyles = createStyles((theme) => ({
-  wrapper: {
-    paddingTop: rem(0),
-    paddingBottom: rem(50),
-  },
-
   item: {
     display: "flex",
   },
 
-  itemIcon: {
-    padding: theme.spacing.xs,
-    marginRight: theme.spacing.md,
-  },
-
   itemTitle: {
     marginBottom: `calc(${theme.spacing.xs} / 2)`,
-  },
-
-  supTitle: {
-    textAlign: "center",
-    textTransform: "uppercase",
-    fontWeight: 800,
-    fontSize: theme.fontSizes.sm,
-    color: theme.fn.variant({ variant: "light", color: theme.primaryColor })
-      .color,
-    letterSpacing: rem(0.5),
   },
 
   title: {
@@ -58,17 +32,6 @@ const useStyles = createStyles((theme) => ({
     [theme.fn.smallerThan("sm")]: {
       fontSize: rem(24),
     },
-  },
-
-  descriptionCard: {
-    height: "100%",
-    marginBottom: "5%",
-    backgroundImage: "url('/images/studio-profile.jpeg')",
-    backgroundSize: "cover",
-  },
-
-  descriptionStats: {
-    color: "white",
   },
 
   description: {
@@ -86,33 +49,11 @@ const useStyles = createStyles((theme) => ({
       marginRight: "auto",
     },
   },
-
-  paper: {
-    margin: "auto",
-    backgroundColor: "#fa5252",
-    padding: "2%",
-    textAlign: "center",
-    width: "20%",
-    borderRadius: "15px",
-    opacity: "0.9",
-  },
-
-  highlight: {
-    backgroundColor: theme.fn.variant({
-      variant: "light",
-      color: theme.primaryColor,
-    }).background,
-    padding: rem(5),
-    paddingTop: 0,
-    borderRadius: theme.radius.sm,
-    display: "inline-block",
-    color: theme.colorScheme === "dark" ? theme.white : "inherit",
-  },
 }));
 
 const ArtistAlbums = () => {
   const { classes } = useStyles();
-  const { data: albums } = useAlbumControllerFindAll({});
+  const { data: albums } = useAlbumControllerFindAllArtistAlbums({});
   const theme = useMantineTheme();
   const router = useRouter();
 
@@ -138,9 +79,7 @@ const ArtistAlbums = () => {
       >
         <Box sx={{ position: "relative" }}>
           <ImageWithBlurredShadow
-            src={
-              "https://images.unsplash.com/photo-1619983081593-e2ba5b543168?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bXVzaWMlMjByZWNvcmR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60"
-            }
+            src={"/images/new-album-image.avif"}
             alt={"Add new album"}
             height={140}
             width={140}

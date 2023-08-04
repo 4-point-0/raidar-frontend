@@ -5,4 +5,11 @@ export const raidarTheme: MantineThemeOverride = {
   colors: {
     raidarRed: ["#000000"],
   },
+  components: {
+    Button: {
+      defaultProps: {
+        color: "#ff6b6b",
+      },
+    },
+  },
 };

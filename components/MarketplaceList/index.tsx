@@ -2,13 +2,11 @@ import {
   createStyles,
   Title,
   Text,
-  Card,
   SimpleGrid,
   Container,
   rem,
   Image,
   Button,
-  Grid,
   Group,
   Avatar,
   Box,
@@ -67,13 +65,11 @@ const useStyles = createStyles((theme) => ({
     },
   },
 
-  item: {
-    marginTop: theme.spacing.lg,
-    borderRadius: theme.radius.md,
-    marginBottom: theme.spacing.lg,
-    border: `${rem(1)} solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[3]
-    }`,
+  button: {
+    backgroundColor: theme.colors.red[5],
+    ...theme.fn.hover({
+      backgroundColor: theme.colors.red[8],
+    }),
   },
 }));
 
@@ -175,7 +171,7 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
         </Text>
       </Group>
       <Group>
-        <Button mt="xl" color="red">
+        <Button mt="xl" className={classes.button}>
           <Group spacing="xs">
             <Text>Buy for {song.last_listing?.price}</Text>{" "}
             <Image width={14} src={"/images/near-logo-white.svg"} />

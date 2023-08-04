@@ -5,7 +5,6 @@ import {
   Group,
   Button,
   Card,
-  rem,
   createStyles,
   Switch,
   NumberInput,
@@ -48,12 +47,6 @@ const useStyles = createStyles((theme) => ({
     backgroundColor: theme.colors.red[5],
     width: "80%",
     margin: "auto",
-  },
-
-  avatar: {
-    border: `${rem(2)} solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white
-    }`,
   },
 }));
 

@@ -15,13 +15,10 @@ import {
 } from "@mantine/core";
 import { useState, useRef, useEffect } from "react";
 import {
-  BsFillForwardFill,
   BsFillSkipBackwardFill,
   BsFillSkipForwardFill,
-  BsPause, // Changed to pause icon
+  BsPause,
   BsPlay,
-  BsPlayBtnFill,
-  BsPlayCircle,
 } from "react-icons/bs";
 
 export const MusicPlayer = () => {
@@ -130,7 +127,7 @@ export const MusicPlayer = () => {
         </Grid.Col>
         <Grid.Col span={3}>
           <Group position="right">
-            <CloseButton size={30} onClick={closePlayer}/>
+            <CloseButton size={30} onClick={closePlayer} />
           </Group>
         </Grid.Col>
       </Grid>

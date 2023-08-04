@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Title, Text, Container, SimpleGrid } from "@mantine/core";
+import { Title, Container } from "@mantine/core";
 import AlbumForm from "../../../../components/artist/Album/AlbumForm";
 
 export const CreateAlbum = () => {

@@ -17,8 +17,9 @@ export const AppLayout = ({ children }: PropsWithChildren) => {
 
   const isRoot = router.route === "/login";
   const isArtist = user?.roles.includes("artist");
-  const isUser = user?.roles.includes("user");
+  // const isUser = user?.roles.includes("user");
 
+  //TODO: resolve protected routes
   const renderHeader = () => {
     if (isArtist) {
       return <ArtistHeader />;

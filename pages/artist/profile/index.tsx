@@ -1,12 +1,7 @@
 import React from "react";
 import {
-  Button,
-  Container,
-  Stack,
-  Image,
   Title,
   Box,
-  Group,
   Text,
   Card,
   Avatar,
@@ -100,12 +95,6 @@ export const ArtistProfile = () => {
       <Box ta="center" mt="xl">
         <WalletConnectButton />
       </Box>
-
-      {/* <Box ta="center" mt="xl">
-        <BrandFacebook size={30} />
-        <BrandInstagram size={30} />
-        <BrandLinkedin size={30} />
-      </Box> */}
     </Card>
   );
 };

@@ -37,16 +37,6 @@ const useStyles = createStyles((theme) => ({
     marginBottom: `calc(${theme.spacing.xs} / 2)`,
   },
 
-  supTitle: {
-    textAlign: "center",
-    textTransform: "uppercase",
-    fontWeight: 800,
-    fontSize: theme.fontSizes.sm,
-    color: theme.fn.variant({ variant: "light", color: theme.primaryColor })
-      .color,
-    letterSpacing: rem(0.5),
-  },
-
   title: {
     fontSize: rem(34),
     fontWeight: 900,
@@ -68,18 +58,6 @@ const useStyles = createStyles((theme) => ({
     marginBottom: "2%",
     backgroundSize: "cover",
     backgroundPosition: "center",
-  },
-
-  highlight: {
-    backgroundColor: theme.fn.variant({
-      variant: "light",
-      color: theme.primaryColor,
-    }).background,
-    padding: rem(5),
-    paddingTop: 0,
-    borderRadius: theme.radius.sm,
-    display: "inline-block",
-    color: theme.colorScheme === "dark" ? theme.white : "inherit",
   },
 }));
 
