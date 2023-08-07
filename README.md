@@ -6,7 +6,6 @@ Raidar app for musicians and creators to buy and sell music licenses
 API hooks, functions and types are genereated from the API Swagger files. APIs are seperated to `./services/api/client` and `./services/api/admin` folders.
 
 ```bash
-npm run api:codegen:admin
 npm run api:codegen:client
 ```
 
