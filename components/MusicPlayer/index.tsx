@@ -23,7 +23,7 @@ import {
 import ImageWithBlurredShadow from "../ImageBlurShadow";
 
 export const MusicPlayer = () => {
-  const { song, setSong } = userPlayerContext();
+  const { song, setSong, setIsVisible } = userPlayerContext();
 
   const [value, setValue] = useState(0);
   const [endValue, setEndValue] = useState(0);
@@ -42,8 +42,11 @@ export const MusicPlayer = () => {
   }, [isPlaying]);
 
   const closePlayer = () => {
+    setIsVisible(false);
     setIsPlaying(false);
-    setSong(null);
+    setTimeout(() => {
+      setSong(null);
+    }, 200);
   };
 
   const handlePlayPause = () => {
@@ -94,7 +97,7 @@ export const MusicPlayer = () => {
           {isPlaying ? <BsPause size={40} /> : <BsPlay size={40} />}
         </ActionIcon>
         <MediaQuery smallerThan="md" styles={{ display: "none" }}>
-          <Stack ml="auto" mr="auto" sx={{ width: "60%" }}>
+          <Stack ml="auto" mr="auto" sx={{ width: "55%" }}>
             <Slider
               label={(value) => formatTime(value)}
               value={value}

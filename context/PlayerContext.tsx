@@ -3,6 +3,8 @@ import React, { useContext, useEffect, useState } from "react";
 
 interface PlayerContextValue {
   song: SongDto | null;
+  isVisible: boolean;
+  setIsVisible: (isVisible: boolean) => void;
   setSong: (song: SongDto | null) => void;
 }
 
@@ -10,6 +12,13 @@ const PlayerContext = React.createContext<PlayerContextValue | null>(null);
 
 export const PlayerContextProvider = ({ children }: any) => {
   const [song, setSong] = useState<SongDto | null>(null);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (song) {
+      setIsVisible(true);
+    }
+  }, [song]);
 
   return (
     <PlayerContext.Provider
@@ -17,6 +26,10 @@ export const PlayerContextProvider = ({ children }: any) => {
         song: song,
         setSong: (song) => {
           setSong(song);
+        },
+        isVisible: isVisible,
+        setIsVisible: (isVisible) => {
+          setIsVisible(isVisible);
         },
       }}
     >

@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
 import { useRouter } from "next/router";
-import { AppShell, Box } from "@mantine/core";
+import { AppShell, Box, Transition } from "@mantine/core";
 
 import { ArtistHeader } from "@/components/artist/ArtistHeader";
 import { useFindUser } from "../../hooks/useFindUser";
@@ -13,7 +13,7 @@ export const AppLayout = ({ children }: PropsWithChildren) => {
 
   const { user } = useFindUser();
 
-  const { song } = userPlayerContext();
+  const { song, isVisible } = userPlayerContext();
 
   const isRoot = router.route === "/login";
   const isArtist = user?.roles.includes("artist");
@@ -40,20 +40,30 @@ export const AppLayout = ({ children }: PropsWithChildren) => {
     >
       {children}
 
-      {song && (
-        <Box
-          sx={{
-            boxShadow: "0px -4px 8px rgba(0, 0, 0, 0.1)",
-            position: "fixed",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            zIndex: 1000,
-          }}
-        >
-          <MusicPlayer />
-        </Box>
-      )}
+      <Transition
+        mounted={isVisible}
+        transition="slide-up"
+        duration={200}
+        timingFunction="ease-in-out"
+      >
+        {(styles) => (
+          <Box
+            style={{
+              ...styles,
+            }}
+            sx={{
+              boxShadow: "0px -4px 8px rgba(0, 0, 0, 0.1)",
+              position: "fixed",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1000,
+            }}
+          >
+            <MusicPlayer />
+          </Box>
+        )}
+      </Transition>
     </AppShell>
   );
 };
