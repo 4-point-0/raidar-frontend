@@ -2,7 +2,6 @@ import {
   createStyles,
   Header,
   Group,
-  Button,
   Divider,
   Box,
   Burger,
@@ -10,12 +9,10 @@ import {
   ScrollArea,
   rem,
   Image,
-  Popover,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Logout, Wallet } from "tabler-icons-react";
 import ThemeTogglerButton from "@/components/ThemeTogglerButton";
 import { AccountDetails } from "@/components/AccountDetails";
 
@@ -133,23 +130,6 @@ export const UserHeader = () => {
           <Group className={classes.hiddenMobile}>
             <AccountDetails />
             <ThemeTogglerButton />
-            {/* <Popover width="auto" position="bottom" withArrow shadow="md">
-              <Popover.Target>
-                <Button className={classes.button} leftIcon={<Wallet />}>
-                  Wallet
-                </Button>
-              </Popover.Target>
-              <Popover.Dropdown>
-                <AccountDetails />
-              </Popover.Dropdown>
-            </Popover>
-            <Button
-              color="red"
-              leftIcon={<Logout size={14} />}
-              onClick={handleLogout}
-            >
-              Log Out
-            </Button> */}
           </Group>
 
           <Burger
@@ -200,23 +180,6 @@ export const UserHeader = () => {
           <Group position="center" grow pb="xl" px="md">
             <AccountDetails />
             <ThemeTogglerButton />
-            {/* <Popover width="auto" position="bottom" withArrow shadow="md">
-              <Popover.Target>
-                <Button className={classes.button} leftIcon={<Wallet />}>
-                  Wallet
-                </Button>
-              </Popover.Target>
-              <Popover.Dropdown>
-                <AccountDetails />
-              </Popover.Dropdown>
-            </Popover>
-            <Button
-              leftIcon={<Logout size={14} />}
-              color="red"
-              onClick={handleLogout}
-            >
-              Log Out
-            </Button> */}
           </Group>
         </ScrollArea>
       </Drawer>

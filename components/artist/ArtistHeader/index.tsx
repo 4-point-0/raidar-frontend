@@ -4,7 +4,6 @@ import {
   createStyles,
   Header,
   Group,
-  Button,
   Divider,
   Box,
   Burger,
@@ -12,13 +11,10 @@ import {
   ScrollArea,
   rem,
   Image,
-  Popover,
-  Avatar,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Logout, Wallet } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -138,24 +134,6 @@ export const ArtistHeader = () => {
             <AccountDetails />
 
             <ThemeTogglerButton />
-            {/* <Popover width="auto" position="bottom" withArrow shadow="md">
-              <Popover.Target>
-                <Button className={classes.button} leftIcon={<Wallet />}>
-                  Wallet
-                </Button>
-              </Popover.Target>
-              <Popover.Dropdown>
-                <AccountDetails />
-              </Popover.Dropdown>
-            </Popover>
-
-            <Button
-              className={classes.button}
-              leftIcon={<Logout size={14} />}
-              onClick={handleLogout}
-            >
-              Log Out
-            </Button> */}
           </Group>
 
           <Burger
@@ -205,26 +183,6 @@ export const ArtistHeader = () => {
             <AccountDetails />
 
             <ThemeTogglerButton />
-
-            {/* <Popover width="auto" position="bottom" withArrow shadow="md">
-              <Popover.Target>
-                <Button className={classes.button} leftIcon={<Wallet />}>
-                  Wallet
-                </Button>
-              </Popover.Target>
-              <Popover.Dropdown>
-                <AccountDetails />
-              </Popover.Dropdown>
-            </Popover>
-
-            <Button
-              className={classes.button}
-              leftIcon={<Logout size={14} />}
-              color="red"
-              onClick={handleLogout}
-            >
-              Log Out
-            </Button>  */}
           </Group>
         </ScrollArea>
       </Drawer>
