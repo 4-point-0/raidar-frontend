@@ -132,16 +132,6 @@ export const ArtistHeader = () => {
             >
               My Albums
             </a>
-            <a
-              href="/artist/profile"
-              className={`${
-                pathname === "/artist/profile"
-                  ? classes.activeLink
-                  : classes.link
-              }`}
-            >
-              Profile
-            </a>
           </Group>
 
           <Group className={classes.hiddenMobile}>
@@ -205,14 +195,6 @@ export const ArtistHeader = () => {
             }`}
           >
             My Collection
-          </a>
-          <a
-            href="/artist/profile"
-            className={`${
-              pathname === "/artist/profile" ? classes.activeLink : classes.link
-            }`}
-          >
-            My Profile
           </a>
           <Divider
             my="sm"

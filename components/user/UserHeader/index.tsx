@@ -128,14 +128,6 @@ export const UserHeader = () => {
             >
               My Songs
             </a>
-            <a
-              href="/user/profile"
-              className={`${
-                pathname === "/user/profile" ? classes.activeLink : classes.link
-              }`}
-            >
-              Profile
-            </a>
           </Group>
 
           <Group className={classes.hiddenMobile}>
@@ -198,14 +190,6 @@ export const UserHeader = () => {
             }`}
           >
             My Songs
-          </a>
-          <a
-            href="/user/profile"
-            className={`${
-              pathname === "/user/profile" ? classes.activeLink : classes.link
-            }`}
-          >
-            My Profile
           </a>
 
           <Divider
