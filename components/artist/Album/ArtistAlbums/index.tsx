@@ -15,6 +15,7 @@ import { Plus } from "tabler-icons-react";
 import { useAlbumControllerFindAllArtistAlbums } from "@/services/api/raidar/raidarComponents";
 import ImageWithBlurredShadow from "@/components/ImageBlurShadow";
 import { useRouter } from "next/router";
+import { AlbumDto } from "@/services/api/raidar/raidarSchemas";
 
 const useStyles = createStyles((theme) => ({
   item: {
@@ -119,7 +120,7 @@ const ArtistAlbums = () => {
     );
   };
 
-  const items = albums?.results.map((album: any, i: any) => (
+  const items = albums?.results.map((album: AlbumDto, i: number) => (
     <Group
       // className={classes.item}
       key={i}
