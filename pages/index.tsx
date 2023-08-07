@@ -29,9 +29,9 @@ export default function Home(session: Session) {
     }
 
     if (user?.roles[0] === "artist") {
-      router.push("/artist/profile");
+      router.push("/marketplace");
     } else if (user?.roles[0] === "user") {
-      router.push("/user/profile");
+      router.push("/marketplace");
     } else {
       router.push("/login");
     }

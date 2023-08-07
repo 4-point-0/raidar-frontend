@@ -106,7 +106,7 @@ export type AlbumDto = {
   title: string;
   pka: string;
   cover: FileDto;
-  songs: any[][];
+  songs: SongDto[];
 };
 
 export type ListingDto = {

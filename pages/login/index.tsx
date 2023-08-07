@@ -39,7 +39,7 @@ export const Login = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
 
-  const callbackUrl = (router.query.callbackUrl as string) || "/profile";
+  const callbackUrl = (router.query.callbackUrl as string) || "/marketplace";
 
   // const user = false;
   // const loading = false;
@@ -51,7 +51,7 @@ export const Login = ({
   //     if (redirect) {
   //       router.push(redirect as string);
   //     } else {
-  //       router.push("/profile");
+  //       router.push("/marketplace");
   //     }
   //   }
   // }, [router, user, redirect]);
