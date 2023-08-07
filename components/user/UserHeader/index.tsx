@@ -139,8 +139,9 @@ export const UserHeader = () => {
           </Group>
 
           <Group className={classes.hiddenMobile}>
+            <AccountDetails />
             <ThemeTogglerButton />
-            <Popover width="auto" position="bottom" withArrow shadow="md">
+            {/* <Popover width="auto" position="bottom" withArrow shadow="md">
               <Popover.Target>
                 <Button className={classes.button} leftIcon={<Wallet />}>
                   Wallet
@@ -156,7 +157,7 @@ export const UserHeader = () => {
               onClick={handleLogout}
             >
               Log Out
-            </Button>
+            </Button> */}
           </Group>
 
           <Burger
@@ -213,8 +214,9 @@ export const UserHeader = () => {
           />
 
           <Group position="center" grow pb="xl" px="md">
+            <AccountDetails />
             <ThemeTogglerButton />
-            <Popover width="auto" position="bottom" withArrow shadow="md">
+            {/* <Popover width="auto" position="bottom" withArrow shadow="md">
               <Popover.Target>
                 <Button className={classes.button} leftIcon={<Wallet />}>
                   Wallet
@@ -230,7 +232,7 @@ export const UserHeader = () => {
               onClick={handleLogout}
             >
               Log Out
-            </Button>
+            </Button> */}
           </Group>
         </ScrollArea>
       </Drawer>

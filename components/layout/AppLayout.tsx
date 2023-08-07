@@ -32,6 +32,7 @@ export const AppLayout = ({ children }: PropsWithChildren) => {
     <AppShell
       sx={{
         position: "relative",
+        paddingBottom: song ? 100 : 0,
       }}
       padding="sm"
       header={!isRoot ? renderHeader() : undefined}
@@ -42,7 +43,7 @@ export const AppLayout = ({ children }: PropsWithChildren) => {
       {song && (
         <Box
           sx={{
-            borderTop: "1px solid #ccc",
+            boxShadow: "0px -4px 8px rgba(0, 0, 0, 0.1)",
             position: "fixed",
             bottom: 0,
             left: 0,

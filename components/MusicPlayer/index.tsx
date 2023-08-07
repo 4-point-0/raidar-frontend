@@ -20,6 +20,7 @@ import {
   BsPause,
   BsPlay,
 } from "react-icons/bs";
+import ImageWithBlurredShadow from "../ImageBlurShadow";
 
 export const MusicPlayer = () => {
   const { song, setSong } = userPlayerContext();
@@ -67,70 +68,56 @@ export const MusicPlayer = () => {
 
   return (
     <Card sx={{ width: "100%" }}>
-      <Grid sx={{ width: "100%" }}>
-        <Grid.Col span={3}>
-          <Group>
-            <Image
-              sx={{
-                borderRadius: "8px",
-              }}
-              src={song?.art.url}
-              height={80}
-              width={80}
+      <Group>
+        <ImageWithBlurredShadow
+          src={song?.art.url ?? ""}
+          alt={song?.title ?? ""}
+          height={80}
+          width={80}
+        />
+
+        <Stack ml="md" spacing="xs">
+          <Text fz="lg" fw={600}>
+            {song?.title}
+          </Text>
+          <Text fz="sm">{song?.pka}</Text>
+        </Stack>
+
+        <ActionIcon
+          ml={"xl"}
+          variant="light"
+          color="red"
+          size="xl"
+          radius="sm"
+          onClick={handlePlayPause}
+        >
+          {isPlaying ? <BsPause size={40} /> : <BsPlay size={40} />}
+        </ActionIcon>
+        <MediaQuery smallerThan="md" styles={{ display: "none" }}>
+          <Stack ml="auto" mr="auto" sx={{ width: "60%" }}>
+            <Slider
+              label={(value) => formatTime(value)}
+              value={value}
+              onChange={handleSeek}
+              max={endValue}
+              color="red"
             />
-
-            <Stack spacing="xs">
-              <Text fz="lg" fw={600}>
-                {song?.title}
-              </Text>
-              <Text fz="sm">{song?.pka}</Text>
-            </Stack>
-          </Group>
-        </Grid.Col>
-        <Grid.Col span={6}>
-          <Stack>
-            <Group position="center">
-              <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
-                <ActionIcon variant="transparent" size="xl">
-                  <BsFillSkipBackwardFill size={30} />
-                </ActionIcon>
-              </MediaQuery>
-
-              <ActionIcon
-                variant="transparent"
-                size="xl"
-                onClick={handlePlayPause}
-              >
-                {isPlaying ? <BsPause size={30} /> : <BsPlay size={30} />}
-              </ActionIcon>
-
-              <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
-                <ActionIcon variant="transparent" size="xl">
-                  <BsFillSkipForwardFill size={30} />
-                </ActionIcon>
-              </MediaQuery>
-            </Group>
-
-            <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
-              <Slider
-                label={(value) => formatTime(value)}
-                value={value}
-                onChange={handleSeek}
-                max={endValue}
-              />
-            </MediaQuery>
             <Group position="apart">
               <Text>{formatTime(value)}</Text>
               <Text>{formatTime(endValue)}</Text>
             </Group>
           </Stack>
-        </Grid.Col>
-        <Grid.Col span={3}>
-          <Group position="right">
-            <CloseButton size={30} onClick={closePlayer} />
-          </Group>
-        </Grid.Col>
-      </Grid>
+        </MediaQuery>
+
+        <CloseButton
+          ml="auto"
+          mr="xl"
+          variant="light"
+          size="xl"
+          onClick={closePlayer}
+        />
+      </Group>
+
       <audio
         ref={audioRef}
         onTimeUpdate={handleTimeUpdate}
