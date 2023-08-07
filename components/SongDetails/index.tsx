@@ -1,27 +1,19 @@
-import React, { useState } from "react";
 import {
   createStyles,
-  Image,
   Container,
   Title,
   Text,
   rem,
-  useMantineTheme,
   Box,
-  Overlay,
-  AspectRatio,
   Group,
-  ActionIcon,
   SimpleGrid,
   Button,
   Avatar,
-  Flex,
 } from "@mantine/core";
-import { AiOutlineClockCircle } from "react-icons/ai";
 import { BsTags, BsCalendar2Date, BsGlobe } from "react-icons/bs";
 import { BiLeftArrowAlt } from "react-icons/bi";
 import { GiMusicSpell, GiMusicalKeyboard } from "react-icons/gi";
-import { GiCuckooClock, GiMusicalNotes } from "react-icons/gi";
+import { GiMusicalNotes } from "react-icons/gi";
 import { TfiLocationPin } from "react-icons/tfi";
 import { TbUserShare, TbLanguage } from "react-icons/tb";
 
@@ -29,12 +21,10 @@ import SongAttributes from "./SongAttributes";
 import formatDuration from "@/utils/formatDuration";
 import { formatDate } from "@/utils/formatDate";
 import { SongDto } from "@/services/api/raidar/raidarSchemas";
-import { MusicPlayer } from "@/components/MusicPlayer";
-import { PlayerPlay } from "tabler-icons-react";
+
 import ImageWithBlurredShadow from "../ImageBlurShadow";
-import Tilt from "react-parallax-tilt";
 import { userPlayerContext } from "@/context/PlayerContext";
-import { Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -122,7 +112,7 @@ interface SongDetailsProps {
   song: SongDto;
 }
 
-export const SongDetails = ({ song }: any) => {
+export const SongDetails = ({ song }: SongDetailsProps) => {
   // this is the example of the UI we want to recreate
   // https://noizd.com/assets/5831d56b-ceb4-426b-9b5e-d502a0670d30?listing_id=563
   const { classes } = useStyles();

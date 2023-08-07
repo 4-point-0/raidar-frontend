@@ -83,7 +83,7 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
 
   const { setSong } = userPlayerContext();
 
-  const updatingResults = (data: MarketplaceControllerFindAllResponse) => {
+  const updatingResults = (data: { results: SongDto[] }) => {
     setCurrentResults(data.results);
   };
 
