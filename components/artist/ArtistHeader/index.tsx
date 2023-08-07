@@ -13,6 +13,7 @@ import {
   rem,
   Image,
   Popover,
+  Avatar,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { signOut } from "next-auth/react";
@@ -144,8 +145,10 @@ export const ArtistHeader = () => {
           </Group>
 
           <Group className={classes.hiddenMobile}>
+            <AccountDetails />
+
             <ThemeTogglerButton />
-            <Popover width="auto" position="bottom" withArrow shadow="md">
+            {/* <Popover width="auto" position="bottom" withArrow shadow="md">
               <Popover.Target>
                 <Button className={classes.button} leftIcon={<Wallet />}>
                   Wallet
@@ -162,7 +165,7 @@ export const ArtistHeader = () => {
               onClick={handleLogout}
             >
               Log Out
-            </Button>
+            </Button> */}
           </Group>
 
           <Burger
@@ -187,7 +190,6 @@ export const ArtistHeader = () => {
             my="sm"
             color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
           />
-
           <a
             href="/marketplace"
             className={`${
@@ -212,15 +214,17 @@ export const ArtistHeader = () => {
           >
             My Profile
           </a>
-
           <Divider
             my="sm"
             color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
           />
 
           <Group position="center" grow pb="xl" px="md">
+            <AccountDetails />
+
             <ThemeTogglerButton />
-            <Popover width="auto" position="bottom" withArrow shadow="md">
+
+            {/* <Popover width="auto" position="bottom" withArrow shadow="md">
               <Popover.Target>
                 <Button className={classes.button} leftIcon={<Wallet />}>
                   Wallet
@@ -238,7 +242,7 @@ export const ArtistHeader = () => {
               onClick={handleLogout}
             >
               Log Out
-            </Button>
+            </Button>  */}
           </Group>
         </ScrollArea>
       </Drawer>

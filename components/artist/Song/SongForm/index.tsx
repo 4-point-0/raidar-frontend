@@ -320,12 +320,12 @@ export const SongForm = (): any => {
       });
 
       notifications.success({
-        title: "Album sucessfully created",
+        title: "Song sucessfully created",
       });
     } catch (error) {
       console.error(error);
       notifications.error({
-        title: "Error while creating album",
+        title: "Error while creating song",
       });
     }
   };
