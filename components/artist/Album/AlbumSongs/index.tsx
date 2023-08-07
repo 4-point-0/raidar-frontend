@@ -10,13 +10,15 @@ import {
   Button,
   Anchor,
   Paper,
+  Loader,
 } from "@mantine/core";
 import { Plus } from "tabler-icons-react";
 
 import Link from "next/link";
 import { useRouter } from "next/router";
 import formatDuration from "@/utils/formatDuration";
-import { useAlbumControllerFindOne } from "../../../../services/api/raidar/raidarComponents";
+import { useAlbumControllerFindOne } from "@/services/api/raidar/raidarComponents";
+import { SongDto } from "@/services/api/raidar/raidarSchemas";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -73,7 +75,7 @@ const AlbumSongs = () => {
     },
   });
 
-  const items = album?.songs.map((song: any, i: number) => (
+  const items = album?.songs.map((song: SongDto, i: number) => (
     <div className={classes.item} key={i}>
       <ThemeIcon
         variant="light"

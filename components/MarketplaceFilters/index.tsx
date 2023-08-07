@@ -12,6 +12,7 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { musicalKeys } from "@/datasets/filters/musical-keys";
 import { intrumentalKeys } from "@/datasets/filters/intrumental-keys";
+import { SongDto } from "@/services/api/raidar/raidarSchemas";
 
 interface FiltersProps {
   title: string;
@@ -34,8 +35,13 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-//TODO: resolve any types
-export const MarketplaceFilters = ({ onUpdatedResults }: any) => {
+type MarketplaceFiltersProps = {
+  onUpdatedResults: (data: { results: SongDto[] }) => void;
+};
+
+export const MarketplaceFilters = ({
+  onUpdatedResults,
+}: MarketplaceFiltersProps) => {
   const [opened, { open, close }] = useDisclosure(false);
   const { classes } = useStyles();
   const session = useSession();
@@ -79,7 +85,7 @@ export const MarketplaceFilters = ({ onUpdatedResults }: any) => {
     const filterQueryString = filterParams.join("&");
 
     fetch(
-      `http://raidardev.eba-pgpaxsx2.eu-central-1.elasticbeanstalk.com/api/v1/marketplace/songs?${filterQueryString}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/marketplace/songs?${filterQueryString}`,
       {
         method: "GET",
         headers: {
