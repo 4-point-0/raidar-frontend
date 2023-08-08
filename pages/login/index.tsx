@@ -41,21 +41,6 @@ export const Login = ({
 
   const callbackUrl = (router.query.callbackUrl as string) || "/marketplace";
 
-  // const user = false;
-  // const loading = false;
-
-  // const { redirect } = router.query;
-
-  // useEffect(() => {
-  //   if (user) {
-  //     if (redirect) {
-  //       router.push(redirect as string);
-  //     } else {
-  //       router.push("/marketplace");
-  //     }
-  //   }
-  // }, [router, user, redirect]);
-
   const handleSignIn = (provider?: ClientSafeProvider) => {
     return () => {
       signIn(provider?.id, {
