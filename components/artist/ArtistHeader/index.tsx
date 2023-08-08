@@ -13,7 +13,6 @@ import {
   Image,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 
 const useStyles = createStyles((theme) => ({
@@ -96,15 +95,13 @@ export const ArtistHeader = () => {
   const router = useRouter();
   const pathname = router.pathname;
 
-  const handleLogout = () => {
-    signOut({ callbackUrl: "/login" });
-  };
-
   return (
     <Box pb={40}>
       <Header height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
-          <Image src="/images/berklee-college.png" width={150} />
+          <a href="/marketplace">
+            <Image src="/images/berklee-college.png" width={150} />
+          </a>
           <Group
             sx={{ height: "100%" }}
             spacing={0}
@@ -149,7 +146,11 @@ export const ArtistHeader = () => {
         onClose={closeDrawer}
         size="100%"
         padding="md"
-        title="Navigation"
+        title={
+          <a href="/marketplace">
+            <Image src="/images/berklee-college.png" width={150} />
+          </a>
+        }
         className={classes.hiddenDesktop}
         zIndex={1000000}
       >
@@ -172,7 +173,7 @@ export const ArtistHeader = () => {
               pathname === "/artist/albums" ? classes.activeLink : classes.link
             }`}
           >
-            My Collection
+            My Albums
           </a>
           <Divider
             my="sm"

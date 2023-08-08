@@ -1,3 +1,5 @@
+import { AccountDetails } from "@/components/AccountDetails";
+import ThemeTogglerButton from "@/components/ThemeTogglerButton";
 import {
   createStyles,
   Header,
@@ -11,10 +13,7 @@ import {
   Image,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
-import ThemeTogglerButton from "@/components/ThemeTogglerButton";
-import { AccountDetails } from "@/components/AccountDetails";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -91,19 +90,18 @@ const useStyles = createStyles((theme) => ({
 export const UserHeader = () => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
+
   const { classes, theme } = useStyles();
   const router = useRouter();
   const pathname = router.pathname;
-
-  const handleLogout = () => {
-    signOut({ callbackUrl: "/login" });
-  };
 
   return (
     <Box pb={40}>
       <Header height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
-          <Image src="/images/berklee-college.png" width={150} />
+          <a href="/marketplace">
+            <Image src="/images/berklee-college.png" width={150} />
+          </a>
           <Group
             sx={{ height: "100%" }}
             spacing={0}
@@ -120,7 +118,7 @@ export const UserHeader = () => {
             <a
               href="/user/songs"
               className={`${
-                pathname === "/user/albums" ? classes.activeLink : classes.link
+                pathname === "/user/songs" ? classes.activeLink : classes.link
               }`}
             >
               My Songs
@@ -129,6 +127,7 @@ export const UserHeader = () => {
 
           <Group className={classes.hiddenMobile}>
             <AccountDetails />
+
             <ThemeTogglerButton />
           </Group>
 
@@ -145,7 +144,11 @@ export const UserHeader = () => {
         onClose={closeDrawer}
         size="100%"
         padding="md"
-        title="Navigation"
+        title={
+          <a href="/marketplace">
+            <Image src="/images/berklee-college.png" width={150} />
+          </a>
+        }
         className={classes.hiddenDesktop}
         zIndex={1000000}
       >
@@ -154,7 +157,6 @@ export const UserHeader = () => {
             my="sm"
             color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
           />
-
           <a
             href="/marketplace"
             className={`${
@@ -171,7 +173,6 @@ export const UserHeader = () => {
           >
             My Songs
           </a>
-
           <Divider
             my="sm"
             color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
@@ -179,6 +180,7 @@ export const UserHeader = () => {
 
           <Group position="center" grow pb="xl" px="md">
             <AccountDetails />
+
             <ThemeTogglerButton />
           </Group>
         </ScrollArea>
