@@ -4,6 +4,7 @@ import {
 } from "@/services/api/raidar/raidarComponents";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import { GoogleLoginDto } from "@/services/api/raidar/raidarSchemas";
 
 interface WithToken {
   token: string;
@@ -26,7 +27,7 @@ export const authOptions: NextAuthOptions = {
       if (account?.access_token) {
         const { token } = (await fetchGoogleControllerAuthenticate({
           body: { token: account?.access_token },
-        })) as unknown as any;
+        })) as unknown as GoogleLoginDto;
         jwt.token = token;
       } else if (userWithToken?.token) {
         jwt.token = userWithToken.token;

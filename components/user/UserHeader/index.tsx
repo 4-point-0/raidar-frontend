@@ -1,8 +1,9 @@
+import { AccountDetails } from "@/components/AccountDetails";
+import ThemeTogglerButton from "@/components/ThemeTogglerButton";
 import {
   createStyles,
   Header,
   Group,
-  Button,
   Divider,
   Box,
   Burger,
@@ -10,14 +11,9 @@ import {
   ScrollArea,
   rem,
   Image,
-  Popover,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Logout, Wallet } from "tabler-icons-react";
-import ThemeTogglerButton from "@/components/ThemeTogglerButton";
-import { AccountDetails } from "@/components/AccountDetails";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -94,19 +90,18 @@ const useStyles = createStyles((theme) => ({
 export const UserHeader = () => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
+
   const { classes, theme } = useStyles();
   const router = useRouter();
   const pathname = router.pathname;
-
-  const handleLogout = () => {
-    signOut({ callbackUrl: "/login" });
-  };
 
   return (
     <Box pb={40}>
       <Header height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
-          <Image src="/images/berklee-college.png" width={150} />
+          <a href="/marketplace">
+            <Image src="/images/berklee-college.png" width={150} />
+          </a>
           <Group
             sx={{ height: "100%" }}
             spacing={0}
@@ -123,41 +118,17 @@ export const UserHeader = () => {
             <a
               href="/user/songs"
               className={`${
-                pathname === "/user/albums" ? classes.activeLink : classes.link
+                pathname === "/user/songs" ? classes.activeLink : classes.link
               }`}
             >
               My Songs
-            </a>
-            <a
-              href="/user/profile"
-              className={`${
-                pathname === "/user/profile" ? classes.activeLink : classes.link
-              }`}
-            >
-              Profile
             </a>
           </Group>
 
           <Group className={classes.hiddenMobile}>
             <AccountDetails />
+
             <ThemeTogglerButton />
-            {/* <Popover width="auto" position="bottom" withArrow shadow="md">
-              <Popover.Target>
-                <Button className={classes.button} leftIcon={<Wallet />}>
-                  Wallet
-                </Button>
-              </Popover.Target>
-              <Popover.Dropdown>
-                <AccountDetails />
-              </Popover.Dropdown>
-            </Popover>
-            <Button
-              color="red"
-              leftIcon={<Logout size={14} />}
-              onClick={handleLogout}
-            >
-              Log Out
-            </Button> */}
           </Group>
 
           <Burger
@@ -173,7 +144,11 @@ export const UserHeader = () => {
         onClose={closeDrawer}
         size="100%"
         padding="md"
-        title="Navigation"
+        title={
+          <a href="/marketplace">
+            <Image src="/images/berklee-college.png" width={150} />
+          </a>
+        }
         className={classes.hiddenDesktop}
         zIndex={1000000}
       >
@@ -182,7 +157,6 @@ export const UserHeader = () => {
             my="sm"
             color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
           />
-
           <a
             href="/marketplace"
             className={`${
@@ -199,15 +173,6 @@ export const UserHeader = () => {
           >
             My Songs
           </a>
-          <a
-            href="/user/profile"
-            className={`${
-              pathname === "/user/profile" ? classes.activeLink : classes.link
-            }`}
-          >
-            My Profile
-          </a>
-
           <Divider
             my="sm"
             color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
@@ -215,24 +180,8 @@ export const UserHeader = () => {
 
           <Group position="center" grow pb="xl" px="md">
             <AccountDetails />
+
             <ThemeTogglerButton />
-            {/* <Popover width="auto" position="bottom" withArrow shadow="md">
-              <Popover.Target>
-                <Button className={classes.button} leftIcon={<Wallet />}>
-                  Wallet
-                </Button>
-              </Popover.Target>
-              <Popover.Dropdown>
-                <AccountDetails />
-              </Popover.Dropdown>
-            </Popover>
-            <Button
-              leftIcon={<Logout size={14} />}
-              color="red"
-              onClick={handleLogout}
-            >
-              Log Out
-            </Button> */}
           </Group>
         </ScrollArea>
       </Drawer>

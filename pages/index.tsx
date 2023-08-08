@@ -4,8 +4,10 @@ import { useRouter } from "next/router";
 import { useIsClient } from "@/hooks/useIsClient";
 import { getSession } from "next-auth/react";
 import { useFindUser } from "../hooks/useFindUser";
+import { GetServerSidePropsContext } from "next";
+import { Session } from "next-auth";
 
-export const getServerSideProps = async (ctx: any) => {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const session = await getSession(ctx);
 
   return {
@@ -15,11 +17,11 @@ export const getServerSideProps = async (ctx: any) => {
   };
 };
 
-export default function Home({ session }: any) {
+export default function Home(session: Session) {
   const isClient = useIsClient();
   const router = useRouter();
 
-  const { user, isLoadingUser } = useFindUser();
+  const { user } = useFindUser();
 
   useEffect(() => {
     if (!isClient) {
@@ -27,9 +29,9 @@ export default function Home({ session }: any) {
     }
 
     if (user?.roles[0] === "artist") {
-      router.push("/artist/profile");
+      router.push("/marketplace");
     } else if (user?.roles[0] === "user") {
-      router.push("/user/profile");
+      router.push("/marketplace");
     } else {
       router.push("/login");
     }
