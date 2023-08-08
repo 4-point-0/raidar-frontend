@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { useRouter } from "next/router";
 import { AppShell, Box, Transition } from "@mantine/core";
 
@@ -7,6 +7,7 @@ import { useFindUser } from "../../hooks/useFindUser";
 import { UserHeader } from "@/components/user/UserHeader";
 import { MusicPlayer } from "../MusicPlayer";
 import { userPlayerContext } from "@/context/PlayerContext";
+import { useSession } from "next-auth/react";
 
 export const AppLayout = ({ children }: PropsWithChildren) => {
   const router = useRouter();
@@ -14,12 +15,11 @@ export const AppLayout = ({ children }: PropsWithChildren) => {
   const { user } = useFindUser();
 
   const { song, isVisible } = userPlayerContext();
+  const session = useSession();
 
   const isRoot = router.route === "/login";
   const isArtist = user?.roles.includes("artist");
-  // const isUser = user?.roles.includes("user");
 
-  //TODO: resolve protected routes
   const renderHeader = () => {
     if (isArtist) {
       return <ArtistHeader />;
@@ -27,6 +27,12 @@ export const AppLayout = ({ children }: PropsWithChildren) => {
       return <UserHeader />;
     }
   };
+
+  useEffect(() => {
+    if (session.status !== "authenticated") {
+      router.push("/login");
+    }
+  }, []);
 
   return (
     <AppShell
