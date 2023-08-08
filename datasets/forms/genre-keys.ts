@@ -1,5 +1,5 @@
 export const genreKeys = [
-  { value: "", label: "All" },
+  { value: "Not Defined", label: "Not Defined" },
   {
     value: "A Cappella",
     label: "A Cappella",
