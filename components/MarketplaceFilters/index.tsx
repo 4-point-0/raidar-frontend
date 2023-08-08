@@ -13,6 +13,7 @@ import { useState } from "react";
 import { musicalKeys } from "@/datasets/filters/musical-keys";
 import { intrumentalKeys } from "@/datasets/filters/intrumental-keys";
 import { SongDto } from "@/services/api/raidar/raidarSchemas";
+import { genreKeys } from "@/datasets/filters/genre-keys";
 
 interface FiltersProps {
   title: string;
@@ -83,6 +84,8 @@ export const MarketplaceFilters = ({
     }
 
     const filterQueryString = filterParams.join("&");
+
+    console.log(filterQueryString);
 
     fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/v1/marketplace/songs?${filterQueryString}`,
@@ -159,13 +162,15 @@ export const MarketplaceFilters = ({
           mx="auto"
           withAsterisk={false}
         >
-          <Input
+          <Select
             radius="sm"
+            searchable
+            data={genreKeys}
             value={selectedFilters.genre}
             onChange={(event) => {
               setSelectedFilters({
                 ...selectedFilters,
-                genre: event?.target.value,
+                genre: event || "",
               });
             }}
           />
