@@ -1,5 +1,5 @@
 export const intrumentalKeys = [
-  { value: "", label: "None" },
+  { value: "", label: "All" },
   { value: "true", label: "Yes" },
   { value: "false", label: "No" },
 ];

@@ -4,12 +4,12 @@ import {
   Card,
   Group,
   NumberInput,
+  Select,
   Stack,
   Switch,
   TextInput,
   createStyles,
 } from "@mantine/core";
-import { DateInput } from "@mantine/dates";
 
 import { FileWithPath } from "@mantine/dropzone";
 import { useForm } from "@mantine/form";
@@ -30,6 +30,11 @@ import { useIsMutating } from "@tanstack/react-query";
 
 import { getFileUrl } from "@/utils/file";
 
+import { countryKeys } from "@/datasets/forms/country-keys";
+import { genreKeys } from "@/datasets/forms/genre-keys";
+import { languageKeys } from "@/datasets/forms/language-keys";
+import { musicalKeys } from "@/datasets/forms/musical-keys";
+import { vocalRangeKeys } from "@/datasets/forms/vocal-range-keys";
 import {
   useAlbumControllerFindOne,
   useFileControllerUpdateFile,
@@ -37,15 +42,21 @@ import {
   useSongControllerCreateSong,
 } from "@/services/api/raidar/raidarComponents";
 import { FileDto } from "@/services/api/raidar/raidarSchemas";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Check } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
-  // card: {
-  //   backgroundColor: theme.colors.red[5],
-  //   width: "80%",
-  //   margin: "auto",
-  // },
+  card: {
+    backgroundColor: "#fff",
+    width: "80%",
+    margin: "auto",
+  },
+  button: {
+    backgroundColor: theme.colors.red[5],
+    ...theme.fn.hover({
+      backgroundColor: theme.colors.red[8],
+    }),
+  },
 }));
 
 interface SongFormProps {
@@ -94,6 +105,10 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
     //TODO: check why validations is not working
     // validate: getEditFormValidateInput(),
   });
+
+  // const { error: fileError, value: fileValue } = form.getInputProps(
+  //   `${formKey}.file`
+  // );
 
   const createSong = useSongControllerCreateSong({
     onMutate: () => {
@@ -264,20 +279,20 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
     const formattedDate = new Date(selectedDate).toISOString();
 
     // console.log("title", title);
-    // console.log("genre", genre);
+    console.log("genre", genre);
     // console.log("mood", mood);
     // console.log("title", title);
     // console.log("tags", tags);
     // console.log("length", length);
     // console.log("bpm", bpm);
-    // console.log("instrumental", instrumental);
-    // console.log("languages", languages);
-    // console.log("vocal_ranges", vocalRanges);
-    // console.log("musical_key", musicalKey);
+    console.log("instrumental", instrumental ? true : false);
+    console.log("languages", languages);
+    console.log("vocal_ranges", vocalRanges);
+    console.log("musical_key", musicalKey);
     // console.log("recording_date", selectedDate[0]);
-    // console.log("recording_country", recordingCountry);
+    console.log("recording_country", recordingCountry);
     // console.log("recording_location", recordingLocation);
-    // console.log("price", price);
+    console.log("price", price);
     // console.log("image", image);
     // console.log("song", song);
 
@@ -288,39 +303,39 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
     //   ...documents.map(({ response }: any) => response.id),
     // ].filter(Boolean) as string[];
 
-    try {
-      await createSong.mutateAsync({
-        body: {
-          title: title,
-          album_id: albumId as string,
-          genre: genre,
-          mood: [mood],
-          tags: [tags],
-          length: length as unknown as number,
-          bpm: bpm as unknown as number,
-          instrumental: true,
-          languages: [languages],
-          vocal_ranges: [vocalRanges],
-          musical_key: musicalKey,
-          music_id: song?.response?.id as string,
-          recording_date: formattedDate,
-          recording_country: recordingCountry,
-          recording_location: recordingLocation,
-          art_id: image?.response?.id as string,
-          pka: albumData?.pka || "Missing PKA info",
-          price: price as unknown as number,
-        },
-      });
+    // try {
+    //   await createSong.mutateAsync({
+    //     body: {
+    //       title: title,
+    //       album_id: albumId as string,
+    //       genre: genre,
+    //       mood: [mood],
+    //       tags: [tags],
+    //       length: length as unknown as number,
+    //       bpm: bpm as unknown as number,
+    //       instrumental: instrumental ? true : false,
+    //       languages: [languages],
+    //       vocal_ranges: [vocalRanges],
+    //       musical_key: musicalKey,
+    //       music_id: song?.response?.id as string,
+    //       recording_date: formattedDate,
+    //       recording_country: recordingCountry,
+    //       recording_location: recordingLocation,
+    //       art_id: image?.response?.id as string,
+    //       pka: albumData?.pka || "Missing PKA info",
+    //       price: price as unknown as number,
+    //     },
+    //   });
 
-      notifications.success({
-        title: "Song sucessfully created",
-      });
-    } catch (error) {
-      console.error(error);
-      notifications.error({
-        title: "Error while creating song",
-      });
-    }
+    //   notifications.success({
+    //     title: "Song sucessfully created",
+    //   });
+    // } catch (error) {
+    //   console.error(error);
+    //   notifications.error({
+    //     title: "Error while creating song",
+    //   });
+    // }
   };
 
   return (
@@ -376,7 +391,9 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
               </Field>
 
               <Field withAsterisk label="Genre">
-                <TextInput
+                <Select
+                  searchable
+                  data={genreKeys}
                   mt="xs"
                   placeholder="E.g. Rock, Pop, Hip Hop"
                   {...form.getInputProps("genre")}
@@ -391,6 +408,22 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
                 />
               </Field>
             </Group>
+
+            <Field withAsterisk label="Mood">
+              <TextInput
+                mt="xs"
+                placeholder="E.g. Happy, Epic, Euphoric"
+                {...form.getInputProps("mood")}
+              />
+            </Field>
+
+            <Field withAsterisk label="Tags">
+              <TextInput
+                mt="xs"
+                placeholder="E.g. Hard Beats, Bass Boosted, Synthesizer"
+                {...form.getInputProps("tags")}
+              />
+            </Field>
 
             <Group>
               <Field withAsterisk label="Tags">
@@ -418,54 +451,64 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
               </Field>
             </Group>
 
-            <Group>
-              <Field withAsterisk label="Instrimental">
-                <Switch
-                  label="Instrumental"
-                  {...form.getInputProps("instrumental")}
-                />
-              </Field>
+            <Field withAsterisk label="Recording Date">
+              <Calendar
+                color="red"
+                size="md"
+                maxDate={new Date()}
+                defaultDate={new Date()}
+                getDayProps={(date) => ({
+                  selected: selectedDate.some((s) =>
+                    dayjs(date).isSame(s, "date")
+                  ),
+                  onClick: () => handleSelect(date),
+                })}
+              />
+            </Field>
 
-              <Field withAsterisk label="Languages">
-                <TextInput
-                  mt="xs"
-                  placeholder="E.g. English, Spanish, French"
-                  {...form.getInputProps("languages")}
-                />
-              </Field>
+            <Field withAsterisk label="Instrimental">
+              <Switch
+                color="red"
+                label="Instrumental"
+                {...form.getInputProps("instrumental")}
+              />
+            </Field>
 
-              <Field withAsterisk label="Vocal Ranges">
-                <TextInput
-                  mt="xs"
-                  placeholder="E.g. Soprano, Alt, Tenor"
-                  {...form.getInputProps("vocalRanges")}
-                />
-              </Field>
+            <Field withAsterisk label="Languages">
+              <Select
+                searchable
+                data={languageKeys}
+                mt="xs"
+                placeholder="E.g. English, Spanish, French"
+                {...form.getInputProps("languages")}
+              />
+            </Field>
 
-              <Field withAsterisk label="Recording Date">
-                <DateInput
-                  value={selectedDate}
-                  onChange={setSelectedDate}
-                  placeholder="Recording Date"
-                />
-              </Field>
-            </Group>
+            <Field withAsterisk label="Vocal Ranges">
+              <Select
+                searchable
+                data={vocalRangeKeys}
+                mt="xs"
+                placeholder="E.g. Soprano, Alt, Tenor"
+                {...form.getInputProps("vocalRanges")}
+              />
+            </Field>
 
             <Group>
               <Field withAsterisk label="Musical key">
-                <TextInput
+                <Select
+                  searchable
+                  data={musicalKeys}
                   mt="xs"
                   placeholder="E.g. G Minor, C Major"
                   {...form.getInputProps("musicalKey")}
                 />
               </Field>
 
-              {/* <Field withAsterisk label="">
-              <Calendar />
-            </Field> */}
-
               <Field withAsterisk label="Recording Country">
-                <TextInput
+                <Select
+                  searchable
+                  data={countryKeys}
                   mt="xs"
                   placeholder="E.g. examples USA, UK"
                   {...form.getInputProps("recordingCountry")}
@@ -483,11 +526,21 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
               <Field withAsterisk label="Price in NEAR">
                 <NumberInput
                   mt="xs"
-                  defaultValue={0.5}
-                  precision={5}
-                  min={0.1}
+                  defaultValue={0.05}
+                  precision={2}
+                  min={0}
                   step={0.5}
-                  placeholder="Price in NEAR"
+                  max={1000}
+                  placeholder="Price"
+                  parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+                  formatter={(value) =>
+                    !Number.isNaN(parseFloat(value))
+                      ? `${value} NEAR`.replace(
+                          /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
+                          ","
+                        )
+                      : "NEAR "
+                  }
                   {...form.getInputProps("price")}
                 />
               </Field>
@@ -495,12 +548,21 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
 
             <Group>
               <Button
+                className={classes.button}
                 type="submit"
                 color="red"
                 leftIcon={<Check size={14} />}
                 disabled={isMutating > 0}
               >
                 Create Song
+              </Button>
+              <Button
+                className={classes.button}
+                onClick={async () => {
+                  await form.reset(); // Wait for the form reset to complete
+                }}
+              >
+                Reset Form
               </Button>
             </Group>
           </Stack>
