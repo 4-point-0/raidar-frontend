@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { useRouter } from "next/router";
 import { SessionProvider } from "next-auth/react";
 import {
   ColorScheme,
@@ -36,12 +35,7 @@ export default function App({
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
 
-  const router = useRouter();
-
   const queryClient = new QueryClient();
-
-  const isAdminPages = router.route.startsWith("/artist");
-  const isUserPages = router.route.startsWith("/user");
 
   return (
     <>
@@ -57,28 +51,28 @@ export default function App({
         <QueryClientProvider client={queryClient}>
           <WalletSelectorContextProvider>
             <AccountProvider>
-          <UserContextProvider>
-          <PlayerContextProvider>
-            <ColorSchemeProvider
-              colorScheme={colorScheme}
-              toggleColorScheme={toggleColorScheme}
-            >
-              <MantineProvider
-                withGlobalStyles
-                withNormalizeCSS
-                theme={{ ...raidarTheme, colorScheme }}
-              >
-                <ModalsProvider>
-                  <Notifications />
-                  <AppLayout>
-                    <Component {...pageProps} />
-                  </AppLayout>
-                </ModalsProvider>
-              </MantineProvider>
-            </ColorSchemeProvider>
-          </PlayerContextProvider>
-          </UserContextProvider>
-          </AccountProvider>
+              <UserContextProvider>
+                <PlayerContextProvider>
+                  <ColorSchemeProvider
+                    colorScheme={colorScheme}
+                    toggleColorScheme={toggleColorScheme}
+                  >
+                    <MantineProvider
+                      withGlobalStyles
+                      withNormalizeCSS
+                      theme={{ ...raidarTheme, colorScheme }}
+                    >
+                      <ModalsProvider>
+                        <Notifications />
+                        <AppLayout>
+                          <Component {...pageProps} />
+                        </AppLayout>
+                      </ModalsProvider>
+                    </MantineProvider>
+                  </ColorSchemeProvider>
+                </PlayerContextProvider>
+              </UserContextProvider>
+            </AccountProvider>
           </WalletSelectorContextProvider>
         </QueryClientProvider>
       </SessionProvider>
