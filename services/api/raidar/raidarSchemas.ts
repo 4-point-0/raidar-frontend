@@ -42,7 +42,7 @@ export type PaginatedDto = {
   take: number;
   skip: number;
   count: number;
-  results: any[];
+  results: any[][];
 };
 
 export type CreateSongDto = {
@@ -91,24 +91,6 @@ export type FileDto = {
   url_expiry: string;
 };
 
-export type AlbumDto = {
-  id: string;
-  /**
-   * @format date-time
-   */
-  created_at: string;
-  /**
-   * @format date-time
-   */
-  updated_at: string;
-  created_by_id: string;
-  updated_by_id: string;
-  title: string;
-  pka: string;
-  cover: FileDto;
-  songs: SongDto[];
-};
-
 export type ListingDto = {
   id: string;
   /**
@@ -142,7 +124,7 @@ export type SongDto = {
   created_by_id: string;
   updated_by_id: string;
   user_id: string;
-  album?: AlbumDto;
+  album_id?: string | null;
   title: string;
   length: string;
   genre?: string | null;
@@ -169,4 +151,22 @@ export type CreateAlbumDto = {
   title: string;
   pka?: string;
   cover_id: string;
+};
+
+export type AlbumDto = {
+  id: string;
+  /**
+   * @format date-time
+   */
+  created_at: string;
+  /**
+   * @format date-time
+   */
+  updated_at: string;
+  created_by_id: string;
+  updated_by_id: string;
+  title: string;
+  pka?: string;
+  cover: FileDto;
+  songs: SongDto[];
 };
