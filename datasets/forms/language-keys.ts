@@ -89,8 +89,8 @@ export const languageKeys = [
     label: "Bosnian",
   },
   {
-    value: "Catalan; Valencian",
-    label: "Catalan; Valencian",
+    value: "Catalan",
+    label: "Catalan",
   },
   {
     value: "Chechen",
@@ -113,10 +113,8 @@ export const languageKeys = [
     label: "Czech",
   },
   {
-    value:
-      "Church Slavic; Old Slavonic; Church Slavonic; Old Bulgarian; Old Church Slavonic",
-    label:
-      "Church Slavic; Old Slavonic; Church Slavonic; Old Bulgarian; Old Church Slavonic",
+    value: "Church Slavic",
+    label: "Church Slavic",
   },
   {
     value: "Chuvash",
@@ -135,8 +133,8 @@ export const languageKeys = [
     label: "German",
   },
   {
-    value: "Divehi; Dhivehi; Maldivian",
-    label: "Divehi; Dhivehi; Maldivian",
+    value: "Divehi, Maldivian",
+    label: "Divehi, Maldivian",
   },
   {
     value: "Dzongkha",
@@ -147,8 +145,8 @@ export const languageKeys = [
     label: "Ewe",
   },
   {
-    value: "Greek, Modern (1453-)",
-    label: "Greek, Modern (1453-)",
+    value: "Greek",
+    label: "Greek",
   },
   {
     value: "English",
@@ -159,8 +157,8 @@ export const languageKeys = [
     label: "Esperanto",
   },
   {
-    value: "Spanish; Castilian",
-    label: "Spanish; Castilian",
+    value: "Spanish",
+    label: "Spanish",
   },
   {
     value: "Estonian",
@@ -203,8 +201,8 @@ export const languageKeys = [
     label: "Irish",
   },
   {
-    value: "Gaelic; Scomttish Gaelic",
-    label: "Gaelic; Scomttish Gaelic",
+    value: "Gaelic",
+    label: "Gaelic",
   },
   {
     value: "Galician",
@@ -243,8 +241,8 @@ export const languageKeys = [
     label: "Croatian",
   },
   {
-    value: "Haitian; Haitian Creole",
-    label: "Haitian; Haitian Creole",
+    value: "Haitian",
+    label: "Haitian",
   },
   {
     value: "Hungarian",
@@ -259,24 +257,24 @@ export const languageKeys = [
     label: "Herero",
   },
   {
-    value: "Interlingua (International Auxiliary Language Association)",
-    label: "Interlingua (International Auxiliary Language Association)",
+    value: "Interlingua",
+    label: "Interlingua",
   },
   {
     value: "Indonesian",
     label: "Indonesian",
   },
   {
-    value: "Interlingue; Occidental",
-    label: "Interlingue; Occidental",
+    value: "Interlingue",
+    label: "Interlingue",
   },
   {
     value: "Igbo",
     label: "Igbo",
   },
   {
-    value: "Sichuan Yi; Nuosu",
-    label: "Sichuan Yi; Nuosu",
+    value: "Sichuan Yi",
+    label: "Sichuan Yi",
   },
   {
     value: "Inupiaq",
@@ -315,20 +313,20 @@ export const languageKeys = [
     label: "Kongo",
   },
   {
-    value: "Kikuyu; Gikuyu",
-    label: "Kikuyu; Gikuyu",
+    value: "Kikuyu",
+    label: "Kikuyu",
   },
   {
-    value: "Kuanyama; Kwanyama",
-    label: "Kuanyama; Kwanyama",
+    value: "Kuanyama",
+    label: "Kuanyama",
   },
   {
     value: "Kazakh",
     label: "Kazakh",
   },
   {
-    value: "Kalaallisut; Greenlandic",
-    label: "Kalaallisut; Greenlandic",
+    value: "Kalaallisut",
+    label: "Kalaallisut",
   },
   {
     value: "Central Khmer",
@@ -363,24 +361,24 @@ export const languageKeys = [
     label: "Cornish",
   },
   {
-    value: "Kirghiz; Kyrgyz",
-    label: "Kirghiz; Kyrgyz",
+    value: "Kirghiz",
+    label: "Kirghiz",
   },
   {
     value: "Latin",
     label: "Latin",
   },
   {
-    value: "Luxembourgish; Letzeburgesch",
-    label: "Luxembourgish; Letzeburgesch",
+    value: "Luxembourgish",
+    label: "Luxembourgish",
   },
   {
     value: "Ganda",
     label: "Ganda",
   },
   {
-    value: "Limburgan; Limburger; Limburgish",
-    label: "Limburgan; Limburger; Limburgish",
+    value: "Limburgan",
+    label: "Limburgan",
   },
   {
     value: "Lingala",
@@ -447,12 +445,12 @@ export const languageKeys = [
     label: "Nauru",
   },
   {
-    value: "Bokmål, Norwegian; Norwegian Bokmål",
-    label: "Bokmål, Norwegian; Norwegian Bokmål",
+    value: "Bokmål, Norwegian",
+    label: "Bokmål, Norwegian",
   },
   {
-    value: "Ndebele, North; North Ndebele",
-    label: "Ndebele, North; North Ndebele",
+    value: "Ndebele, North",
+    label: "Ndebele, North",
   },
   {
     value: "Nepali",
@@ -463,32 +461,32 @@ export const languageKeys = [
     label: "Ndonga",
   },
   {
-    value: "Dutch; Flemish",
-    label: "Dutch; Flemish",
+    value: "Dutch",
+    label: "Dutch",
   },
   {
-    value: "Norwegian Nynorsk; Nynorsk, Norwegian",
-    label: "Norwegian Nynorsk; Nynorsk, Norwegian",
+    value: "Norwegian Nynorsk",
+    label: "Norwegian Nynorsk",
   },
   {
     value: "Norwegian",
     label: "Norwegian",
   },
   {
-    value: "Ndebele, South; South Ndebele",
-    label: "Ndebele, South; South Ndebele",
+    value: "Ndebele, South",
+    label: "Ndebele, South",
   },
   {
-    value: "Navajo; Navaho",
-    label: "Navajo; Navaho",
+    value: "Navajo",
+    label: "Navajo",
   },
   {
-    value: "Chichewa; Chewa; Nyanja",
-    label: "Chichewa; Chewa; Nyanja",
+    value: "Chichewa",
+    label: "Chichewa",
   },
   {
-    value: "Occitan (post 1500)",
-    label: "Occitan (post 1500)",
+    value: "Occitan",
+    label: "Occitan",
   },
   {
     value: "Ojibwa",
@@ -503,12 +501,12 @@ export const languageKeys = [
     label: "Oriya",
   },
   {
-    value: "Ossetian; Ossetic",
-    label: "Ossetian; Ossetic",
+    value: "Ossetian",
+    label: "Ossetian",
   },
   {
-    value: "Panjabi; Punjabi",
-    label: "Panjabi; Punjabi",
+    value: "Panjabi",
+    label: "Panjabi",
   },
   {
     value: "Pali",
@@ -519,8 +517,8 @@ export const languageKeys = [
     label: "Polish",
   },
   {
-    value: "Pushto; Pashto",
-    label: "Pushto; Pashto",
+    value: "Pushto",
+    label: "Pushto",
   },
   {
     value: "Portuguese",
@@ -539,8 +537,8 @@ export const languageKeys = [
     label: "Rundi",
   },
   {
-    value: "Romanian; Moldavian; Moldovan",
-    label: "Romanian; Moldavian; Moldovan",
+    value: "Romanian",
+    label: "Romanian",
   },
   {
     value: "Russian",
@@ -571,8 +569,8 @@ export const languageKeys = [
     label: "Sango",
   },
   {
-    value: "Sinhala; Sinhalese",
-    label: "Sinhala; Sinhalese",
+    value: "Sinhala",
+    label: "Sinhala",
   },
   {
     value: "Slovak",
@@ -679,8 +677,8 @@ export const languageKeys = [
     label: "Tahitian",
   },
   {
-    value: "Uighur; Uyghur",
-    label: "Uighur; Uyghur",
+    value: "Uighur",
+    label: ",
   },
   {
     value: "Ukrainian",
@@ -727,8 +725,8 @@ export const languageKeys = [
     label: "Yoruba",
   },
   {
-    value: "Zhuang; Chuang",
-    label: "Zhuang; Chuang",
+    value: "Zhuang",
+    label: "Zhuang",
   },
   {
     value: "Chinese",
