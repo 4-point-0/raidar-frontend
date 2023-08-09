@@ -678,7 +678,7 @@ export const languageKeys = [
   },
   {
     value: "Uighur",
-    label: ",
+    label: "Uighur",
   },
   {
     value: "Ukrainian",
