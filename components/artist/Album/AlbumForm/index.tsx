@@ -1,12 +1,12 @@
 import {
   TextInput,
-  Stack,
   Box,
-  Group,
   Button,
-  Card,
   rem,
   createStyles,
+  Container,
+  SimpleGrid,
+  Grid,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { FileWithPath } from "@mantine/dropzone";
@@ -28,9 +28,10 @@ import { useIsMutating } from "@tanstack/react-query";
 
 import { getFileUrl } from "@/utils/file";
 
-import { Check } from "tabler-icons-react";
+import { Check, Trash } from "tabler-icons-react";
 import {
   useAlbumControllerCreateAlbum,
+  useFileControllerRemove,
   useFileControllerUpdateFile,
   useFileControllerUploadFile,
 } from "@/services/api/raidar/raidarComponents";
@@ -42,17 +43,23 @@ const useStyles = createStyles((theme) => ({
     width: "80%",
     margin: "auto",
   },
-
   avatar: {
     border: `${rem(2)} solid ${
       theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white
     }`,
+  },
+  button: {
+    backgroundColor: theme.colors.red[5],
+    ...theme.fn.hover({
+      backgroundColor: theme.colors.red[8],
+    }),
   },
 }));
 
 export const AlbumForm = (): any => {
   const router = useRouter();
   const { classes, theme } = useStyles();
+  const removeFile = useFileControllerRemove({});
 
   const isMutating = useIsMutating();
 
@@ -89,28 +96,15 @@ export const AlbumForm = (): any => {
 
   const handleImageDrop = async (files: FileWithPath[]) => {
     const file = files[0];
-    const previousResponse = form.values.image?.response;
+
+    const { image } = form.values;
 
     try {
-      let response: FileDto;
-
-      if (previousResponse) {
-        response = await updateFile.mutateAsync({
-          pathParams: {
-            id: previousResponse.id,
-          },
-          body: { file, tags: ["image"] } as any,
-        });
-      } else {
-        response = await uploadFile.mutateAsync({
-          body: {
-            file,
-            tags: ["image"],
-          } as any,
-        });
+      if (image?.response) {
+        await removeFile.mutateAsync({ pathParams: { id: image.response.id } });
       }
 
-      response = await uploadFile.mutateAsync({
+      const response = await uploadFile.mutateAsync({
         body: {
           file,
           tags: ["image"],
@@ -122,7 +116,14 @@ export const AlbumForm = (): any => {
         response,
       });
     } catch (error) {
-      form.setFieldError("image", "Failed to upload image");
+      form.setFieldValue("documents", image);
+
+      form.setFieldError(
+        "image",
+        (error as unknown as { stack?: { message?: string } })?.stack
+          ?.message || "Failed to upload image"
+      );
+
       console.error(error);
     }
   };
@@ -175,12 +176,7 @@ export const AlbumForm = (): any => {
       title: "Creating album",
     });
 
-    const { title, pka, cover_id, image } = values;
-
-    // const fileIds = [
-    //   image?.response?.id,
-    //   ...documents.map(({ response }: any) => response.id),
-    // ].filter(Boolean) as string[];
+    const { title, pka, image } = values;
 
     try {
       await createAlbum.mutateAsync({
@@ -202,63 +198,77 @@ export const AlbumForm = (): any => {
     }
   };
 
+  const PRIMARY_COL_HEIGHT = rem(400);
+
+  const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - ${theme.spacing.md} / 2)`;
+
   return (
-    <Card
-      withBorder
-      padding="xl"
-      radius="xl"
-      shadow="sm"
-      className={classes.card}
-    >
+    <Container my="md" mt={200}>
       <FormProvider form={form}>
         <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Stack>
-            <Box my="xl">
-              <Dropzone
-                title="Upload Image"
-                description="Drag'n' drop the campaing banner here. Max file size is 20MB, supported formats are PNG and JPEG"
-                label="Select Image"
-                previewUrl={getFileUrl(form.values.image?.response)}
-                error={form.getInputProps("image").error}
-                isLoading={isMutating > 0}
-                dropzone={{
-                  multiple: false,
-                  accept: ALBUM_IMAGE_TYPES,
-                  onDrop: handleImageDrop,
-                  disabled: isMutating > 0,
-                }}
-              />
-            </Box>
-            <Field withAsterisk label="Album Title">
-              <TextInput
-                mt="xs"
-                placeholder="Album Title"
-                {...form.getInputProps("title")}
-              />
-            </Field>
-
-            <Field withAsterisk label="Artist Name">
-              <TextInput
-                mt="xs"
-                placeholder="Artist Name"
-                {...form.getInputProps("pka")}
-              />
-            </Field>
-
-            <Group>
-              <Button
-                type="submit"
-                color="red"
-                leftIcon={<Check size={14} />}
-                disabled={isMutating > 0}
-              >
-                Create Album
-              </Button>
-            </Group>
-          </Stack>
+          <SimpleGrid
+            mt="5%"
+            cols={2}
+            spacing="md"
+            breakpoints={[{ maxWidth: "sm", cols: 1 }]}
+          >
+            <Dropzone
+              title="Upload Image"
+              maw={PRIMARY_COL_HEIGHT}
+              mah={PRIMARY_COL_HEIGHT}
+              description="Drag'n' drop the campaing banner here. Max file size is 20MB, supported formats are PNG and JPEG"
+              label="Select Image"
+              previewUrl={getFileUrl(form.values.image?.response)}
+              error={form.getInputProps("image").error}
+              isLoading={isMutating > 0}
+              dropzone={{
+                multiple: false,
+                accept: ALBUM_IMAGE_TYPES,
+                onDrop: handleImageDrop,
+                disabled: isMutating > 0,
+              }}
+            />
+            <Grid gutter="md">
+              <Grid.Col>
+                <Box h={SECONDARY_COL_HEIGHT}>
+                  <Field withAsterisk label="Album Title">
+                    <TextInput mt="xs" {...form.getInputProps("title")} />
+                  </Field>
+                  <Field withAsterisk label="Artist Name" mt="lg">
+                    <TextInput mt="xs" {...form.getInputProps("pka")} />
+                  </Field>
+                </Box>
+              </Grid.Col>
+              <Grid.Col span={4}>
+                <Box h={SECONDARY_COL_HEIGHT}>
+                  <Button
+                    className={classes.button}
+                    type="submit"
+                    leftIcon={<Check size={14} />}
+                    disabled={isMutating > 0}
+                  >
+                    Create Album
+                  </Button>
+                </Box>
+              </Grid.Col>
+              <Grid.Col span={4}>
+                <Box h={SECONDARY_COL_HEIGHT}>
+                  <Button
+                    className={classes.button}
+                    type="submit"
+                    color="red"
+                    leftIcon={<Trash size={14} />}
+                    disabled={isMutating > 0}
+                  >
+                    ResetForm
+                  </Button>
+                </Box>
+              </Grid.Col>
+            </Grid>
+          </SimpleGrid>
         </form>
       </FormProvider>
-    </Card>
+    </Container>
   );
 };
 
