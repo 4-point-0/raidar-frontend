@@ -43,6 +43,7 @@ export const Dropzone = ({
   const [aspectRatio, setAspectRatio] = useState<number>();
   const openRef = useRef<() => void>(null);
   const theme = useMantineTheme();
+  const [uploadedImage, setUploadedImage] = useState<boolean>(false);
 
   const { onDrop, ...rest } = dropzone;
 
@@ -52,6 +53,7 @@ export const Dropzone = ({
 
   const handlePreviewLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
     const img = event.target as HTMLImageElement;
+    setUploadedImage(true);
     setAspectRatio(img.naturalWidth / img.naturalHeight);
   };
 
@@ -79,7 +81,8 @@ export const Dropzone = ({
             paddingBottom: 32,
             borderColor: error ? theme.colors.red[6] : undefined,
             borderWidth: 1,
-            background: "transparent !important",
+            background: uploadedImage ? "transparent !important" : undefined,
+            backgroundColor: uploadedImage ? undefined : theme.colors.gray[5],
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
