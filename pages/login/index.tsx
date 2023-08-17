@@ -5,7 +5,6 @@ import {
   Image,
   MediaQuery,
   Stack,
-  Title,
   Text,
 } from "@mantine/core";
 import { useRouter } from "next/router";
@@ -55,10 +54,8 @@ export const Login = ({
       <Container
         mt="20%"
         sx={{
-          // boxShadow: "-2px 0px 17px -3px rgba(0,0,0,0.75)",
           borderRadius: "30px",
           padding: "1%",
-          backgroundColor: "white",
           border: "none",
         }}
       >
@@ -71,9 +68,42 @@ export const Login = ({
             >
               <Image
                 mx="auto"
-                src="images/login-image.jpeg"
-                width={200}
-                alt="Login Images"
+                src="images/login-image2.png"
+                width={300}
+                alt="Login Image"
+              />
+            </Box>
+
+            <Button
+              mt="xl"
+              color={theme.colors.red[5]}
+              variant="filled"
+              radius="xl"
+              size="md"
+              onClick={handleSignIn(providers?.google)}
+            >
+              Connect to Raidar with Google
+              <Box
+                ml={10}
+                sx={{
+                  width: "50",
+                  backgroundColor: "white",
+                  borderRadius: "50%",
+                  padding: "2px",
+                }}
+              >
+                <FcGoogle style={{ width: "22px", height: "22px" }} />
+              </Box>
+            </Button>
+            <Box mt={20} sx={{ textAlign: "center" }}>
+              <Text mb={15} c="dimmed">
+                Powered By
+              </Text>
+              <Image
+                mx="auto"
+                mb={20}
+                src="images/berklee-college.png"
+                width={150}
               />
             </Box>
           </Stack>
@@ -84,14 +114,14 @@ export const Login = ({
             <Box sx={{ width: "50vw" }}>
               <Image
                 mx="auto"
-                width={400}
+                width={600}
                 fit="contain"
-                src="images/login-image.jpeg"
+                src="images/login-image2.png"
               />
             </Box>
 
             <Button
-              // loading={loading}
+              mt="xl"
               color="red"
               variant="filled"
               radius="xl"
