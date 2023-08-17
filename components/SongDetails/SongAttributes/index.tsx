@@ -15,9 +15,9 @@ import { useDisclosure } from "@mantine/hooks";
 const useStyles = createStyles((theme) => ({
   button: {
     backgroundColor: theme.colors.red[5],
-    // ...theme.fn.hover({
-    //   backgroundColor: theme.colors.red[8],
-    // }),
+    ...theme.fn.hover({
+      backgroundColor: theme.colors.red[8],
+    }),
   },
 }));
 interface SongAttributeItem {
@@ -52,7 +52,7 @@ const SongAttribute = ({ songAttributes }: SongAttributeProps) => {
       <Drawer
         opened={opened}
         onClose={close}
-        title="Authentication"
+        title="Song details"
         overlayProps={{ opacity: 0.5, blur: 4 }}
         position="bottom"
       >
