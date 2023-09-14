@@ -3,7 +3,7 @@ import { getSession } from "next-auth/react";
 import { RaidarContext } from "./raidarContext";
 
 const baseUrl =
-  "http://raidar-dev.eba-5r5uvmxm.eu-central-1.elasticbeanstalk.com"; // TODO add your baseUrl
+  "https://raidar-dev.eba-5r5uvmxm.eu-central-1.elasticbeanstalk.com"; // TODO add your baseUrl
 
 export type ErrorWrapper<TError> =
   | TError
