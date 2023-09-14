@@ -2,8 +2,7 @@ import FormData from "form-data";
 import { getSession } from "next-auth/react";
 import { RaidarContext } from "./raidarContext";
 
-const baseUrl =
-  "https://raidar-dev.eba-5r5uvmxm.eu-central-1.elasticbeanstalk.com"; // TODO add your baseUrl
+const baseUrl = "https://raidar.us"; // TODO add your baseUrl
 
 export type ErrorWrapper<TError> =
   | TError
