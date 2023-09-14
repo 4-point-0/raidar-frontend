@@ -121,7 +121,7 @@ const AlbumSongs = () => {
           color="red"
           opacity={0.9}
         >
-          <Plus size={20} /> Add new Song
+          <Plus size={20} /> Add Song
         </Button>
 
         <SimpleGrid
