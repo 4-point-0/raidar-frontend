@@ -42,7 +42,7 @@ export type PaginatedDto = {
   take: number;
   skip: number;
   count: number;
-  results: any[];
+  results: any[][];
 };
 
 export type CreateSongDto = {
@@ -91,7 +91,7 @@ export type FileDto = {
   url_expiry: string;
 };
 
-export type AlbumDto = {
+export type SongAlbumDto = {
   id: string;
   /**
    * @format date-time
@@ -104,12 +104,11 @@ export type AlbumDto = {
   created_by_id: string;
   updated_by_id: string;
   title: string;
-  pka: string;
+  pka?: string;
   cover: FileDto;
-  songs: SongDto[];
 };
 
-export type ListingDto = {
+export type LicenceDto = {
   id: string;
   /**
    * @format date-time
@@ -124,9 +123,8 @@ export type ListingDto = {
   seller: UserDto;
   buyer: UserDto;
   tx_hash: string;
-  price: number;
-  price_in_near: string;
-  price_in_near_formatted: string;
+  sold_price: string;
+  sold_price_in_near_formatted?: string;
 };
 
 export type SongDto = {
@@ -142,7 +140,7 @@ export type SongDto = {
   created_by_id: string;
   updated_by_id: string;
   user_id: string;
-  album?: AlbumDto;
+  album?: SongAlbumDto;
   title: string;
   length: string;
   genre?: string | null;
@@ -162,11 +160,36 @@ export type SongDto = {
   recording_location: string;
   art: FileDto;
   pka: string;
-  last_listing?: ListingDto;
+  price: string;
+  licence?: LicenceDto;
+};
+
+export type BuySongDto = {
+  songId: string;
+  buyerId: string;
+  txHash: string;
 };
 
 export type CreateAlbumDto = {
   title: string;
   pka?: string;
   cover_id: string;
+};
+
+export type AlbumDto = {
+  id: string;
+  /**
+   * @format date-time
+   */
+  created_at: string;
+  /**
+   * @format date-time
+   */
+  updated_at: string;
+  created_by_id: string;
+  updated_by_id: string;
+  title: string;
+  pka?: string;
+  cover: FileDto;
+  songs: SongDto[];
 };

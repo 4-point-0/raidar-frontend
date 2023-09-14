@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 
 import {
   Box,
@@ -16,7 +16,7 @@ import {
   DropzoneProps as MantineDropzoneProps,
 } from "@mantine/dropzone";
 
-import { Photo, Upload, X } from "tabler-icons-react";
+import { Upload, X } from "tabler-icons-react";
 
 import { MAX_FILE_SIZE } from "@/components/artist/Album/AlbumForm/AlbumContext";
 
@@ -121,10 +121,10 @@ export const Dropzone = ({
               {/* <Photo size={50} /> */}
             </MantineDropzone.Idle>
 
-            <Text size="xl" inline>
+            <Text size="xl" inline color="gray.6">
               {title}
             </Text>
-            <Text size="sm" inline mt={7}>
+            <Text size="sm" inline mt={7} color="gray.6">
               {description}
             </Text>
           </Stack>

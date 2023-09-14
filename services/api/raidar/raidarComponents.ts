@@ -428,6 +428,47 @@ export const useSongControllerFindAllUserSongs = <
   );
 };
 
+export type SongControllerBuySongError = Fetcher.ErrorWrapper<undefined>;
+
+export type SongControllerBuySongVariables = {
+  body: Schemas.BuySongDto;
+} & RaidarContext["fetcherOptions"];
+
+export const fetchSongControllerBuySong = (
+  variables: SongControllerBuySongVariables,
+  signal?: AbortSignal
+) =>
+  raidarFetch<
+    Schemas.LicenceDto,
+    SongControllerBuySongError,
+    Schemas.BuySongDto,
+    {},
+    {},
+    {}
+  >({ url: "/api/v1/song/buy", method: "post", ...variables, signal });
+
+export const useSongControllerBuySong = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.LicenceDto,
+      SongControllerBuySongError,
+      SongControllerBuySongVariables
+    >,
+    "mutationFn"
+  >
+) => {
+  const { fetcherOptions } = useRaidarContext();
+  return reactQuery.useMutation<
+    Schemas.LicenceDto,
+    SongControllerBuySongError,
+    SongControllerBuySongVariables
+  >(
+    (variables: SongControllerBuySongVariables) =>
+      fetchSongControllerBuySong({ ...fetcherOptions, ...variables }),
+    options
+  );
+};
+
 export type AlbumControllerFindAllArtistAlbumsQueryParams = {
   take?: number;
   skip?: number;

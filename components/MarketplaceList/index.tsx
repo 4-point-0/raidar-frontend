@@ -1,26 +1,26 @@
-import {
-  createStyles,
-  Title,
-  Text,
-  SimpleGrid,
-  Container,
-  rem,
-  Image,
-  Button,
-  Group,
-  Avatar,
-  Box,
-  ActionIcon,
-  Overlay,
-} from "@mantine/core";
-import { PlayerPlay } from "tabler-icons-react";
 import { MarketplaceFilters } from "@/components/MarketplaceFilters";
-import { useState } from "react";
 import { userPlayerContext } from "@/context/PlayerContext";
 import { MarketplaceControllerFindAllResponse } from "@/services/api/raidar/raidarComponents";
 import { SongDto } from "@/services/api/raidar/raidarSchemas";
-import ImageWithBlurredShadow from "../ImageBlurShadow";
+import {
+  ActionIcon,
+  Avatar,
+  Box,
+  Button,
+  Container,
+  Group,
+  Image,
+  Overlay,
+  SimpleGrid,
+  Text,
+  Title,
+  createStyles,
+  rem,
+} from "@mantine/core";
+import { useState } from "react";
 import Tilt from "react-parallax-tilt";
+import { PlayerPlay } from "tabler-icons-react";
+import ImageWithBlurredShadow from "../ImageBlurShadow";
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -171,7 +171,7 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
           mt="md"
           color="red"
         >
-          {song.album?.pka.charAt(0)}
+          {song.album?.pka?.charAt(0)}
         </Avatar>
         <Text fz="sm" mt="sm" fw={500}>
           {song.album?.pka}
@@ -180,7 +180,7 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
       <Group>
         <Button mt="xl" className={classes.button}>
           <Group spacing="xs">
-            <Text>Buy for {song.last_listing?.price}</Text>{" "}
+            <Text>Buy for {song.price}</Text>{" "}
             <Image width={14} src={"/images/near-logo-white.svg"} />
           </Group>
         </Button>

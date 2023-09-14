@@ -12,7 +12,7 @@ export default defineConfig({
   raidar: {
     from: {
       source: "url",
-      url: `http://raidardev.eba-pgpaxsx2.eu-central-1.elasticbeanstalk.com/swagger-json`,
+      url: `http://raidar-dev.eba-5r5uvmxm.eu-central-1.elasticbeanstalk.com/swagger-json`,
     },
     outputDir: "services/api/raidar",
     to: async (context) => {

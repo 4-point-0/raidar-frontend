@@ -1,53 +1,51 @@
 import {
-  TextInput,
-  Stack,
   Box,
-  Group,
   Button,
-  Card,
-  rem,
+  Group,
+  Paper,
+  Stack,
+  TextInput,
   createStyles,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import { FileWithPath } from "@mantine/dropzone";
+import { useForm } from "@mantine/form";
 
-import { Field } from "@/components/form/Field";
 import { Dropzone } from "@/components/form/Dropzone";
+import { Field } from "@/components/form/Field";
 import { notifications } from "@/utils/notifications";
 import { useRouter } from "next/router";
 
-import { getEditFormValidateInput } from "@/utils/validations";
 import {
-  UploadedFileValue,
+  ALBUM_IMAGE_TYPES,
   CreateFormValues,
   FormProvider,
-  ALBUM_IMAGE_TYPES,
+  UploadedFileValue,
 } from "@/components/artist/Album/AlbumForm/AlbumContext";
 
 import { useIsMutating } from "@tanstack/react-query";
 
 import { getFileUrl } from "@/utils/file";
 
-import { Check } from "tabler-icons-react";
 import {
   useAlbumControllerCreateAlbum,
   useFileControllerUpdateFile,
   useFileControllerUploadFile,
 } from "@/services/api/raidar/raidarComponents";
 import { FileDto } from "@/services/api/raidar/raidarSchemas";
+import { modals } from "@mantine/modals";
+import { Check } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
-  card: {
-    backgroundColor: "#F8F8FF",
-    width: "80%",
-    margin: "auto",
-  },
-
-  avatar: {
-    border: `${rem(2)} solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white
-    }`,
-  },
+  // card: {
+  //   backgroundColor: "#F8F8FF",
+  //   width: "80%",
+  //   margin: "auto",
+  // },
+  // avatar: {
+  //   border: `${rem(2)} solid ${
+  //     theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white
+  //   }`,
+  // },
 }));
 
 export const AlbumForm = (): any => {
@@ -194,6 +192,8 @@ export const AlbumForm = (): any => {
       notifications.success({
         title: "Album sucessfully created",
       });
+
+      modals.closeAll();
     } catch (error) {
       console.error(error);
       notifications.error({
@@ -203,12 +203,12 @@ export const AlbumForm = (): any => {
   };
 
   return (
-    <Card
-      withBorder
-      padding="xl"
-      radius="xl"
-      shadow="sm"
-      className={classes.card}
+    <Paper
+      radius="sm"
+      sx={{
+        overflow: "hidden",
+      }}
+      // className={classes.card}
     >
       <FormProvider form={form}>
         <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -258,7 +258,7 @@ export const AlbumForm = (): any => {
           </Stack>
         </form>
       </FormProvider>
-    </Card>
+    </Paper>
   );
 };
 

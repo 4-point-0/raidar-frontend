@@ -3,7 +3,7 @@ import { getSession } from "next-auth/react";
 import { RaidarContext } from "./raidarContext";
 
 const baseUrl =
-  "http://raidardev.eba-pgpaxsx2.eu-central-1.elasticbeanstalk.com"; // TODO add your baseUrl
+  "http://raidar-dev.eba-5r5uvmxm.eu-central-1.elasticbeanstalk.com"; // TODO add your baseUrl
 
 export type ErrorWrapper<TError> =
   | TError
@@ -25,7 +25,7 @@ export async function raidarFetch<
   TBody extends {} | FormData | undefined | null,
   THeaders extends {},
   TQueryParams extends {},
-  TPathParams extends {},
+  TPathParams extends {}
 >({
   url,
   method,

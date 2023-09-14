@@ -1,39 +1,35 @@
 import {
-  TextInput,
-  Stack,
   Box,
-  Group,
   Button,
   Card,
-  createStyles,
-  Switch,
+  Group,
   NumberInput,
+  Stack,
+  Switch,
+  TextInput,
+  createStyles,
 } from "@mantine/core";
-import { Calendar } from "@mantine/dates";
+import { DateInput } from "@mantine/dates";
 
-import { useForm } from "@mantine/form";
 import { FileWithPath } from "@mantine/dropzone";
+import { useForm } from "@mantine/form";
 
-import { Field } from "@/components/form/Field";
 import { Dropzone } from "@/components/form/Dropzone";
+import { Field } from "@/components/form/Field";
 import { notifications } from "@/utils/notifications";
 import { useRouter } from "next/router";
 
-import { getEditFormValidateInput } from "@/utils/validations";
 import {
-  UploadedFileValue,
   CreateFormValues,
   FormProvider,
   SONG_IMAGE_TYPES,
+  UploadedFileValue,
 } from "@/components/artist/Song/SongForm/SongContext";
 
 import { useIsMutating } from "@tanstack/react-query";
 
 import { getFileUrl } from "@/utils/file";
 
-import { Check } from "tabler-icons-react";
-import { useMemo, useState } from "react";
-import dayjs from "dayjs";
 import {
   useAlbumControllerFindOne,
   useFileControllerUpdateFile,
@@ -41,17 +37,19 @@ import {
   useSongControllerCreateSong,
 } from "@/services/api/raidar/raidarComponents";
 import { FileDto } from "@/services/api/raidar/raidarSchemas";
+import { useMemo, useState } from "react";
+import { Check } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
-  card: {
-    backgroundColor: theme.colors.red[5],
-    width: "80%",
-    margin: "auto",
-  },
+  // card: {
+  //   backgroundColor: theme.colors.red[5],
+  //   width: "80%",
+  //   margin: "auto",
+  // },
 }));
 
 export const SongForm = (): any => {
-  const [selectedDate, setSelectedDate] = useState<Date[]>([]);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
   const router = useRouter();
   const { classes } = useStyles();
@@ -67,17 +65,6 @@ export const SongForm = (): any => {
 
   const isMutating = useIsMutating();
 
-  const handleSelect = (date: Date) => {
-    const isSelected = selectedDate.some((s) => dayjs(date).isSame(s, "date"));
-    if (isSelected) {
-      setSelectedDate((current) =>
-        current.filter((d) => !dayjs(d).isSame(date, "date"))
-      );
-    } else if (selectedDate.length < 3) {
-      setSelectedDate((current) => [...current, date]);
-    }
-  };
-
   const form = useForm<any>({
     validateInputOnChange: true,
     initialValues: {
@@ -86,8 +73,8 @@ export const SongForm = (): any => {
       genre: "",
       mood: "",
       tags: "",
-      length: 0,
-      bpm: 0,
+      length: null,
+      bpm: null,
       instrumental: "",
       languages: "",
       vocal_ranges: "",
@@ -242,6 +229,8 @@ export const SongForm = (): any => {
   const handleSubmit = async (values: CreateFormValues) => {
     form.validate();
 
+    if (!selectedDate) return;
+
     if (!form.isValid) {
       return;
     }
@@ -268,7 +257,7 @@ export const SongForm = (): any => {
       song,
     } = values;
 
-    const formattedDate = new Date(selectedDate[0]).toISOString();
+    const formattedDate = new Date(selectedDate).toISOString();
 
     // console.log("title", title);
     // console.log("genre", genre);
@@ -336,7 +325,7 @@ export const SongForm = (): any => {
       padding="xl"
       radius="xl"
       shadow="sm"
-      className={classes.card}
+      // className={classes.card}
     >
       <FormProvider form={form}>
         <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -389,26 +378,26 @@ export const SongForm = (): any => {
                   {...form.getInputProps("genre")}
                 />
               </Field>
+
+              <Field withAsterisk label="Mood">
+                <TextInput
+                  mt="xs"
+                  placeholder="E.g. Happy, Epic, Euphoric"
+                  {...form.getInputProps("mood")}
+                />
+              </Field>
             </Group>
 
-            <Field withAsterisk label="Mood">
-              <TextInput
-                mt="xs"
-                placeholder="E.g. Happy, Epic, Euphoric"
-                {...form.getInputProps("mood")}
-              />
-            </Field>
-
-            <Field withAsterisk label="tags">
-              <TextInput
-                mt="xs"
-                placeholder="E.g. Hard Beats, Bass Boosted, Synthesizer"
-                {...form.getInputProps("tags")}
-              />
-            </Field>
-
             <Group>
-              <Field withAsterisk label="length">
+              <Field withAsterisk label="Tags">
+                <TextInput
+                  mt="xs"
+                  placeholder="E.g. Hard Beats, Bass Boosted, Synthesizer"
+                  {...form.getInputProps("tags")}
+                />
+              </Field>
+
+              <Field withAsterisk label="Length">
                 <TextInput
                   mt="xs"
                   placeholder="Duration in seconds (0 to 500)"
@@ -416,7 +405,7 @@ export const SongForm = (): any => {
                 />
               </Field>
 
-              <Field withAsterisk label="bpm">
+              <Field withAsterisk label="Bpm">
                 <TextInput
                   mt="xs"
                   placeholder="From 0 to 200"
@@ -425,39 +414,38 @@ export const SongForm = (): any => {
               </Field>
             </Group>
 
-            <Field withAsterisk label="Recording Date">
-              <Calendar
-                getDayProps={(date) => ({
-                  selected: selectedDate.some((s) =>
-                    dayjs(date).isSame(s, "date")
-                  ),
-                  onClick: () => handleSelect(date),
-                })}
-              />
-            </Field>
+            <Group>
+              <Field withAsterisk label="Instrimental">
+                <Switch
+                  label="Instrumental"
+                  {...form.getInputProps("instrumental")}
+                />
+              </Field>
 
-            <Field withAsterisk label="Instrimental">
-              <Switch
-                label="Instrumental"
-                {...form.getInputProps("instrumental")}
-              />
-            </Field>
+              <Field withAsterisk label="Languages">
+                <TextInput
+                  mt="xs"
+                  placeholder="E.g. English, Spanish, French"
+                  {...form.getInputProps("languages")}
+                />
+              </Field>
 
-            <Field withAsterisk label="Languages">
-              <TextInput
-                mt="xs"
-                placeholder="E.g. English, Spanish, French"
-                {...form.getInputProps("languages")}
-              />
-            </Field>
+              <Field withAsterisk label="Vocal Ranges">
+                <TextInput
+                  mt="xs"
+                  placeholder="E.g. Soprano, Alt, Tenor"
+                  {...form.getInputProps("vocalRanges")}
+                />
+              </Field>
 
-            <Field withAsterisk label="Vocal Ranges">
-              <TextInput
-                mt="xs"
-                placeholder="E.g. Soprano, Alt, Tenor"
-                {...form.getInputProps("vocalRanges")}
-              />
-            </Field>
+              <Field withAsterisk label="Recording Date">
+                <DateInput
+                  value={selectedDate}
+                  onChange={setSelectedDate}
+                  placeholder="Recording Date"
+                />
+              </Field>
+            </Group>
 
             <Group>
               <Field withAsterisk label="Musical key">
@@ -488,10 +476,14 @@ export const SongForm = (): any => {
                 />
               </Field>
 
-              <Field withAsterisk label="Price">
+              <Field withAsterisk label="Price in NEAR">
                 <NumberInput
                   mt="xs"
-                  placeholder="Price"
+                  defaultValue={0.5}
+                  precision={5}
+                  min={0.1}
+                  step={0.5}
+                  placeholder="Price in NEAR"
                   {...form.getInputProps("price")}
                 />
               </Field>

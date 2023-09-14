@@ -1,21 +1,26 @@
+"use client";
+
 import {
-  Text,
+  Anchor,
+  Box,
   Container,
-  Title,
+  Group,
   SimpleGrid,
+  Text,
+  Title,
   createStyles,
   rem,
-  Anchor,
-  Group,
-  Box,
   useMantineTheme,
 } from "@mantine/core";
 import { Plus } from "tabler-icons-react";
 
-import { useAlbumControllerFindAllArtistAlbums } from "@/services/api/raidar/raidarComponents";
 import ImageWithBlurredShadow from "@/components/ImageBlurShadow";
-import { useRouter } from "next/router";
+import { useAlbumControllerFindAllArtistAlbums } from "@/services/api/raidar/raidarComponents";
 import { AlbumDto } from "@/services/api/raidar/raidarSchemas";
+import { useMediaQuery } from "@mantine/hooks";
+import { modals } from "@mantine/modals";
+import { useRouter } from "next/router";
+import AlbumForm from "../AlbumForm";
 
 const useStyles = createStyles((theme) => ({
   item: {
@@ -58,11 +63,17 @@ const ArtistAlbums = () => {
   const theme = useMantineTheme();
   const router = useRouter();
 
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
   const addNewAlbumItem = () => {
     return (
       <Group
         onClick={() => {
-          router.push("/artist/album/create");
+          modals.open({
+            fullScreen: isMobile,
+            title: `Create new album`,
+            children: <AlbumForm />,
+          });
         }}
         mb="lg"
         p="lg"
@@ -90,7 +101,7 @@ const ArtistAlbums = () => {
           <Box
             sx={(theme) => ({
               position: "absolute",
-              zIndex: 9999,
+              zIndex: 99,
               top: 0,
               left: 0,
               right: 0,
@@ -113,7 +124,7 @@ const ArtistAlbums = () => {
 
         <Box ml="md">
           <Text fw={700} fz="lg" className={classes.itemTitle}>
-            Add new Album
+            Add Album
           </Text>
         </Box>
       </Group>
