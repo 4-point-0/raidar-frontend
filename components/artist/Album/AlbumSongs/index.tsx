@@ -1,24 +1,23 @@
 import {
-  Image,
-  Text,
+  Anchor,
+  Button,
   Container,
+  Image,
+  Paper,
+  SimpleGrid,
+  Text,
   ThemeIcon,
   Title,
-  SimpleGrid,
   createStyles,
   rem,
-  Button,
-  Anchor,
-  Paper,
-  Loader,
 } from "@mantine/core";
 import { Plus } from "tabler-icons-react";
 
-import Link from "next/link";
-import { useRouter } from "next/router";
-import formatDuration from "@/utils/formatDuration";
 import { useAlbumControllerFindOne } from "@/services/api/raidar/raidarComponents";
 import { SongDto } from "@/services/api/raidar/raidarSchemas";
+import formatDuration from "@/utils/formatDuration";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -122,7 +121,7 @@ const AlbumSongs = () => {
           color="red"
           opacity={0.9}
         >
-          <Plus size={20} /> Add Song
+          <Plus size={20} /> Add new Song
         </Button>
 
         <SimpleGrid
