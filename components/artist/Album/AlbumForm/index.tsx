@@ -220,7 +220,7 @@ export const AlbumForm = (): any => {
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <SimpleGrid
             mt="5%"
-            cols={2}
+            cols={1}
             spacing="md"
             breakpoints={[{ maxWidth: "sm", cols: 1 }]}
           >
@@ -251,7 +251,7 @@ export const AlbumForm = (): any => {
                   </Field>
                 </Box>
               </Grid.Col>
-              <Grid.Col span={4}>
+              <Grid.Col span={5}>
                 <Box h={SECONDARY_COL_HEIGHT}>
                   <Button
                     className={classes.button}
@@ -263,7 +263,7 @@ export const AlbumForm = (): any => {
                   </Button>
                 </Box>
               </Grid.Col>
-              <Grid.Col span={4}>
+              <Grid.Col span={5}>
                 <Box h={SECONDARY_COL_HEIGHT}>
                   <Button
                     className={classes.button}

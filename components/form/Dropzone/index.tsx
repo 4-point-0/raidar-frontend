@@ -82,7 +82,7 @@ export const Dropzone = ({
             borderColor: error ? theme.colors.red[6] : undefined,
             borderWidth: 1,
             background: uploadedImage ? "transparent !important" : undefined,
-            backgroundColor: uploadedImage ? undefined : theme.colors.gray[5],
+            backgroundColor: uploadedImage ? undefined : theme.colors.gray[3],
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -102,8 +102,8 @@ export const Dropzone = ({
               : theme.colors.dark[9],
             backgroundColor:
               previewUrl && theme.fn.rgba(theme.colors.gray[8], 0.5),
-            maxWidth: "40%",
-            minWidth: 400,
+            // maxWidth: "40%",
+            // minWidth: 400,
             margin: "0 auto",
             borderRadius: theme.radius.xl,
             padding: theme.spacing.sm,
@@ -112,7 +112,7 @@ export const Dropzone = ({
           <Stack
             align="center"
             spacing="xs"
-            style={{ margin: "0 auto", maxWidth: 300, pointerEvents: "none" }}
+            style={{ margin: "0 auto", pointerEvents: "none" }}
           >
             <MantineDropzone.Accept>
               <Upload size={50} color={theme.colors[theme.primaryColor][6]} />

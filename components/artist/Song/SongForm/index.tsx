@@ -9,8 +9,9 @@ import {
   Stack,
   Switch,
   TextInput,
-  createStyles
+  createStyles,
 } from "@mantine/core";
+import { DateInput } from "@mantine/dates";
 
 import { FileWithPath } from "@mantine/dropzone";
 import { useForm } from "@mantine/form";
@@ -39,17 +40,16 @@ import { vocalRangeKeys } from "@/datasets/forms/vocal-range-keys";
 import {
   useFileControllerRemove,
   useFileControllerUploadFile,
-  useSongControllerCreateSong
+  useSongControllerCreateSong,
 } from "@/services/api/raidar/raidarComponents";
-import dayjs from "dayjs";
 import { useState } from "react";
 import { Check } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
   card: {
-    backgroundColor: "#fff",
-    width: "80%",
-    margin: "auto",
+    // backgroundColor: "#fff",
+    // width: "80%",
+    // margin: "auto",
   },
   button: {
     backgroundColor: theme.colors.red[5],
@@ -388,10 +388,10 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
                 : null} */}
             </Box>
 
-            <Box maw={400} mx="auto" mt="xl">
+            <Box mx="auto" mt="xl">
               <Dropzone
-                maw={50}
-                mah={50}
+                // maw={50}
+                // mah={50}
                 title="Upload Song"
                 description="Drag'n' drop the audio file here. Max file size is 20MB, supported formats are .waw"
                 label="Select Audio"
@@ -471,16 +471,13 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
             </Group>
 
             <Field withAsterisk label="Recording Date">
-              <Calendar
+              <DateInput
                 color="red"
                 size="md"
                 maxDate={new Date()}
                 defaultDate={new Date()}
                 getDayProps={(date) => ({
-                  selected: selectedDate.?some((s) =>
-                    dayjs(date).isSame(s, "date")
-                  ),
-                  onClick: () => handleSelect(date),
+                  onClick: () => setSelectedDate(date),
                 })}
               />
             </Field>

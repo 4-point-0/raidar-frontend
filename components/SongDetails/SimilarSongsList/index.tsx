@@ -1,8 +1,8 @@
-import { Carousel } from "@mantine/carousel";
-import { useMarketplaceControllerFindAll } from "@/services/api/raidar/raidarComponents";
 import ImageWithBlurredShadow from "@/components/ImageBlurShadow";
-import { useRouter } from "next/router";
+import { useMarketplaceControllerFindAll } from "@/services/api/raidar/raidarComponents";
+import { Carousel } from "@mantine/carousel";
 import { Box } from "@mantine/core";
+import { useRouter } from "next/router";
 
 interface SimilarSongsListProps {
   songGenre: string;
