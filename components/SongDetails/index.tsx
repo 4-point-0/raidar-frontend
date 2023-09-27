@@ -1,37 +1,38 @@
 import {
-  createStyles,
-  Container,
-  Title,
-  Text,
-  rem,
-  Box,
-  Group,
-  SimpleGrid,
-  useMantineTheme,
-  Grid,
-  Overlay,
   ActionIcon,
-  ScrollArea,
+  Box,
+  Container,
+  Grid,
+  Group,
+  Overlay,
+  SimpleGrid,
+  Text,
+  Title,
+  createStyles,
+  rem,
+  useMantineTheme,
 } from "@mantine/core";
-import { BsTags, BsCalendar2Date, BsGlobe } from "react-icons/bs";
-import { BiLeftArrowAlt } from "react-icons/bi";
-import { GiMusicSpell, GiMusicalKeyboard } from "react-icons/gi";
-import { GiMusicalNotes } from "react-icons/gi";
-import { TfiLocationPin } from "react-icons/tfi";
-import { TbUserShare, TbLanguage } from "react-icons/tb";
+import { BsGlobe, BsTags } from "react-icons/bs";
+import {
+  GiMusicSpell,
+  GiMusicalKeyboard,
+  GiMusicalNotes,
+} from "react-icons/gi";
 import { RxAvatar } from "react-icons/rx";
+import { TbLanguage, TbUserShare } from "react-icons/tb";
+import { TfiLocationPin } from "react-icons/tfi";
 import Tilt from "react-parallax-tilt";
 
-import SongAttributes from "./SongAttributes";
 import SimilarSongsList from "@/components/SongDetails/SimilarSongsList";
-import formatDuration from "@/utils/formatDuration";
-import { formatDate } from "@/utils/formatDate";
 import { SongDto } from "@/services/api/raidar/raidarSchemas";
+import { formatDate } from "@/utils/formatDate";
+import formatDuration from "@/utils/formatDuration";
+import SongAttributes from "./SongAttributes";
 
-import ImageWithBlurredShadow from "../ImageBlurShadow";
 import { userPlayerContext } from "@/context/PlayerContext";
 import { useRouter } from "next/router";
 import { Calendar, PlayerPlay } from "tabler-icons-react";
+import ImageWithBlurredShadow from "../ImageBlurShadow";
 
 const useStyles = createStyles((theme) => ({
   image: {
@@ -259,6 +260,7 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
               src={song.art.url}
               alt={song.title}
               height={300}
+              width={400}
               blur={16}
               shadowOffset={-16}
             />

@@ -1,5 +1,7 @@
 import {
+  Alert,
   Anchor,
+  Box,
   Button,
   Container,
   Flex,
@@ -12,9 +14,10 @@ import {
   createStyles,
   rem,
 } from "@mantine/core";
-import { Plus } from "tabler-icons-react";
+import { AlertCircle, Plus, Wallet } from "tabler-icons-react";
 
 import ImageWithBlurredShadow from "@/components/ImageBlurShadow";
+import { useWalletSelector } from "@/context/WalletSelectorContext";
 import { useAlbumControllerFindOne } from "@/services/api/raidar/raidarComponents";
 import { SongDto } from "@/services/api/raidar/raidarSchemas";
 import formatDuration from "@/utils/formatDuration";
@@ -73,6 +76,8 @@ const AlbumSongs = () => {
   const albumId = router.query.id;
 
   const isMobile = useMediaQuery("(max-width: 768px)");
+
+  const { selector, modal, accountId } = useWalletSelector();
 
   const { data: album } = useAlbumControllerFindOne({
     pathParams: {
@@ -135,23 +140,56 @@ const AlbumSongs = () => {
           {album?.pka}
         </Title>
 
-        <Button
-          mx="auto"
-          // component={Link}
-          // href={`/artist/album/songs/create/${albumId}`}
-          color="red"
-          opacity={0.9}
-          onClick={() => {
-            modals.open({
-              fullScreen: isMobile,
+        {!accountId && (
+          <Alert
+            icon={<AlertCircle size="1rem" />}
+            title="You need to connect NEAR wallet"
+            color="red"
+            radius="md"
+            variant="light"
+          >
+            Please connect NEAR wallet to be able to create a new song.
+          </Alert>
+        )}
 
-              title: `Create new song`,
-              children: <SongForm albumIdProp={albumId as string} />,
-            });
-          }}
-        >
-          <Plus size={20} /> Add Song
-        </Button>
+        {!accountId && (
+          <Button
+            onClick={() => modal.show()}
+            color="red"
+            opacity={0.9}
+            mt={"md"}
+          >
+            <Box mr="sm">
+              <Wallet size={20} />
+            </Box>
+            Connect Wallet
+          </Button>
+        )}
+
+        {accountId && (
+          <Button
+            mx="auto"
+            // component={Link}
+            // href={`/artist/album/songs/create/${albumId}`}
+            color="red"
+            opacity={0.9}
+            onClick={() => {
+              if (!accountId) {
+                modal.show();
+                return;
+              }
+
+              modals.open({
+                fullScreen: isMobile,
+
+                title: `Create new song`,
+                children: <SongForm albumIdProp={albumId as string} />,
+              });
+            }}
+          >
+            <Plus size={20} /> Add Song
+          </Button>
+        )}
 
         <SimpleGrid
           cols={2}

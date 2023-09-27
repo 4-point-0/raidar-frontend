@@ -1,5 +1,6 @@
 import { MarketplaceFilters } from "@/components/MarketplaceFilters";
 import { userPlayerContext } from "@/context/PlayerContext";
+import { useWalletSelector } from "@/context/WalletSelectorContext";
 import { MarketplaceControllerFindAllResponse } from "@/services/api/raidar/raidarComponents";
 import { SongDto } from "@/services/api/raidar/raidarSchemas";
 import {
@@ -81,10 +82,19 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
   const { classes } = useStyles();
   const [currentResults, setCurrentResults] = useState<SongDto[]>(data.results);
 
+  const { selector, modal, accountId } = useWalletSelector();
+
   const { setSong } = userPlayerContext();
 
   const updatingResults = (data: { results: SongDto[] }) => {
     setCurrentResults(data.results);
+  };
+
+  const buySong = async (songId: string) => {
+    if (!accountId) {
+      modal.show();
+      return;
+    }
   };
 
   const features = currentResults.map((song: SongDto) => (
@@ -178,7 +188,13 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
         </Text>
       </Group>
       <Group>
-        <Button mt="xl" className={classes.button}>
+        <Button
+          mt="xl"
+          className={classes.button}
+          onClick={() => {
+            buySong(song.id);
+          }}
+        >
           <Group spacing="xs">
             <Text>Buy for {song.price}</Text>{" "}
             <Image width={14} src={"/images/near-logo-white.svg"} />

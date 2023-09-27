@@ -1,6 +1,5 @@
-import React from "react";
-import { Title, Container } from "@mantine/core";
 import SongForm from "@/components/artist/Song/SongForm";
+import { Container, Title } from "@mantine/core";
 
 export const CreateSong = () => {
   return (
@@ -9,7 +8,7 @@ export const CreateSong = () => {
         Create new song
       </Title>
 
-      <SongForm />
+      <SongForm albumIdProp={"0"} />
     </Container>
   );
 };

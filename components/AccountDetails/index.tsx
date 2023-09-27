@@ -1,41 +1,36 @@
 import {
   ActionIcon,
+  Alert,
+  Avatar,
   CopyButton,
   Group,
-  Paper,
-  Tooltip,
-  Text,
-  Avatar,
+  Indicator,
   Menu,
+  Paper,
+  Text,
+  Tooltip,
 } from "@mantine/core";
-import React, { useCallback, useEffect, useState } from "react";
+import * as nearApi from "near-api-js";
+import { useCallback, useEffect, useState } from "react";
 import {
-  ArrowsLeftRight,
   Check,
   Coin,
   Copy,
   ExternalLink,
   Logout,
   MessageCircle,
-  Moneybag,
   Music,
-  Photo,
-  Search,
-  Settings,
-  Trash,
   User,
   Wallet,
 } from "tabler-icons-react";
-import * as nearApi from "near-api-js";
 
+import { useWalletSelector } from "@/context/WalletSelectorContext";
+import { useFindUser } from "@/hooks/useFindUser";
+import { getConnectionConfig } from "@/utils/near";
+import { signOut, useSession } from "next-auth/react";
+import { useAccount } from "../../context/AccountContext";
 import { useUserContext } from "../../context/UserContext";
 import WalletConnectButton from "../WalletConnectButton";
-import { useAccount } from "../../context/AccountContext";
-import { signOut, useSession } from "next-auth/react";
-import Email from "next-auth/providers/email";
-import { useWalletSelector } from "@/context/WalletSelectorContext";
-import { getConnectionConfig } from "@/utils/near";
-import { useFindUser } from "@/hooks/useFindUser";
 
 export const AccountDetails = () => {
   const userContext = useUserContext();
@@ -192,15 +187,24 @@ export const AccountDetails = () => {
     <Group position="center">
       <Menu position="left-start" offset={7} withArrow arrowPosition="center">
         <Menu.Target>
-          <Avatar
-            variant="filled"
-            radius="xl"
-            size="md"
+          <Indicator
+            disabled={accountId !== null}
+            inline
+            label="!"
+            size={16}
+            offset={4}
             color="red"
-            src={session?.user?.image ?? ""}
           >
-            {session?.user?.name?.charAt(0)}
-          </Avatar>
+            <Avatar
+              variant="filled"
+              radius="xl"
+              size="md"
+              color="red"
+              src={session?.user?.image ?? ""}
+            >
+              {session?.user?.name?.charAt(0)}
+            </Avatar>
+          </Indicator>
         </Menu.Target>
         <Menu.Dropdown>
           <Menu.Label>User Information</Menu.Label>
@@ -230,6 +234,12 @@ export const AccountDetails = () => {
           <Menu.Label>NEAR Wallet</Menu.Label>
 
           {accountId === null && (
+            <Alert title="Connect NEAR Wallet" color="red" maw={200}>
+              Please connect NEAR wallet to be able to use all the features.
+            </Alert>
+          )}
+
+          {accountId === null && (
             <Menu.Item
               icon={<Wallet size={14} />}
               onClick={() => {
@@ -250,6 +260,23 @@ export const AccountDetails = () => {
             <Menu.Item closeMenuOnClick={false} icon={<Coin size={14} />}>
               {nearApi.utils.format.formatNearAmount(account?.amount ?? "0", 2)}{" "}
               Ⓝ
+            </Menu.Item>
+          )}
+
+          {accountId !== null && (
+            <Menu.Item
+              color="red"
+              icon={<Wallet size={14} />}
+              onClick={async () => {
+                const wallet = await selector.wallet();
+
+                wallet.signOut().catch((err) => {
+                  console.log("Failed to sign out");
+                  console.error(err);
+                });
+              }}
+            >
+              Disconnect Wallet
             </Menu.Item>
           )}
 
