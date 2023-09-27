@@ -48,12 +48,16 @@ const useStyles = createStyles((theme) => ({
   // },
 }));
 
-export const SongForm = (): any => {
+interface SongFormProps {
+  albumIdProp: string | null;
+}
+
+export const SongForm = ({ albumIdProp }: SongFormProps): any => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
   const router = useRouter();
   const { classes } = useStyles();
-  const albumId = router.query.id;
+  const albumId = albumIdProp || router.query.id;
 
   const albumDataQuery = useAlbumControllerFindOne({
     pathParams: {
@@ -321,11 +325,11 @@ export const SongForm = (): any => {
 
   return (
     <Card
-      withBorder
-      padding="xl"
-      radius="xl"
-      shadow="sm"
-      // className={classes.card}
+    // withBorder
+    // padding="xl"
+    // radius="xl"
+    // shadow="sm"
+    // className={classes.card}
     >
       <FormProvider form={form}>
         <form onSubmit={form.onSubmit(handleSubmit)}>

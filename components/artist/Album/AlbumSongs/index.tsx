@@ -2,6 +2,7 @@ import {
   Anchor,
   Button,
   Container,
+  Flex,
   Image,
   Paper,
   SimpleGrid,
@@ -13,11 +14,14 @@ import {
 } from "@mantine/core";
 import { Plus } from "tabler-icons-react";
 
+import ImageWithBlurredShadow from "@/components/ImageBlurShadow";
 import { useAlbumControllerFindOne } from "@/services/api/raidar/raidarComponents";
 import { SongDto } from "@/services/api/raidar/raidarSchemas";
 import formatDuration from "@/utils/formatDuration";
-import Link from "next/link";
+import { useMediaQuery } from "@mantine/hooks";
+import { modals } from "@mantine/modals";
 import { useRouter } from "next/router";
+import SongForm from "../../Song/SongForm";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -68,6 +72,8 @@ const AlbumSongs = () => {
 
   const albumId = router.query.id;
 
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
   const { data: album } = useAlbumControllerFindOne({
     pathParams: {
       id: albumId as string,
@@ -106,20 +112,43 @@ const AlbumSongs = () => {
     <Container size="100%" className={classes.wrapper}>
       <Paper
         radius="xl"
-        className={classes.descriptionCard}
+        // className={classes.descriptionCard}
         sx={{ backgroundImage: `url(${album?.cover?.url})` }}
       />
       <Container size={800} className={classes.wrapper}>
+        <Flex justify="center" align="center" direction="row" mb={"xl"}>
+          <ImageWithBlurredShadow
+            src={album?.cover?.url ?? ""}
+            alt={album?.title ?? ""}
+            height={200}
+            width={200}
+            blur={8}
+            shadowOffset={0}
+          />
+        </Flex>
+
         <Title className={classes.title} order={2} fw={700} fz={40}>
           {album?.title}
         </Title>
 
+        <Title order={4} className={classes.title} fw={700} fz={40}>
+          {album?.pka}
+        </Title>
+
         <Button
           mx="auto"
-          component={Link}
-          href={`/artist/album/songs/create/${albumId}`}
+          // component={Link}
+          // href={`/artist/album/songs/create/${albumId}`}
           color="red"
           opacity={0.9}
+          onClick={() => {
+            modals.open({
+              fullScreen: isMobile,
+
+              title: `Create new song`,
+              children: <SongForm albumIdProp={albumId as string} />,
+            });
+          }}
         >
           <Plus size={20} /> Add Song
         </Button>
