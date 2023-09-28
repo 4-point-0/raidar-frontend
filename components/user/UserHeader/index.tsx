@@ -1,8 +1,9 @@
+import { AccountDetails } from "@/components/AccountDetails";
+import ThemeTogglerButton from "@/components/ThemeTogglerButton";
 import {
   createStyles,
   Header,
   Group,
-  Button,
   Divider,
   Box,
   Burger,
@@ -12,9 +13,7 @@ import {
   Image,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Logout } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -50,7 +49,7 @@ const useStyles = createStyles((theme) => ({
     paddingLeft: theme.spacing.md,
     paddingRight: theme.spacing.md,
     textDecoration: "none",
-    color: "red",
+    color: theme.colors.red[5],
     fontWeight: 500,
     fontSize: theme.fontSizes.sm,
 
@@ -69,35 +68,6 @@ const useStyles = createStyles((theme) => ({
     }),
   },
 
-  subLink: {
-    width: "100%",
-    padding: `${theme.spacing.xs} ${theme.spacing.md}`,
-    borderRadius: theme.radius.md,
-
-    ...theme.fn.hover({
-      backgroundColor:
-        theme.colorScheme === "dark"
-          ? theme.colors.dark[7]
-          : theme.colors.gray[0],
-    }),
-
-    "&:active": theme.activeStyles,
-  },
-
-  dropdownFooter: {
-    backgroundColor:
-      theme.colorScheme === "dark"
-        ? theme.colors.dark[7]
-        : theme.colors.gray[0],
-    margin: `calc(${theme.spacing.md} * -1)`,
-    marginTop: theme.spacing.sm,
-    padding: `${theme.spacing.md} calc(${theme.spacing.md} * 2)`,
-    paddingBottom: theme.spacing.xl,
-    borderTop: `${rem(1)} solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[1]
-    }`,
-  },
-
   hiddenMobile: {
     [theme.fn.smallerThan("sm")]: {
       display: "none",
@@ -109,24 +79,36 @@ const useStyles = createStyles((theme) => ({
       display: "none",
     },
   },
+  button: {
+    backgroundColor: theme.colors.red[5],
+    ...theme.fn.hover({
+      backgroundColor: theme.colors.red[8],
+    }),
+  },
 }));
 
 export const UserHeader = () => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
+
   const { classes, theme } = useStyles();
   const router = useRouter();
   const pathname = router.pathname;
-
-  const handleLogout = () => {
-    signOut({ callbackUrl: "/login" });
-  };
 
   return (
     <Box pb={40}>
       <Header height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
-          <Image src="/images/berklee-college.png" width={150} />
+          <a href="/marketplace">
+            <Image
+              src={
+                theme.colorScheme === "light"
+                  ? "/images/berklee-college-light.png"
+                  : "/images/berklee-college-dark.png"
+              }
+              width={150}
+            />
+          </a>
           <Group
             sx={{ height: "100%" }}
             spacing={0}
@@ -141,35 +123,26 @@ export const UserHeader = () => {
               Marketplace
             </a>
             <a
-              href="/artist/albums"
+              href="/user/songs"
               className={`${
-                pathname === "/artist/albums"
-                  ? classes.activeLink
-                  : classes.link
+                pathname === "/user/songs" ? classes.activeLink : classes.link
               }`}
             >
-              My Albums
-            </a>
-            <a
-              href="/artist/profile"
-              className={`${
-                pathname === "/artist/profile"
-                  ? classes.activeLink
-                  : classes.link
-              }`}
-            >
-              Profile
+              My Songs
             </a>
           </Group>
 
           <Group className={classes.hiddenMobile}>
-            <Button
-              color="red"
-              leftIcon={<Logout size={14} />}
-              onClick={handleLogout}
-            >
-              Log Out
-            </Button>
+            <AccountDetails />
+            <ThemeTogglerButton />
+            <Image
+              src={
+                theme.colorScheme === "light"
+                  ? "/images/built-on-near-black.svg"
+                  : "/images/built-on-near-white.svg"
+              }
+              width={120}
+            />
           </Group>
 
           <Burger
@@ -185,7 +158,18 @@ export const UserHeader = () => {
         onClose={closeDrawer}
         size="100%"
         padding="md"
-        title="Navigation"
+        title={
+          <a href="/marketplace">
+            <Image
+              src={
+                theme.colorScheme === "light"
+                  ? "/images/berklee-college-light.png"
+                  : "/images/berklee-college-dark.png"
+              }
+              width={150}
+            />
+          </a>
+        }
         className={classes.hiddenDesktop}
         zIndex={1000000}
       >
@@ -194,30 +178,38 @@ export const UserHeader = () => {
             my="sm"
             color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
           />
-
-          <a href="/marketplace" className={classes.link}>
+          <a
+            href="/marketplace"
+            className={`${
+              pathname === "/marketplace" ? classes.activeLink : classes.link
+            }`}
+          >
             Marketplace
           </a>
-          <a href="/artist/albums" className={classes.link}>
-            My Collection
+          <a
+            href="/user/songs"
+            className={`${
+              pathname === "/user/songs" ? classes.activeLink : classes.link
+            }`}
+          >
+            My Songs
           </a>
-          <a href="/artist/profile" className={classes.link}>
-            My Profile
-          </a>
-
           <Divider
             my="sm"
             color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
           />
 
           <Group position="center" grow pb="xl" px="md">
-            <Button
-              leftIcon={<Logout size={14} />}
-              color="red"
-              onClick={handleLogout}
-            >
-              Log Out
-            </Button>
+            <AccountDetails />
+            <ThemeTogglerButton />
+            <Image
+              src={
+                theme.colorScheme === "light"
+                  ? "/images/built-on-near-black.svg"
+                  : "/images/built-on-near-white.svg"
+              }
+              width={120}
+            />
           </Group>
         </ScrollArea>
       </Drawer>

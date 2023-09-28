@@ -1,90 +1,81 @@
 import {
-  TextInput,
-  Stack,
+  Alert,
   Box,
-  Group,
   Button,
-  Card,
-  rem,
-  createStyles,
-  Switch,
+  Group,
   NumberInput,
+  Paper,
+  Select,
+  Slider,
+  Stack,
+  Switch,
+  TextInput,
+  createStyles,
 } from "@mantine/core";
-import { Calendar } from "@mantine/dates";
+import { DateInput } from "@mantine/dates";
 
-import { useForm } from "@mantine/form";
 import { FileWithPath } from "@mantine/dropzone";
+import { useForm } from "@mantine/form";
 
-import { Field } from "@/components/form/Field";
 import { Dropzone } from "@/components/form/Dropzone";
+import { Field } from "@/components/form/Field";
 import { notifications } from "@/utils/notifications";
 import { useRouter } from "next/router";
 
-import { getEditFormValidateInput } from "@/utils/validations";
-import { CreateSongDto, FileDto } from "@/services/api/artist/artistSchemas";
 import {
-  UploadedFileValue,
   CreateFormValues,
   FormProvider,
   SONG_IMAGE_TYPES,
-  SONG_AUDIO_TYPES,
+  UploadedFileValue,
 } from "@/components/artist/Song/SongForm/SongContext";
-import {
-  useAlbumControllerFindOne,
-  useFileControllerUpdateFile,
-  useFileControllerUploadFile,
-  useSongControllerCreate,
-} from "@/services/api/artist/artistComponents";
 
 import { useIsMutating } from "@tanstack/react-query";
 
 import { getFileUrl } from "@/utils/file";
 
-import { Check } from "tabler-icons-react";
+import { useWalletSelector } from "@/context/WalletSelectorContext";
+import { countryKeys } from "@/datasets/forms/country-keys";
+import { genreKeys } from "@/datasets/forms/genre-keys";
+import { languageKeys } from "@/datasets/forms/language-keys";
+import { musicalKeys } from "@/datasets/forms/musical-keys";
+import { vocalRangeKeys } from "@/datasets/forms/vocal-range-keys";
+import {
+  useFileControllerRemove,
+  useFileControllerUploadFile,
+  useSongControllerCreateSong,
+} from "@/services/api/raidar/raidarComponents";
+import { parseNearAmount } from "near-api-js/lib/utils/format";
 import { useState } from "react";
-import dayjs from "dayjs";
+import { AlertCircle, Check } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
-  card: {
-    backgroundColor: "#F8F8FF",
-    width: "80%",
-    margin: "auto",
-  },
-
-  avatar: {
-    border: `${rem(2)} solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white
-    }`,
+  button: {
+    backgroundColor: theme.colors.red[5],
+    ...theme.fn.hover({
+      backgroundColor: theme.colors.red[8],
+    }),
   },
 }));
 
-export const SongForm = (): any => {
-  const [selectedDate, setSelectedDate] = useState<Date[]>([]);
+interface SongFormProps {
+  albumIdProp: string | null;
+}
+
+export const SongForm = ({ albumIdProp }: SongFormProps): any => {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const removeFile = useFileControllerRemove({});
+  const [uploadedImage, setUploadedImage] = useState<UploadedFileValue | null>(
+    null
+  );
+  const { reset } = useForm();
 
   const router = useRouter();
   const { classes } = useStyles();
-  const albumId = router.query.id;
+  const albumId = albumIdProp || router.query.id;
 
-  const { data: albumData } = useAlbumControllerFindOne({
-    pathParams: {
-      id: albumId as string,
-    },
-  });
-
-  console.log("data", albumData);
+  const { callMethod } = useWalletSelector();
 
   const isMutating = useIsMutating();
-
-  const handleSelect = (date: Date) => {
-    const isSelected = selectedDate.some((s) => dayjs(date).isSame(s, "date"));
-    if (isSelected) {
-      setSelectedDate((current) =>
-        current.filter((d) => !dayjs(d).isSame(date, "date"))
-      );
-    } else if (selectedDate.length < 3) {
-      setSelectedDate((current) => [...current, date]);
-    }
-  };
 
   const form = useForm<any>({
     validateInputOnChange: true,
@@ -94,70 +85,58 @@ export const SongForm = (): any => {
       genre: "",
       mood: "",
       tags: "",
-      length: 0,
-      bpm: 0,
-      instrumental: "",
+      length: "",
+      bpm: null,
+      instrumental: false,
       languages: "",
-      vocal_ranges: "",
-      musical_key: "",
-      recording_date: "",
-      recording_location: "",
-      recording_country: "",
-      music_id: "",
-      art_id: "",
+      vocalRanges: "",
+      musicalKey: "",
+      recordingDate: "",
+      recordingLocation: "",
+      recordingCountry: "",
+      musicId: "",
+      artId: "",
       pka: "",
       price: 0,
     },
-    //TODO: check why validations is not working
-    // validate: getEditFormValidateInput(),
   });
 
-  const createSong = useSongControllerCreate({
+  const handleResetForm = () => {
+    reset();
+  };
+
+  const createSong = useSongControllerCreateSong({
     onMutate: () => {
       notifications.create({ title: "Creating song" });
     },
     onSuccess: () => {
       notifications.success({ title: "Song created" });
-      // router.push("artist/collection");
+      router.push("/artist/albums");
     },
     onError: () => {
       notifications.error({ title: "Error while creating album" });
     },
   });
 
-  const updateFile = useFileControllerUpdateFile({});
   const uploadFile = useFileControllerUploadFile({});
-
-  const { documents } = form.values;
 
   const handleImageDrop = async (files: FileWithPath[]) => {
     const file = files[0];
-    const previousResponse = form.values.image?.response;
+
+    const { image } = form.values;
+
+    await setUploadedImage(image);
 
     try {
-      let response: FileDto;
-
-      if (previousResponse) {
-        response = await updateFile.mutateAsync({
-          pathParams: {
-            id: previousResponse.id,
-          },
-          body: { file, tags: ["image"] },
-        });
-      } else {
-        response = await uploadFile.mutateAsync({
-          body: {
-            file,
-            tags: ["image"],
-          },
-        });
+      if (image?.response) {
+        await removeFile.mutateAsync({ pathParams: { id: image.response.id } });
       }
 
-      response = await uploadFile.mutateAsync({
+      const response = await uploadFile.mutateAsync({
         body: {
           file,
           tags: ["image"],
-        },
+        } as any,
       });
 
       form.setFieldValue("image", {
@@ -165,76 +144,33 @@ export const SongForm = (): any => {
         response,
       });
     } catch (error) {
-      form.setFieldError("image", "Failed to upload image");
+      form.setFieldValue("documents", image);
+
+      form.setFieldError(
+        "image",
+        (error as unknown as { stack?: { message?: string } })?.stack
+          ?.message || "Failed to upload image"
+      );
+
       console.error(error);
     }
   };
 
-  const handleDocumentsDrop = async (files: FileWithPath[]) => {
-    const previous = documents;
-
-    const uniqueFiles = files.filter(({ path }) => {
-      return !documents.some((document: any) => document.file?.path === path);
-    });
-
-    const response = await Promise.all(
-      uniqueFiles.map((file) => {
-        return uploadFile.mutateAsync({
-          body: {
-            file,
-            tags: ["document"],
-          },
-        });
-      })
-    );
-
-    const newDocuments: UploadedFileValue[] = uniqueFiles.map((file, i) => {
-      return {
-        file,
-        response: response[i] as unknown as FileDto,
-      };
-    });
-
-    form.setFieldValue("documents", previous.concat(...newDocuments));
-  };
-
-  const handleRemove = (file: UploadedFileValue) => {
-    return () => {
-      form.setFieldValue(
-        "documents",
-        documents.filter((document: any) => document !== file)
-      );
-    };
-  };
-
   const handleSongDrop = async (files: FileWithPath[]) => {
     const file = files[0];
-    const previousResponse = form.values.song?.response;
+
+    const { song } = form.values;
 
     try {
-      let response: FileDto;
-
-      if (previousResponse) {
-        response = await updateFile.mutateAsync({
-          pathParams: {
-            id: previousResponse.id,
-          },
-          body: { file, tags: ["song"] },
-        });
-      } else {
-        response = await uploadFile.mutateAsync({
-          body: {
-            file,
-            tags: ["song"],
-          },
-        });
+      if (song?.response) {
+        await removeFile.mutateAsync({ pathParams: { id: song.response.id } });
       }
 
-      response = await uploadFile.mutateAsync({
+      const response = await uploadFile.mutateAsync({
         body: {
           file,
           tags: ["song"],
-        },
+        } as any,
       });
 
       form.setFieldValue("song", {
@@ -242,13 +178,22 @@ export const SongForm = (): any => {
         response,
       });
     } catch (error) {
-      form.setFieldError("song", "Failed to upload song");
+      form.setFieldValue("song", undefined);
+
+      form.setFieldError(
+        "song",
+        (error as unknown as { stack?: { message?: string } })?.stack
+          ?.message || "Failed to upload song"
+      );
+
       console.error(error);
     }
   };
 
   const handleSubmit = async (values: CreateFormValues) => {
     form.validate();
+
+    if (!selectedDate) return;
 
     if (!form.isValid) {
       return;
@@ -269,40 +214,18 @@ export const SongForm = (): any => {
       languages,
       vocalRanges,
       musicalKey,
-      musicId,
-      recordingDate,
       recordingCountry,
       recordingLocation,
       price,
       image,
       song,
+      pka,
     } = values;
 
-    console.log("title", title);
-    console.log("genre", genre);
-    console.log("mood", mood);
-    console.log("title", title);
-    console.log("tags", tags);
-    console.log("length", length);
-    console.log("bpm", bpm);
-    console.log("instrumental", instrumental);
-    console.log("languages", languages);
-    console.log("vocal_ranges", vocalRanges);
-    console.log("musical_key", musicalKey);
-    console.log("recording_date", selectedDate[0]);
-    console.log("recording_country", recordingCountry);
-    console.log("recording_location", recordingLocation);
-    console.log("price", price);
-    console.log("image", image);
-    console.log("song", song);
-
-    // const fileIds = [
-    //   image?.response?.id,
-    //   ...documents.map(({ response }: any) => response.id),
-    // ].filter(Boolean) as string[];
+    const formattedDate = new Date(selectedDate).toISOString();
 
     try {
-      await createSong.mutateAsync({
+      const result = await createSong.mutateAsync({
         body: {
           title: title,
           album_id: albumId as string,
@@ -311,44 +234,61 @@ export const SongForm = (): any => {
           tags: [tags],
           length: length as unknown as number,
           bpm: bpm as unknown as number,
-          instrumental: true,
+          instrumental: instrumental ? true : false,
           languages: [languages],
           vocal_ranges: [vocalRanges],
           musical_key: musicalKey,
           music_id: song?.response?.id as string,
-          recording_date: `2023-07-17T10:39:43.582Z`,
+          recording_date: formattedDate,
           recording_country: recordingCountry,
           recording_location: recordingLocation,
           art_id: image?.response?.id as string,
-          pka: albumData?.pka || "",
-          price: 10.0,
+          pka: pka || "Missing PKA info",
+          price: price as unknown as number,
         },
       });
 
-      notifications.success({
-        title: "Album sucessfully created",
-      });
+      const songPriceInYoctoNear = parseNearAmount(result.price) as string;
+
+      const data = {
+        token_id: result.token_contract_id.toString(),
+        name: result.title,
+        description: `${result.title} by ${result.pka}`,
+        extra: null,
+        price: songPriceInYoctoNear,
+      };
+
+      callMethod(
+        "raidar.near",
+        "mint_nft",
+        {
+          data,
+        },
+        parseNearAmount("1") as any,
+        "30000000000000" as any
+      );
     } catch (error) {
       console.error(error);
       notifications.error({
-        title: "Error while creating album",
+        title: "Error while creating song",
       });
     }
   };
 
   return (
-    <Card
-      withBorder
-      padding="xl"
-      radius="xl"
-      shadow="sm"
-      className={classes.card}
-    >
+    <Paper>
+      <Alert mb={"md"} icon={<AlertCircle size="1rem" />} title="Important">
+        Please make sure to have at least 1 NEAR in your wallet to pay for
+        creation of the NFT.
+      </Alert>
+
       <FormProvider form={form}>
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack>
-            <Box my="xl">
+            <Box maw={400} mx="auto">
               <Dropzone
+                maw={50}
+                mah={50}
                 title="Upload Artwork"
                 description="Drag'n' drop the song artwork here. Max file size is 20MB, supported formats are PNG and JPEG"
                 label="Select Image"
@@ -361,39 +301,50 @@ export const SongForm = (): any => {
                   onDrop: handleImageDrop,
                   disabled: isMutating > 0,
                 }}
+                isSong={false}
               />
             </Box>
 
-            <Box my="xl">
+            <Box mx="auto" mt="xl">
               <Dropzone
                 title="Upload Song"
-                description="Drag'n' drop the audio file here. Max file size is 20MB, supported formats are PNG and JPEG"
+                description="Drag'n' drop the audio file here. Max file size is 20MB, supported formats are .waw"
                 label="Select Audio"
                 previewUrl={getFileUrl(form.values.song?.response)}
                 error={form.getInputProps("song").error}
                 isLoading={isMutating > 0}
                 dropzone={{
                   multiple: false,
-                  // accept: SONG_AUDIO_TYPES,
                   onDrop: handleSongDrop,
                   disabled: isMutating > 0,
                 }}
+                isSong={true}
               />
             </Box>
-            <Group>
+            <Group mt="xl">
               <Field withAsterisk label="Song Title">
                 <TextInput
                   mt="xs"
-                  placeholder="Song Title"
+                  placeholder="Title"
                   {...form.getInputProps("title")}
                 />
               </Field>
 
               <Field withAsterisk label="Genre">
+                <Select
+                  searchable
+                  data={genreKeys}
+                  mt="xs"
+                  placeholder="E.g. Rock, Pop, Hip Hop"
+                  {...form.getInputProps("genre")}
+                />
+              </Field>
+
+              <Field withAsterisk label="PKA">
                 <TextInput
                   mt="xs"
-                  placeholder="Genre"
-                  {...form.getInputProps("genre")}
+                  placeholder="Professional Known As"
+                  {...form.getInputProps("pka")}
                 />
               </Field>
             </Group>
@@ -401,88 +352,99 @@ export const SongForm = (): any => {
             <Field withAsterisk label="Mood">
               <TextInput
                 mt="xs"
-                placeholder="mood"
+                placeholder="E.g. Happy, Epic, Euphoric"
                 {...form.getInputProps("mood")}
               />
             </Field>
 
-            <Field withAsterisk label="tags">
+            <Field withAsterisk label="Tags">
               <TextInput
                 mt="xs"
-                placeholder="tags"
+                placeholder="E.g. Hard Beats, Bass Boosted, Synthesizer"
                 {...form.getInputProps("tags")}
               />
             </Field>
 
             <Group>
-              <Field withAsterisk label="length">
+              <Field withAsterisk label="Song Length (in seconds)">
                 <TextInput
                   mt="xs"
-                  placeholder="length"
+                  placeholder="Duration in seconds (0 to 500)"
                   {...form.getInputProps("length")}
                 />
               </Field>
 
-              <Field withAsterisk label="bpm">
-                <TextInput
-                  mt="xs"
-                  placeholder="bpm"
+              <Field withAsterisk label="BPM">
+                <Slider
+                  w={"200px"}
+                  mt="sm"
+                  thumbSize={15}
+                  defaultValue={20}
+                  max={210}
+                  size="sm"
+                  color="red"
                   {...form.getInputProps("bpm")}
                 />
               </Field>
             </Group>
 
             <Field withAsterisk label="Recording Date">
-              <Calendar
+              <DateInput
+                color="red"
+                size="md"
+                maxDate={new Date()}
+                defaultDate={new Date()}
                 getDayProps={(date) => ({
-                  selected: selectedDate.some((s) =>
-                    dayjs(date).isSame(s, "date")
-                  ),
-                  onClick: () => handleSelect(date),
+                  onClick: () => setSelectedDate(date),
                 })}
               />
             </Field>
 
-            <Field withAsterisk label="Instrimental">
+            <Field withAsterisk label="Instrumental">
               <Switch
+                color="red"
                 label="Instrumental"
                 {...form.getInputProps("instrumental")}
               />
             </Field>
 
             <Field withAsterisk label="Languages">
-              <TextInput
+              <Select
+                searchable
+                data={languageKeys}
                 mt="xs"
-                placeholder="Languages"
+                placeholder="E.g. English, Spanish, French"
                 {...form.getInputProps("languages")}
               />
             </Field>
 
             <Field withAsterisk label="Vocal Ranges">
-              <TextInput
+              <Select
+                searchable
+                data={vocalRangeKeys}
                 mt="xs"
-                placeholder="Vocal Ranges"
+                placeholder="E.g. Soprano, Alt, Tenor"
                 {...form.getInputProps("vocalRanges")}
               />
             </Field>
 
             <Group>
               <Field withAsterisk label="Musical key">
-                <TextInput
+                <Select
+                  searchable
+                  data={musicalKeys}
                   mt="xs"
-                  placeholder="Musical key"
+                  placeholder="E.g. G Minor, C Major"
                   {...form.getInputProps("musicalKey")}
                 />
               </Field>
 
-              {/* <Field withAsterisk label="">
-              <Calendar />
-            </Field> */}
-
               <Field withAsterisk label="Recording Country">
-                <TextInput
+                <Select
+                  searchable
+                  data={countryKeys}
                   mt="xs"
-                  placeholder="Recording Country"
+                  placeholder="E.g. examples USA, UK"
                   {...form.getInputProps("recordingCountry")}
                 />
               </Field>
@@ -490,15 +452,29 @@ export const SongForm = (): any => {
               <Field withAsterisk label="Recording Location">
                 <TextInput
                   mt="xs"
-                  placeholder="Recording Location"
+                  placeholder="E.g. Los Angeles, New York"
                   {...form.getInputProps("recordingLocation")}
                 />
               </Field>
 
-              <Field withAsterisk label="Price">
+              <Field withAsterisk label="Price in NEAR">
                 <NumberInput
                   mt="xs"
+                  defaultValue={0.05}
+                  precision={2}
+                  min={0}
+                  step={0.5}
+                  max={1000}
                   placeholder="Price"
+                  parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+                  formatter={(value) =>
+                    !Number.isNaN(parseFloat(value))
+                      ? `${value} NEAR`.replace(
+                          /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
+                          ","
+                        )
+                      : "NEAR "
+                  }
                   {...form.getInputProps("price")}
                 />
               </Field>
@@ -506,6 +482,7 @@ export const SongForm = (): any => {
 
             <Group>
               <Button
+                className={classes.button}
                 type="submit"
                 color="red"
                 leftIcon={<Check size={14} />}
@@ -513,11 +490,20 @@ export const SongForm = (): any => {
               >
                 Create Song
               </Button>
+              <Button
+                className={classes.button}
+                onClick={async () => {
+                  await form.reset();
+                  await handleResetForm();
+                }}
+              >
+                Reset Form
+              </Button>
             </Group>
           </Stack>
         </form>
       </FormProvider>
-    </Card>
+    </Paper>
   );
 };
 

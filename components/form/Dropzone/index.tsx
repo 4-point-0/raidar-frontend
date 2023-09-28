@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 
 import {
   Box,
@@ -16,7 +16,7 @@ import {
   DropzoneProps as MantineDropzoneProps,
 } from "@mantine/dropzone";
 
-import { Photo, Upload, X } from "tabler-icons-react";
+import { Check, Upload, X } from "tabler-icons-react";
 
 import { MAX_FILE_SIZE } from "@/components/artist/Album/AlbumForm/AlbumContext";
 
@@ -29,6 +29,7 @@ interface DropzoneProps extends Partial<MantineDropzoneProps> {
   formValue?: FileWithPath[];
   isLoading: boolean;
   dropzone: Omit<MantineDropzoneProps, "children">;
+  isSong: boolean;
 }
 
 export const Dropzone = ({
@@ -39,10 +40,12 @@ export const Dropzone = ({
   previewUrl,
   dropzone,
   isLoading,
+  isSong,
 }: DropzoneProps) => {
   const [aspectRatio, setAspectRatio] = useState<number>();
   const openRef = useRef<() => void>(null);
   const theme = useMantineTheme();
+  const [uploadedImage, setUploadedImage] = useState<boolean>(false);
 
   const { onDrop, ...rest } = dropzone;
 
@@ -52,6 +55,7 @@ export const Dropzone = ({
 
   const handlePreviewLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
     const img = event.target as HTMLImageElement;
+    setUploadedImage(true);
     setAspectRatio(img.naturalWidth / img.naturalHeight);
   };
 
@@ -79,7 +83,7 @@ export const Dropzone = ({
             paddingBottom: 32,
             borderColor: error ? theme.colors.red[6] : undefined,
             borderWidth: 1,
-            background: "transparent !important",
+            background: uploadedImage ? "transparent !important" : undefined,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -99,8 +103,6 @@ export const Dropzone = ({
               : theme.colors.dark[9],
             backgroundColor:
               previewUrl && theme.fn.rgba(theme.colors.gray[8], 0.5),
-            maxWidth: "40%",
-            minWidth: 400,
             margin: "0 auto",
             borderRadius: theme.radius.xl,
             padding: theme.spacing.sm,
@@ -109,10 +111,11 @@ export const Dropzone = ({
           <Stack
             align="center"
             spacing="xs"
-            style={{ margin: "0 auto", maxWidth: 300, pointerEvents: "none" }}
+            style={{ margin: "0 auto", pointerEvents: "none" }}
           >
             <MantineDropzone.Accept>
               <Upload size={50} color={theme.colors[theme.primaryColor][6]} />
+              <Check size={50} color={theme.colors[theme.primaryColor][6]} />
             </MantineDropzone.Accept>
             <MantineDropzone.Reject>
               <X size={50} color="red.6" />
@@ -121,11 +124,11 @@ export const Dropzone = ({
               {/* <Photo size={50} /> */}
             </MantineDropzone.Idle>
 
-            <Text size="xl" inline>
-              {title}
+            <Text size="xl" inline color="gray.6">
+              {previewUrl && isSong ? `SONG UPLOADED SUCCESSFULLY` : title}
             </Text>
-            <Text size="sm" inline mt={7}>
-              {description}
+            <Text size="sm" inline mt={7} color="gray.6">
+              {previewUrl && isSong ? <Check size={25} /> : description}
             </Text>
           </Stack>
         </Box>

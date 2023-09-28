@@ -1,7 +1,6 @@
+import { FileDto } from "@/services/api/raidar/raidarSchemas";
 import { MIME_TYPES } from "@mantine/dropzone";
 import { createFormContext } from "@mantine/form";
-
-import { FileDto } from "@/services/api/artist/artistSchemas";
 
 export const MAX_FILE_SIZE = 20 * 1024 ** 2;
 

@@ -1,22 +1,30 @@
 import {
-  Image,
-  Text,
+  Alert,
+  Anchor,
+  Box,
+  Button,
   Container,
+  Flex,
+  Image,
+  Paper,
+  SimpleGrid,
+  Text,
   ThemeIcon,
   Title,
-  SimpleGrid,
   createStyles,
   rem,
-  Button,
-  Anchor,
-  Paper,
 } from "@mantine/core";
-import { Plus } from "tabler-icons-react";
+import { AlertCircle, Check, Plus, Wallet } from "tabler-icons-react";
 
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useAlbumControllerFindOne } from "@/services/api/artist/artistComponents";
+import ImageWithBlurredShadow from "@/components/ImageBlurShadow";
+import { useWalletSelector } from "@/context/WalletSelectorContext";
+import { useAlbumControllerFindOne } from "@/services/api/raidar/raidarComponents";
+import { SongDto } from "@/services/api/raidar/raidarSchemas";
 import formatDuration from "@/utils/formatDuration";
+import { useMediaQuery } from "@mantine/hooks";
+import { modals } from "@mantine/modals";
+import { useRouter } from "next/router";
+import SongForm from "../../Song/SongForm";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -35,16 +43,6 @@ const useStyles = createStyles((theme) => ({
 
   itemTitle: {
     marginBottom: `calc(${theme.spacing.xs} / 2)`,
-  },
-
-  supTitle: {
-    textAlign: "center",
-    textTransform: "uppercase",
-    fontWeight: 800,
-    fontSize: theme.fontSizes.sm,
-    color: theme.fn.variant({ variant: "light", color: theme.primaryColor })
-      .color,
-    letterSpacing: rem(0.5),
   },
 
   title: {
@@ -69,18 +67,6 @@ const useStyles = createStyles((theme) => ({
     backgroundSize: "cover",
     backgroundPosition: "center",
   },
-
-  highlight: {
-    backgroundColor: theme.fn.variant({
-      variant: "light",
-      color: theme.primaryColor,
-    }).background,
-    padding: rem(5),
-    paddingTop: 0,
-    borderRadius: theme.radius.sm,
-    display: "inline-block",
-    color: theme.colorScheme === "dark" ? theme.white : "inherit",
-  },
 }));
 
 const AlbumSongs = () => {
@@ -89,13 +75,28 @@ const AlbumSongs = () => {
 
   const albumId = router.query.id;
 
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  const { selector, modal, accountId } = useWalletSelector();
+
+  const { errorCode, errorMessage, transactionHashes } = router.query;
+
+  const removeQueryParam = (paramToRemove: string[]) => {
+    const { pathname, query } = router;
+    const params = new URLSearchParams(query as any);
+    paramToRemove.forEach((param) => params.delete(param));
+    router.replace({ pathname, query: params.toString() }, undefined, {
+      shallow: true,
+    });
+  };
+
   const { data: album } = useAlbumControllerFindOne({
     pathParams: {
       id: albumId as string,
     },
   });
 
-  const items = album?.songs.map((song: any, i: number) => (
+  const items = album?.songs.map((song: SongDto, i: number) => (
     <div className={classes.item} key={i}>
       <ThemeIcon
         variant="light"
@@ -127,23 +128,111 @@ const AlbumSongs = () => {
     <Container size="100%" className={classes.wrapper}>
       <Paper
         radius="xl"
-        className={classes.descriptionCard}
         sx={{ backgroundImage: `url(${album?.cover?.url})` }}
       />
       <Container size={800} className={classes.wrapper}>
+        <Flex justify="center" align="center" direction="row" mb={"xl"}>
+          <ImageWithBlurredShadow
+            src={album?.cover?.url ?? ""}
+            alt={album?.title ?? ""}
+            height={200}
+            width={200}
+            blur={8}
+            shadowOffset={0}
+          />
+        </Flex>
+
         <Title className={classes.title} order={2} fw={700} fz={40}>
           {album?.title}
         </Title>
 
-        <Button
-          mx="auto"
-          component={Link}
-          href={`/artist/album/songs/create/${albumId}`}
-          color="red"
-          opacity={0.9}
-        >
-          <Plus size={20} /> Add Song
-        </Button>
+        <Title order={4} className={classes.title} fw={700} fz={40}>
+          {album?.pka}
+        </Title>
+
+        {transactionHashes && (
+          <Alert my={"md"} icon={<Check size={16} />} title="Success">
+            Transaction has been successfully signed.
+          </Alert>
+        )}
+
+        {/* {errorCode && errorCode === "userRejected" && (
+          <Alert
+            
+            my={"md"}
+            icon={<AlertCircle size={16} />}
+            title="Transaction rejected by user"
+            color="red"
+          >
+            You rejected the transaction.
+          </Alert>
+        )} */}
+
+        {errorCode && errorCode !== "userRejected" && errorMessage && (
+          <Alert
+            my={"md"}
+            icon={<AlertCircle size={16} />}
+            title="Something went wrong"
+            color="red"
+          >
+            Something went wrong, please try again.
+          </Alert>
+        )}
+
+        {!accountId && (
+          <Alert
+            icon={<AlertCircle size="1rem" />}
+            title="You need to connect NEAR wallet"
+            color="red"
+            radius="md"
+            variant="light"
+          >
+            Please connect NEAR wallet to be able to create a new song.
+          </Alert>
+        )}
+
+        {!accountId && (
+          <Button
+            onClick={() => modal.show()}
+            color="red"
+            opacity={0.9}
+            mt={"md"}
+          >
+            <Box mr="sm">
+              <Wallet size={20} />
+            </Box>
+            Connect Wallet
+          </Button>
+        )}
+
+        {accountId && (
+          <Button
+            mx="auto"
+            color="red"
+            opacity={0.9}
+            onClick={() => {
+              removeQueryParam([
+                "errorCode",
+                "errorMessage",
+                "transactionHashes",
+              ]);
+
+              if (!accountId) {
+                modal.show();
+                return;
+              }
+
+              modals.open({
+                fullScreen: isMobile,
+
+                title: `Create new song`,
+                children: <SongForm albumIdProp={albumId as string} />,
+              });
+            }}
+          >
+            <Plus size={20} /> Add Song
+          </Button>
+        )}
 
         <SimpleGrid
           cols={2}

@@ -12,7 +12,7 @@ export const redirectIfActiveSession = async (
   if (session) {
     return {
       redirect: {
-        destination: "/profile",
+        destination: "/marketplace",
         permanent: false,
       },
     };

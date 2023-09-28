@@ -2,24 +2,13 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 
 import { useIsClient } from "@/hooks/useIsClient";
-import { getSession } from "next-auth/react";
 import { useFindUser } from "../hooks/useFindUser";
 
-export const getServerSideProps = async (ctx: any) => {
-  const session = await getSession(ctx);
-
-  return {
-    props: {
-      session,
-    },
-  };
-};
-
-export default function Home({ session }: any) {
+export default function Home() {
   const isClient = useIsClient();
   const router = useRouter();
 
-  const { user, isLoadingUser } = useFindUser();
+  const { user } = useFindUser();
 
   useEffect(() => {
     if (!isClient) {
@@ -27,9 +16,9 @@ export default function Home({ session }: any) {
     }
 
     if (user?.roles[0] === "artist") {
-      router.push("/artist/profile");
+      router.push("/marketplace");
     } else if (user?.roles[0] === "user") {
-      router.push("/user/profile");
+      router.push("/marketplace");
     } else {
       router.push("/login");
     }

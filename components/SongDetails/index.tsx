@@ -1,61 +1,41 @@
-import React from "react";
 import {
-  createStyles,
-  Image,
+  ActionIcon,
+  Box,
   Container,
-  Title,
+  Grid,
+  Group,
+  Overlay,
+  SimpleGrid,
   Text,
+  Title,
+  createStyles,
   rem,
+  useMantineTheme,
 } from "@mantine/core";
-import { AiOutlineClockCircle } from "react-icons/ai";
-import { BsTags, BsCalendar2Date, BsGlobe } from "react-icons/bs";
-import { GiMusicSpell, GiMusicalKeyboard } from "react-icons/gi";
-import { GiCuckooClock, GiMusicalNotes } from "react-icons/gi";
+import { BsGlobe, BsTags } from "react-icons/bs";
+import {
+  GiMusicSpell,
+  GiMusicalKeyboard,
+  GiMusicalNotes,
+} from "react-icons/gi";
+import { RxAvatar } from "react-icons/rx";
+import { TbLanguage, TbUserShare } from "react-icons/tb";
 import { TfiLocationPin } from "react-icons/tfi";
-import { TbUserShare, TbLanguage } from "react-icons/tb";
+import Tilt from "react-parallax-tilt";
 
-import SongAttributes from "./SongAttributes";
-import formatDuration from "@/utils/formatDuration";
+import SimilarSongsList from "@/components/SongDetails/SimilarSongsList";
+import { SongDto } from "@/services/api/raidar/raidarSchemas";
 import { formatDate } from "@/utils/formatDate";
-import { SongDto } from "@/services/api/artist/artistSchemas";
+import formatDuration from "@/utils/formatDuration";
+import SongAttributes from "./SongAttributes";
+
+import { userPlayerContext } from "@/context/PlayerContext";
+import { useMediaQuery } from "@mantine/hooks";
+import { useRouter } from "next/router";
+import { Calendar, PlayerPlay } from "tabler-icons-react";
+import ImageWithBlurredShadow from "../ImageBlurShadow";
 
 const useStyles = createStyles((theme) => ({
-  inner: {
-    display: "flex",
-    justifyContent: "space-between",
-    paddingTop: `calc(${theme.spacing.sm} * 4)`,
-    paddingBottom: `calc(${theme.spacing.sm} * 4)`,
-    borderRadius: theme.radius.md,
-  },
-
-  content: {
-    maxWidth: rem(500),
-    marginLeft: `calc(${theme.spacing.xl} * 3)`,
-
-    [theme.fn.smallerThan("md")]: {
-      maxWidth: "100%",
-      marginRight: 0,
-    },
-  },
-
-  title: {
-    color: theme.colorScheme === "dark" ? theme.white : theme.black,
-    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-    fontSize: rem(44),
-    lineHeight: 1.2,
-    fontWeight: 700,
-
-    [theme.fn.smallerThan("xs")]: {
-      fontSize: rem(28),
-    },
-  },
-
-  //   control: {
-  //     [theme.fn.smallerThan("xs")]: {
-  //       flex: 1,
-  //     },
-  //   },
-
   image: {
     flex: 1,
     [theme.fn.smallerThan("md")]: {
@@ -64,15 +44,80 @@ const useStyles = createStyles((theme) => ({
     margin: "auto",
   },
 
-  //   highlight: {
-  //     position: "relative",
-  //     backgroundColor: theme.fn.variant({
-  //       variant: "light",
-  //       color: theme.primaryColor,
-  //     }).background,
-  //     borderRadius: theme.radius.sm,
-  //     padding: `${rem(4)} ${rem(12)}`,
-  //   },
+  root: {
+    display: "flex",
+    backgroundImage: `linear-gradient(-60deg, ${theme.colors.red[5]} 0%, ${theme.colors.dark[4]} 100%)`,
+    padding: `calc(${theme.spacing.xl} * 1.5)`,
+    borderRadius: theme.radius.md,
+
+    [theme.fn.smallerThan("sm")]: {
+      flexDirection: "column",
+      width: "50%",
+      margin: "auto",
+    },
+    marginTop: "5%",
+    opacity: 0.8,
+  },
+
+  value: {
+    color: theme.white,
+    textTransform: "uppercase",
+    fontWeight: 700,
+    fontSize: theme.fontSizes.lg,
+  },
+
+  count: {
+    color: theme.white,
+    fontSize: rem(26),
+    lineHeight: 1,
+    fontWeight: 700,
+    marginBottom: theme.spacing.md,
+    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+  },
+
+  stat: {
+    flex: 1,
+
+    "& + &": {
+      paddingLeft: theme.spacing.xl,
+      marginLeft: theme.spacing.xl,
+      borderLeft: `${rem(1)} solid ${theme.colors[theme.primaryColor][3]}`,
+
+      [theme.fn.smallerThan("sm")]: {
+        paddingLeft: 0,
+        marginLeft: 0,
+        borderLeft: 0,
+        paddingTop: theme.spacing.xl,
+        marginTop: theme.spacing.xl,
+        borderTop: `${rem(1)} solid ${theme.colors[theme.primaryColor][3]}`,
+      },
+    },
+
+    cardTitle: {
+      "&::after": {
+        content: '""',
+        display: "block",
+        backgroundColor: theme.colors.red[5],
+        width: rem(45),
+        height: rem(2),
+        marginTop: theme.spacing.sm,
+      },
+    },
+  },
+
+  title: {
+    fontSize: rem(30),
+    fontWeight: 900,
+
+    [theme.fn.smallerThan("sm")]: {
+      fontSize: rem(24),
+    },
+  },
+
+  description: {
+    maxWidth: 600,
+    margin: "auto",
+  },
 }));
 
 interface SongDetailsProps {
@@ -81,13 +126,11 @@ interface SongDetailsProps {
 
 export const SongDetails = ({ song }: SongDetailsProps) => {
   const { classes } = useStyles();
+  const { setSong } = userPlayerContext();
+
+  const router = useRouter();
 
   const songAttributes = [
-    {
-      label: "Length",
-      value: formatDuration(song.length),
-      icon: <AiOutlineClockCircle />,
-    },
     {
       label: "Mood",
       value: song.mood,
@@ -99,13 +142,8 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
       icon: <BsTags />,
     },
     {
-      label: "BPM",
-      value: song.bpm,
-      icon: <GiCuckooClock />,
-    },
-    {
       label: "Instrumental",
-      value: song.instrumental,
+      value: song.instrumental ? "Yes" : "No",
       icon: <GiMusicalNotes />,
     },
     {
@@ -123,43 +161,165 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
       value: song.musical_key,
       icon: <GiMusicalKeyboard />,
     },
-    {
-      label: "Recording Date",
-      value: formatDate(song.recording_date),
-      icon: <BsCalendar2Date />,
-    },
-    {
-      label: "Recording Location",
-      value: song.recording_location,
-      icon: <TfiLocationPin />,
-    },
-    {
-      label: "Recording Country",
-      value: song.recording_country,
-      icon: <BsGlobe />,
-    },
   ];
 
-  return (
-    <div>
-      <Container sx={{ backgroundColor: "#F8F8FF", borderRadius: "20px" }}>
-        <div className={classes.inner}>
-          <div className={classes.content}>
-            <Title className={classes.title}>{song.title}</Title>
-            <Text color="dimmed" mt="md">
-              {song.genre}
-            </Text>
+  const PRIMARY_COL_HEIGHT = rem(300);
 
-            <SongAttributes songAttributes={songAttributes} />
-          </div>
-          <Image
-            src={`${song.art.url}`}
-            className={classes.image}
-            radius="xl"
-          />
+  const theme = useMantineTheme();
+  const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - ${theme.spacing.md} / 2)`;
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  return (
+    <Container my="md">
+      <Title ta="center" className={classes.title}>
+        {song.title}
+      </Title>
+
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginTop: "5%",
+          textAlign: "center",
+        }}
+      >
+        <div className={classes.description}>
+          <Text c={theme.colors.red[5]} fw={800}>
+            Length
+          </Text>
+          <Text c="dimmed">{formatDuration(song.length)}</Text>
         </div>
-      </Container>
-    </div>
+
+        <div className={classes.description}>
+          <Text c={theme.colors.red[5]} fw={800}>
+            Genre
+          </Text>
+          <Text c="dimmed">{song.genre}</Text>
+        </div>
+
+        <div className={classes.description}>
+          <Text c={theme.colors.red[5]} fw={800}>
+            BPM
+          </Text>
+          <Text c="dimmed">{song.bpm}</Text>
+        </div>
+      </Box>
+
+      <SimpleGrid
+        mt="xl"
+        cols={2}
+        spacing="md"
+        breakpoints={[{ maxWidth: "sm", cols: 1 }]}
+      >
+        <Box
+          key={song.title}
+          mb="lg"
+          p="md"
+          sx={(theme) => ({
+            ":hover .song-image": {
+              filter: "brightness(1.3)",
+              transition: "all 0.2s ease-in-out",
+            },
+            ":hover .play-overlay": {
+              display: "block",
+            },
+          })}
+        >
+          <Tilt
+            className="song-image"
+            tiltMaxAngleX={10}
+            tiltMaxAngleY={10}
+            scale={1}
+          >
+            <ImageWithBlurredShadow
+              src={song.art.url}
+              alt={song.title}
+              height={300}
+              width={isMobile ? 300 : 400}
+              blur={isMobile ? 8 : 16}
+              shadowOffset={isMobile ? -8 : -16}
+            />
+
+            <Overlay
+              radius="md"
+              sx={{ display: "none", zIndex: 1 }}
+              className="play-overlay"
+              opacity={0}
+            >
+              <Group position="center" sx={{ height: "100%" }}>
+                <ActionIcon
+                  radius="xl"
+                  sx={{
+                    width: "60px",
+                    height: "60px",
+                    backgroundColor: "rgba(255, 255, 255, 0.5)",
+                    ":hover": {
+                      backgroundColor: "rgba(255, 255, 255, 1)",
+                    },
+                    transition: "all 0.2s ease-in-out",
+                  }}
+                  variant="light"
+                  onClick={() => setSong(song)}
+                >
+                  <PlayerPlay size={40} strokeWidth={2} color={"black"} />
+                </ActionIcon>
+              </Group>
+            </Overlay>
+          </Tilt>
+        </Box>
+
+        <Grid gutter="md">
+          <Grid.Col>
+            <Box ml="xl">
+              <Title order={5} mt="sm">
+                Artist
+              </Title>
+              <Group mt="md" position="left">
+                <RxAvatar />
+                <Text c="dimmed" ta="center">
+                  {song.pka}
+                </Text>
+              </Group>
+              <Title order={5} mt="sm">
+                Recording Country
+              </Title>
+              <Group mt="md" position="left">
+                <TfiLocationPin />
+                <Text c="dimmed" ta="center">
+                  {song.recording_country}
+                </Text>
+              </Group>
+              <Title order={5} mt="sm">
+                Recording Location
+              </Title>
+              <Group mt="md" position="left">
+                <BsGlobe />
+                <Text c="dimmed" ta="center">
+                  {song.recording_location}
+                </Text>
+              </Group>
+              <Title order={5} mt="sm">
+                Recording Date
+              </Title>
+              <Group mt="md" position="left">
+                <Calendar size={18} />
+                <Text c="dimmed" ta="center">
+                  {formatDate(song.recording_date)}
+                </Text>
+              </Group>
+            </Box>
+          </Grid.Col>
+        </Grid>
+      </SimpleGrid>
+
+      <Box mt="5%">
+        <SongAttributes songAttributes={songAttributes} />
+      </Box>
+      <Title order={3} mt="md" mb="md">
+        Similar Songs
+      </Title>
+      <SimilarSongsList songGenre={song.genre || ""} />
+    </Container>
   );
 };
 

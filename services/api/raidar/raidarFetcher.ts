@@ -1,16 +1,14 @@
 import FormData from "form-data";
-import fetch from "isomorphic-fetch";
 import { getSession } from "next-auth/react";
+import { RaidarContext } from "./raidarContext";
 
-import { Context } from "./context";
-
-const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+const baseUrl = "https://raidar.us"; // TODO add your baseUrl
 
 export type ErrorWrapper<TError> =
   | TError
   | { status: "unknown"; payload: string };
 
-export type FetcherOptions<TBody, THeaders, TQueryParams, TPathParams> = {
+export type RaidarFetcherOptions<TBody, THeaders, TQueryParams, TPathParams> = {
   url: string;
   method: string;
   body?: TBody;
@@ -18,9 +16,9 @@ export type FetcherOptions<TBody, THeaders, TQueryParams, TPathParams> = {
   queryParams?: TQueryParams;
   pathParams?: TPathParams;
   signal?: AbortSignal;
-} & Context["fetcherOptions"];
+} & RaidarContext["fetcherOptions"];
 
-export async function Fetch<
+export async function raidarFetch<
   TData,
   TError,
   TBody extends {} | FormData | undefined | null,
@@ -35,7 +33,12 @@ export async function Fetch<
   pathParams,
   queryParams,
   signal,
-}: FetcherOptions<TBody, THeaders, TQueryParams, TPathParams>): Promise<TData> {
+}: RaidarFetcherOptions<
+  TBody,
+  THeaders,
+  TQueryParams,
+  TPathParams
+>): Promise<TData> {
   try {
     const requestHeaders: HeadersInit = {
       "Content-Type": "application/json",
@@ -50,7 +53,7 @@ export async function Fetch<
         requestHeaders.hasOwnProperty("Authorization")
       )
     ) {
-      requestHeaders["authorization"] = session?.token
+      requestHeaders["Authorization"] = session?.token
         ? `Bearer ${session.token}`
         : "";
     }
@@ -61,11 +64,7 @@ export async function Fetch<
      * the correct boundary.
      * https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects#sending_files_using_a_formdata_object
      */
-    if (
-      requestHeaders["Content-Type"]
-        .toLowerCase()
-        .includes("multipart/form-data")
-    ) {
+    if (requestHeaders["Content-Type"].toLowerCase().includes(" ")) {
       delete requestHeaders["Content-Type"];
     }
 
@@ -121,7 +120,6 @@ export async function Fetch<
     if (response.headers.get("content-type")?.includes("json")) {
       return await response.json();
     } else {
-      // if it is not a json response, assume it is a blob and cast it to TData
       return (await response.blob()) as unknown as TData;
     }
   } catch (e) {

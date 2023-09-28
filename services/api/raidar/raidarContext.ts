@@ -1,8 +1,7 @@
 import type { QueryKey, UseQueryOptions } from "@tanstack/react-query";
+import { QueryOperation } from "./raidarComponents";
 
-import { QueryOperation } from "./components";
-
-export type Context = {
+export type RaidarContext = {
   fetcherOptions: {
     /**
      * Headers to inject in the fetcher
@@ -31,7 +30,7 @@ export type Context = {
  *
  * @param queryOptions options from the useQuery wrapper
  */
-export function useContext<
+export function useRaidarContext<
   TQueryFnData = unknown,
   TError = unknown,
   TData = TQueryFnData,
@@ -41,7 +40,7 @@ export function useContext<
     UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>,
     "queryKey" | "queryFn"
   >
-): Context {
+): RaidarContext {
   return {
     fetcherOptions: {},
     queryOptions: {},

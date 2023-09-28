@@ -1,15 +1,12 @@
 import type { AccountState, WalletSelector } from "@near-wallet-selector/core";
 import { setupWalletSelector } from "@near-wallet-selector/core";
-import { setupDefaultWallets } from "@near-wallet-selector/default-wallets";
 import { setupMathWallet } from "@near-wallet-selector/math-wallet";
 import { setupMeteorWallet } from "@near-wallet-selector/meteor-wallet";
 import type { WalletSelectorModal } from "@near-wallet-selector/modal-ui";
 import { setupModal } from "@near-wallet-selector/modal-ui";
 import { setupNearWallet } from "@near-wallet-selector/near-wallet";
 import { setupNightly } from "@near-wallet-selector/nightly";
-import { setupNightlyConnect } from "@near-wallet-selector/nightly-connect";
 import { setupSender } from "@near-wallet-selector/sender";
-import { setupWalletConnect } from "@near-wallet-selector/wallet-connect";
 import * as nearApi from "near-api-js";
 import { ContractCodeView } from "near-api-js/lib/providers/provider";
 import React, {
@@ -21,13 +18,9 @@ import React, {
 } from "react";
 import { distinctUntilChanged, map } from "rxjs";
 
-import {
-  RAIDAR_CONTRACT_ID,
-  getConnectionConfig,
-  IS_TESTNET,
-  NO_DEPOSIT,
-  THIRTY_TGAS,
-} from "../utils/near";
+import { setupLedger } from "@near-wallet-selector/ledger";
+import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
+import { NO_DEPOSIT, THIRTY_TGAS, getConnectionConfig } from "../utils/near";
 
 declare global {
   interface Window {
@@ -41,17 +34,13 @@ interface WalletSelectorContextValue {
   modal: WalletSelectorModal;
   accounts: Array<AccountState>;
   accountId: string | null;
-  //   nearConnection: nearApi.Near | null;
-  //   provider: nearApi.providers.JsonRpcProvider | null;
-  //   viewMethod: (contractId: string, method: string, args: any) => Promise<any>;
-  //   callMethod: (
-  //     contractId: string,
-  //     method: string,
-  //     args?: any,
-  //     deposit?: string,
-  //     gas?: string
-  //   ) => Promise<void | nearApi.providers.FinalExecutionOutcome>;
-  //   getViewCode(contractId: string): Promise<ContractCodeView | undefined>;
+  callMethod: (
+    contractId: string,
+    method: string,
+    args?: any,
+    deposit?: string,
+    gas?: string
+  ) => Promise<void | nearApi.providers.FinalExecutionOutcome>;
 }
 
 const WalletSelectorContext =
@@ -144,48 +133,30 @@ export const WalletSelectorContextProvider = ({ children }: any) => {
     setNearConnection(nearConnection);
 
     const _selector = await setupWalletSelector({
-      network: IS_TESTNET ? "testnet" : "mainnet",
-      debug: IS_TESTNET,
+      network: "mainnet",
       modules: [
-        ...(await setupDefaultWallets()),
         setupNearWallet(),
+        setupMyNearWallet(),
         setupSender(),
         setupMathWallet(),
         setupNightly(),
         setupMeteorWallet(),
-        setupWalletConnect({
-          projectId: "test...",
-          metadata: {
-            name: "NEAR Wallet Selector",
-            description: "Example dApp used by NEAR Wallet Selector",
-            url: "https://github.com/near/wallet-selector",
-            icons: ["https://avatars.githubusercontent.com/u/37784886"],
-          },
-        }),
-        setupNightlyConnect({
-          url: "wss://relay.nightly.app/app",
-          appMetadata: {
-            additionalInfo: "",
-            application: "NEAR Wallet Selector",
-            description: "Example dApp used by NEAR Wallet Selector",
-            icon: "https://near.org/wp-content/uploads/2020/09/cropped-favicon-192x192.png",
-          },
-        }),
+        setupLedger(),
       ],
     });
-    // const _modal = setupModal(_selector, {
-    //   contractId: RAIDAR_CONTRACT_ID as string,
-    //   // theme: "light", // doesn't work, need to open an issue on github
-    // });
+
+    const _modal = setupModal(_selector, {
+      contractId: "raidar.near",
+    });
     const state = _selector.store.getState();
 
     setAccounts(state.accounts);
 
     window.selector = _selector;
-    // window.modal = _modal;
+    window.modal = _modal;
 
     setSelector(_selector);
-    // setModal(_modal);
+    setModal(_modal);
   }, []);
 
   useEffect(() => {
@@ -226,11 +197,7 @@ export const WalletSelectorContextProvider = ({ children }: any) => {
         modal,
         accounts,
         accountId,
-        // nearConnection,
-        // callMethod,
-        // viewMethod,
-        // provider,
-        // getViewCode,
+        callMethod,
       }}
     >
       {children}

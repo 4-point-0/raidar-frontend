@@ -18,8 +18,6 @@ export class ReceiverError extends Error {}
 export const nearWalletRegex =
   /^(([a-z\d]+[-_])*[a-z\d]+\.)*([a-z\d]+[-_])*[a-z\d]+$/;
 
-// /^((\w|(?<!\.)\.)+(?<!\.)\.(testnet|near)|[A-Fa-f0-9]{64})$/;
-
 export const parseFtAmount = (amount: number, ftDecimals = 0) =>
   (amount * 10 ** ftDecimals).toString();
 
