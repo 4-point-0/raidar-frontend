@@ -72,6 +72,7 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
   const [uploadedImage, setUploadedImage] = useState<UploadedFileValue | null>(
     null
   );
+  const { reset } = useForm();
 
   const router = useRouter();
   const { classes } = useStyles();
@@ -97,23 +98,25 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
       genre: "",
       mood: "",
       tags: "",
-      length: null,
+      length: "",
       bpm: null,
-      instrumental: "",
+      instrumental: false,
       languages: "",
-      vocal_ranges: "",
-      musical_key: "",
-      recording_date: "",
-      recording_location: "",
-      recording_country: "",
-      music_id: "",
-      art_id: "",
+      vocalRanges: "",
+      musicalKey: "",
+      recordingDate: "",
+      recordingLocation: "",
+      recordingCountry: "",
+      musicId: "",
+      artId: "",
       pka: "",
       price: 0,
     },
-    //TODO: check why validations is not working
-    // validate: getEditFormValidateInput(),
   });
+
+  const handleResetForm = () => {
+    reset();
+  };
 
   // const { error: fileError, value: fileValue } = form.getInputProps(
   //   `${formKey}.file`
@@ -308,6 +311,8 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
     //   image?.response?.id,
     //   ...documents.map(({ response }: any) => response.id),
     // ].filter(Boolean) as string[];
+
+    console.log("music_id", song);
 
     try {
       const result = await createSong.mutateAsync({
@@ -514,7 +519,7 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
               />
             </Field>
 
-            <Field withAsterisk label="Instrimental">
+            <Field withAsterisk label="Instrumental">
               <Switch
                 color="red"
                 label="Instrumental"
@@ -607,7 +612,8 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
               <Button
                 className={classes.button}
                 onClick={async () => {
-                  await form.reset(); // Wait for the form reset to complete
+                  await form.reset();
+                  await handleResetForm();
                 }}
               >
                 Reset Form
