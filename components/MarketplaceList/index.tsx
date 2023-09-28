@@ -27,10 +27,11 @@ import {
 } from "@mantine/core";
 import BN from "bn.js";
 import { parseNearAmount } from "near-api-js/lib/utils/format";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Tilt from "react-parallax-tilt";
-import { AlertCircle, Check, PlayerPlay } from "tabler-icons-react";
+import { AlertCircle, Check, InfoCircle, PlayerPlay } from "tabler-icons-react";
 import ImageWithBlurredShadow from "../ImageBlurShadow";
 
 const useStyles = createStyles((theme) => ({
@@ -306,6 +307,18 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
             </Group>
           </Button>
         )}
+
+        <Button
+          ml={"auto"}
+          mt="xl"
+          color="red"
+          variant="light"
+          component={Link}
+          href={`/user/songs/${song.id}`}
+          leftIcon={<InfoCircle size={rem(18)} />}
+        >
+          Details
+        </Button>
       </Group>
     </Box>
   ));
