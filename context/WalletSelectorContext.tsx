@@ -6,7 +6,6 @@ import type { WalletSelectorModal } from "@near-wallet-selector/modal-ui";
 import { setupModal } from "@near-wallet-selector/modal-ui";
 import { setupNearWallet } from "@near-wallet-selector/near-wallet";
 import { setupNightly } from "@near-wallet-selector/nightly";
-import { setupNightlyConnect } from "@near-wallet-selector/nightly-connect";
 import { setupSender } from "@near-wallet-selector/sender";
 import * as nearApi from "near-api-js";
 import { ContractCodeView } from "near-api-js/lib/providers/provider";
@@ -134,7 +133,7 @@ export const WalletSelectorContextProvider = ({ children }: any) => {
     setNearConnection(nearConnection);
 
     const _selector = await setupWalletSelector({
-      network: "testnet",
+      network: "mainnet",
       modules: [
         setupNearWallet(),
         setupMyNearWallet(),
@@ -143,15 +142,6 @@ export const WalletSelectorContextProvider = ({ children }: any) => {
         setupNightly(),
         setupMeteorWallet(),
         setupLedger(),
-        setupNightlyConnect({
-          url: "wss://relay.nightly.app/app",
-          appMetadata: {
-            additionalInfo: "",
-            application: "NEAR Wallet Selector",
-            description: "Example dApp used by NEAR Wallet Selector",
-            icon: "https://near.org/wp-content/uploads/2020/09/cropped-favicon-192x192.png",
-          },
-        }),
       ],
     });
 

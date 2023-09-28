@@ -133,7 +133,7 @@ export const AccountDetails = () => {
               variant="light"
               component="a"
               target="_blank"
-              href={`https://explorer.testnet.near.org/accounts/${userContext.user?.email}`}
+              href={`https://explorer.near.org/accounts/${userContext.user?.email}`}
             >
               <ExternalLink size={16} />
             </ActionIcon>
