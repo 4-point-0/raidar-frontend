@@ -45,9 +45,15 @@ export default function App({
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
-        <meta property="twitter:image" content="images/berklee-logo.svg"></meta>
+        <meta
+          property="twitter:image"
+          content="https://app.raidar.us/images/berklee-logo.svg"
+        ></meta>
 
-        <meta property="og:image" content="images/berklee-logo.svg"></meta>
+        <meta
+          property="og:image"
+          content="https://app.raidar.us/images/berklee-logo.svg"
+        ></meta>
 
         <meta property="twitter:title" content="Raidar"></meta>
 
