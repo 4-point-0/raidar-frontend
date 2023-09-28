@@ -460,10 +460,12 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
 
               <Field withAsterisk label="BPM">
                 <Slider
+                  w={"200px"}
                   mt="sm"
-                  thumbSize={16}
+                  thumbSize={15}
                   defaultValue={20}
-                  max={200}
+                  max={210}
+                  size="sm"
                   color="red"
                   {...form.getInputProps("bpm")}
                 />
