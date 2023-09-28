@@ -4,7 +4,6 @@ import {
   Button,
   Drawer,
   Group,
-  List,
   SimpleGrid,
   Text,
   createStyles,
@@ -35,19 +34,6 @@ const SongAttribute = ({ songAttributes }: SongAttributeProps) => {
   const [opened, { open, close }] = useDisclosure(false);
   const { classes } = useStyles();
   return (
-    // <List mt={30} spacing="sm" size="sm" sx={{ listStyle: "none" }}>
-    //   {songAttributes.map((songAttribute, index) => (
-    //     <List.Item key={index}>
-    //       <Text>
-    //         <ThemeIcon size={30} radius="xl" color="red" mr={10}>
-    //           {songAttribute.icon}
-    //         </ThemeIcon>
-    //         <b>{songAttribute.label}</b>: {songAttribute.value}
-    //       </Text>
-    //     </List.Item>
-    //   ))}
-    // </List>
-
     <>
       <Drawer
         opened={opened}

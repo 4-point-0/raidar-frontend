@@ -103,8 +103,8 @@ export const ArtistHeader = () => {
             <Image
               src={
                 theme.colorScheme === "light"
-                  ? "images/berklee-college-light.png"
-                  : "images/berklee-college-dark.png"
+                  ? "/images/berklee-college-light.png"
+                  : "/images/berklee-college-dark.png"
               }
               width={150}
             />
@@ -158,8 +158,8 @@ export const ArtistHeader = () => {
             <Image
               src={
                 theme.colorScheme === "light"
-                  ? "images/berklee-college-light.png"
-                  : "images/berklee-college-dark.png"
+                  ? "/images/berklee-college-light.png"
+                  : "/images/berklee-college-dark.png"
               }
               width={150}
             />
@@ -196,7 +196,6 @@ export const ArtistHeader = () => {
 
           <Group position="center" grow pb="xl" px="md">
             <AccountDetails />
-
             <ThemeTogglerButton />
           </Group>
         </ScrollArea>

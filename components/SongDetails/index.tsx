@@ -124,19 +124,12 @@ interface SongDetailsProps {
 }
 
 export const SongDetails = ({ song }: SongDetailsProps) => {
-  // this is the example of the UI we want to recreate
-  // https://noizd.com/assets/5831d56b-ceb4-426b-9b5e-d502a0670d30?listing_id=563
   const { classes } = useStyles();
   const { setSong } = userPlayerContext();
 
   const router = useRouter();
 
   const songAttributes = [
-    // {
-    //   label: "Length",
-    //   value: formatDuration(song.length),
-    //   icon: <AiOutlineClockCircle />,
-    // },
     {
       label: "Mood",
       value: song.mood,
@@ -147,11 +140,6 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
       value: song.tags,
       icon: <BsTags />,
     },
-    // {
-    //   label: "BPM",
-    //   value: song.bpm,
-    //   icon: <GiCuckooClock />,
-    // },
     {
       label: "Instrumental",
       value: song.instrumental ? "Yes" : "No",
@@ -172,21 +160,6 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
       value: song.musical_key,
       icon: <GiMusicalKeyboard />,
     },
-    // {
-    //   label: "Recording Date",
-    //   value: formatDate(song.recording_date),
-    //   icon: <BsCalendar2Date />,
-    // },
-    // {
-    //   label: "Recording Location",
-    //   value: song.recording_location,
-    //   icon: <TfiLocationPin />,
-    // },
-    // {
-    //   label: "Recording Country",
-    //   value: song.recording_country,
-    //   icon: <BsGlobe />,
-    // },
   ];
 
   const PRIMARY_COL_HEIGHT = rem(300);
