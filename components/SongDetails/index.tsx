@@ -30,6 +30,7 @@ import formatDuration from "@/utils/formatDuration";
 import SongAttributes from "./SongAttributes";
 
 import { userPlayerContext } from "@/context/PlayerContext";
+import { useMediaQuery } from "@mantine/hooks";
 import { useRouter } from "next/router";
 import { Calendar, PlayerPlay } from "tabler-icons-react";
 import ImageWithBlurredShadow from "../ImageBlurShadow";
@@ -166,6 +167,7 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
 
   const theme = useMantineTheme();
   const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - ${theme.spacing.md} / 2)`;
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   return (
     <Container my="md">
@@ -233,9 +235,9 @@ export const SongDetails = ({ song }: SongDetailsProps) => {
               src={song.art.url}
               alt={song.title}
               height={300}
-              width={400}
-              blur={16}
-              shadowOffset={-16}
+              width={isMobile ? 300 : 400}
+              blur={isMobile ? 8 : 16}
+              shadowOffset={isMobile ? -8 : -16}
             />
 
             <Overlay
