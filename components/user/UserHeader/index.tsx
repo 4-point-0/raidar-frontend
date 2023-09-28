@@ -134,8 +134,15 @@ export const UserHeader = () => {
 
           <Group className={classes.hiddenMobile}>
             <AccountDetails />
-
             <ThemeTogglerButton />
+            <Image
+              src={
+                theme.colorScheme === "light"
+                  ? "/images/built-on-near-black.svg"
+                  : "/images/built-on-near-white.svg"
+              }
+              width={120}
+            />
           </Group>
 
           <Burger
@@ -195,6 +202,14 @@ export const UserHeader = () => {
           <Group position="center" grow pb="xl" px="md">
             <AccountDetails />
             <ThemeTogglerButton />
+            <Image
+              src={
+                theme.colorScheme === "light"
+                  ? "/images/built-on-near-black.svg"
+                  : "/images/built-on-near-white.svg"
+              }
+              width={120}
+            />
           </Group>
         </ScrollArea>
       </Drawer>
