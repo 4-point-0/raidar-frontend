@@ -120,7 +120,7 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
     },
     onSuccess: () => {
       notifications.success({ title: "Song created" });
-      router.push("artist/albums");
+      router.push("/artist/albums");
     },
     onError: () => {
       notifications.error({ title: "Error while creating album" });
