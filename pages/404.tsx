@@ -1,11 +1,11 @@
 import {
-  createStyles,
-  Image,
-  Container,
-  Title,
-  Text,
   Button,
+  Container,
+  Image,
   SimpleGrid,
+  Text,
+  Title,
+  createStyles,
   rem,
 } from "@mantine/core";
 import { useRouter } from "next/router";
