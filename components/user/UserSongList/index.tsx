@@ -63,7 +63,6 @@ const UserSongList = () => {
 
   const items = (data?.results ?? []).map((song: any, i: number) => (
     <Group
-      // className={classes.item}
       key={i}
       mb="lg"
       p="lg"

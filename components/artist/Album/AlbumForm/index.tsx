@@ -38,16 +38,6 @@ import { modals } from "@mantine/modals";
 import { Check, Trash } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
-  // card: {
-  //   backgroundColor: "#F8F8FF",
-  //   width: "80%",
-  //   margin: "auto",
-  // },
-  // avatar: {
-  //   border: `${rem(2)} solid ${
-  //     theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white
-  //   }`,
-  // },
   card: {
     backgroundColor: "#F8F8FF",
     width: "80%",
@@ -81,8 +71,6 @@ export const AlbumForm = (): any => {
       cover_id: "",
       image: undefined,
     },
-    //TODO: needs to check why validations doesn't work
-    // validate: getEditFormValidateInput(),
   });
 
   const createAlbum = useAlbumControllerCreateAlbum({

@@ -49,11 +49,6 @@ import { useState } from "react";
 import { AlertCircle, Check } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
-  card: {
-    // backgroundColor: "#fff",
-    // width: "80%",
-    // margin: "auto",
-  },
   button: {
     backgroundColor: theme.colors.red[5],
     ...theme.fn.hover({
@@ -79,14 +74,6 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
   const albumId = albumIdProp || router.query.id;
 
   const { callMethod } = useWalletSelector();
-
-  // const albumDataQuery = useAlbumControllerFindOne({
-  //   pathParams: {
-  //     id: albumId as string,
-  //   },
-  // });
-
-  // const albumData = useMemo(() => albumDataQuery.data, [albumDataQuery.data]);
 
   const isMutating = useIsMutating();
 
@@ -118,10 +105,6 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
     reset();
   };
 
-  // const { error: fileError, value: fileValue } = form.getInputProps(
-  //   `${formKey}.file`
-  // );
-
   const createSong = useSongControllerCreateSong({
     onMutate: () => {
       notifications.create({ title: "Creating song" });
@@ -135,7 +118,6 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
     },
   });
 
-  // const updateFile = useFileControllerUpdateFile({});
   const uploadFile = useFileControllerUploadFile({});
 
   const handleImageDrop = async (files: FileWithPath[]) => {
@@ -173,51 +155,6 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
       console.error(error);
     }
   };
-
-  // const handleDocumentsDrop = async (files: FileWithPath[]) => {
-  //   const previous = documents;
-
-  //   const uniqueFiles = files.filter(({ path }) => {
-  //     return !documents.some((document: any) => document.file?.path === path);
-  //   });
-
-  //   const response = await Promise.all(
-  //     uniqueFiles.map((file) => {
-  //       return uploadFile.mutateAsync({
-  //         body: {
-  //           file,
-  //           tags: ["document"],
-  //         } as any,
-  //       });
-  //     })
-  //   );
-
-  //   const newDocuments: UploadedFileValue[] = uniqueFiles.map((file, i) => {
-  //     return {
-  //       file,
-  //       response: response[i] as unknown as FileDto,
-  //     };
-  //   });
-
-  //   form.setFieldValue("documents", previous.concat(...newDocuments));
-  // };
-
-  // const handleRemove = (file: UploadedFileValue) => {
-  //   return async () => {
-  //     try {
-  //       await removeFile.mutateAsync({
-  //         pathParams: { id: file.response?.id as string },
-  //       });
-
-  //       form.setFieldValue(
-  //         "documents",
-  //         file.filter((document: any) => document !== file)
-  //       );
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-  // };
 
   const handleSongDrop = async (files: FileWithPath[]) => {
     const file = files[0];
@@ -287,33 +224,6 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
 
     const formattedDate = new Date(selectedDate).toISOString();
 
-    // console.log("title", title);
-    // console.log("genre", genre);
-    // console.log("mood", mood);
-    // console.log("title", title);
-    // console.log("tags", tags);
-    // console.log("length", length);
-    // console.log("bpm", bpm);
-    // console.log("instrumental", instrumental ? true : false);
-    // console.log("languages", languages);
-    // console.log("vocal_ranges", vocalRanges);
-    // console.log("musical_key", musicalKey);
-    // console.log("recording_date", selectedDate[0]);
-    // console.log("recording_country", recordingCountry);
-    // console.log("recording_location", recordingLocation);
-    // console.log("price", price);
-    // console.log("image", image);
-    // console.log("song", song);
-
-    // console.log("formattedDate", formattedDate);
-
-    // const fileIds = [
-    //   image?.response?.id,
-    //   ...documents.map(({ response }: any) => response.id),
-    // ].filter(Boolean) as string[];
-
-    console.log("music_id", song);
-
     try {
       const result = await createSong.mutateAsync({
         body: {
@@ -357,10 +267,6 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
         parseNearAmount("1") as any,
         "30000000000000" as any
       );
-
-      // notifications.success({
-      //   title: "Song sucessfully created",
-      // });
     } catch (error) {
       console.error(error);
       notifications.error({
@@ -370,13 +276,7 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
   };
 
   return (
-    <Paper
-    // withBorder
-    // padding="xl"
-    // radius="xl"
-    // shadow="sm"
-    // className={classes.card}
-    >
+    <Paper>
       <Alert mb={"md"} icon={<AlertCircle size="1rem" />} title="Important">
         Please make sure to have at least 1 NEAR in your wallet to pay for
         creation of the NFT.
@@ -403,31 +303,10 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
                 }}
                 isSong={false}
               />
-              {/* {documents
-                ? documents.map((document: any) => (
-                    <Button
-                      key={document.file?.path}
-                      leftIcon={
-                        <ActionIcon
-                          variant="transparent"
-                          color="dark"
-                          onClick={handleRemove(document)}
-                        >
-                          <X size={14} />
-                        </ActionIcon>
-                      }
-                      size="lg"
-                    >
-                      {document.file?.name}
-                    </Button>
-                  ))
-                : null} */}
             </Box>
 
             <Box mx="auto" mt="xl">
               <Dropzone
-                // maw={50}
-                // mah={50}
                 title="Upload Song"
                 description="Drag'n' drop the audio file here. Max file size is 20MB, supported formats are .waw"
                 label="Select Audio"

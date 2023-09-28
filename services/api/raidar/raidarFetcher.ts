@@ -120,7 +120,6 @@ export async function raidarFetch<
     if (response.headers.get("content-type")?.includes("json")) {
       return await response.json();
     } else {
-      // if it is not a json response, assume it is a blob and cast it to TData
       return (await response.blob()) as unknown as TData;
     }
   } catch (e) {

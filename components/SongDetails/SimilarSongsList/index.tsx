@@ -16,7 +16,6 @@ export const SimilarSongsList: React.FC<SimilarSongsListProps> = ({
 
   const isMobile = useMediaQuery("(max-width: 768px)");
 
-  console.log(songGenre);
   const { data: marketplaceData } = useMarketplaceControllerFindAll({
     queryParams: { genre: songGenre },
   });

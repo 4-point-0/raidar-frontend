@@ -76,20 +76,6 @@ export const AccountDetails = () => {
   const onNearUser = useCallback(
     async (user: { username: string; signedJsonString: string }) => {
       if (localStorage.getItem("token")) return;
-
-      // setIsLoading(true);
-      // console.log(new Date());
-      // console.log(user);
-      // const { token } = await fetchAuthControllerNearLogin({
-      //   body: {
-      //     signedJsonString: user.signedJsonString,
-      //     username: user.username,
-      //   },
-      // });
-
-      // console.log(token);
-      // userData.onLogin(token);
-      // setIsLoading(false);
     },
     []
   );

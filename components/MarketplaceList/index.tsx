@@ -265,13 +265,7 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
         {` ${song.album?.title}`}
       </Text>
       <Group>
-        <Avatar
-          // src={"/images/avatar-placeholder.png"}
-          size="md"
-          radius="xl"
-          mt="md"
-          color="red"
-        >
+        <Avatar size="md" radius="xl" mt="md" color="red">
           {song.album?.pka?.charAt(0)}
         </Avatar>
         <Text fz="sm" mt="sm" fw={500}>

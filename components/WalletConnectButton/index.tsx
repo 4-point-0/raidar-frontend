@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import { useUserContext } from "../../context/UserContext";
 import { useWalletSelector } from "../../context/WalletSelectorContext";
-// import { fetchAuthControllerNearLogin } from "../../services/api/components";
 import { getConnectionConfig } from "../../utils/near";
 
 const ConnectAccount = () => {
@@ -18,7 +17,6 @@ const ConnectAccount = () => {
   useEffect(() => {
     if (accountId && !loading) {
       setIsLoading(true);
-      // signMessage();
     }
   }, [accountId]);
 
@@ -51,16 +49,7 @@ const ConnectAccount = () => {
       if (localStorage.getItem("token")) return;
 
       setIsLoading(true);
-      console.log(new Date());
-      console.log(user);
-      // const { token } = await fetchAuthControllerNearLogin({
-      //   body: {
-      //     signedJsonString: user.signedJsonString,
-      //     username: user.username,
-      //   },
-      // });
-      const token = ""; // TODO: Fix and implement
-      console.log(token);
+      const token = "";
       userData.onLogin(token);
       setIsLoading(false);
 

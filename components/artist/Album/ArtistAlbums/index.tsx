@@ -133,7 +133,6 @@ const ArtistAlbums = () => {
 
   const items = albums?.results.map((album: AlbumDto, i: number) => (
     <Group
-      // className={classes.item}
       key={i}
       mb="lg"
       p="lg"

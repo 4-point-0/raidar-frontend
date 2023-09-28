@@ -35,9 +35,6 @@ interface WalletSelectorContextValue {
   modal: WalletSelectorModal;
   accounts: Array<AccountState>;
   accountId: string | null;
-  //   nearConnection: nearApi.Near | null;
-  //   provider: nearApi.providers.JsonRpcProvider | null;
-  //   viewMethod: (contractId: string, method: string, args: any) => Promise<any>;
   callMethod: (
     contractId: string,
     method: string,
@@ -45,7 +42,6 @@ interface WalletSelectorContextValue {
     deposit?: string,
     gas?: string
   ) => Promise<void | nearApi.providers.FinalExecutionOutcome>;
-  //   getViewCode(contractId: string): Promise<ContractCodeView | undefined>;
 }
 
 const WalletSelectorContext =
@@ -211,11 +207,7 @@ export const WalletSelectorContextProvider = ({ children }: any) => {
         modal,
         accounts,
         accountId,
-        // nearConnection,
         callMethod,
-        // viewMethod,
-        // provider,
-        // getViewCode,
       }}
     >
       {children}

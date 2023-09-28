@@ -128,7 +128,6 @@ const AlbumSongs = () => {
     <Container size="100%" className={classes.wrapper}>
       <Paper
         radius="xl"
-        // className={classes.descriptionCard}
         sx={{ backgroundImage: `url(${album?.cover?.url})` }}
       />
       <Container size={800} className={classes.wrapper}>
@@ -209,8 +208,6 @@ const AlbumSongs = () => {
         {accountId && (
           <Button
             mx="auto"
-            // component={Link}
-            // href={`/artist/album/songs/create/${albumId}`}
             color="red"
             opacity={0.9}
             onClick={() => {
