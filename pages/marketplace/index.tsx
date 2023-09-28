@@ -3,7 +3,9 @@ import { useMarketplaceControllerFindAll } from "@/services/api/raidar/raidarCom
 import { Loader } from "@mantine/core";
 
 export const Marketplace = () => {
-  const { data: marketplaceData } = useMarketplaceControllerFindAll({});
+  const { data: marketplaceData } = useMarketplaceControllerFindAll({
+    queryParams: { take: 1000 },
+  });
 
   if (!marketplaceData) {
     return <Loader color="red" />;
