@@ -349,7 +349,7 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
       };
 
       callMethod(
-        "raidar-dev.testnet",
+        "raidar.near",
         "mint_nft",
         {
           data,

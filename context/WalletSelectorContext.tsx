@@ -160,7 +160,7 @@ export const WalletSelectorContextProvider = ({ children }: any) => {
     });
 
     const _modal = setupModal(_selector, {
-      contractId: "guest-book.testnet",
+      contractId: "raidar.near",
     });
     const state = _selector.store.getState();
 
