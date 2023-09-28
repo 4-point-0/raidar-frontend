@@ -225,6 +225,7 @@ export const AlbumForm = (): any => {
             breakpoints={[{ maxWidth: "sm", cols: 1 }]}
           >
             <Dropzone
+              isSong={false}
               title="Upload Image"
               maw={PRIMARY_COL_HEIGHT}
               mah={PRIMARY_COL_HEIGHT}
