@@ -1,24 +1,24 @@
-import Head from "next/head";
-import { SessionProvider } from "next-auth/react";
+import { AppLayout } from "@/components/layout/AppLayout";
 import {
   ColorScheme,
   ColorSchemeProvider,
   MantineProvider,
 } from "@mantine/core";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ModalsProvider } from "@mantine/modals";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
-import { AppLayout } from "@/components/layout/AppLayout";
+import Head from "next/head";
 
-import { Notifications } from "@mantine/notifications";
-import { WalletSelectorContextProvider } from "@/context/WalletSelectorContext";
-import { UserContextProvider } from "../context/UserContext";
 import { PlayerContextProvider } from "@/context/PlayerContext";
-import { useColorScheme, useLocalStorage } from "@mantine/hooks";
+import { WalletSelectorContextProvider } from "@/context/WalletSelectorContext";
 import { raidarTheme } from "@/styles/theme";
+import { useColorScheme, useLocalStorage } from "@mantine/hooks";
+import { Notifications } from "@mantine/notifications";
+import { UserContextProvider } from "../context/UserContext";
 
-import "@near-wallet-selector/modal-ui/styles.css";
 import { AccountProvider } from "@/context/AccountContext";
+import "@near-wallet-selector/modal-ui/styles.css";
 
 export default function App({
   Component,
@@ -44,6 +44,31 @@ export default function App({
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
+        />
+        <meta
+          property="twitter:image"
+          content="/images/berklee-logo.svg"
+        ></meta>
+
+        <meta property="og:image" content="/images/berklee-logo.svg"></meta>
+
+        <meta property="twitter:title" content="Raidar"></meta>
+
+        <meta property="og:title" content="Raidar"></meta>
+
+        <meta
+          property="twitter:description"
+          content="Explore and purchase licenses for a diverse selection of songs from talented artists in our marketplace, all powered by the convenience and security of cryptocurrencies."
+        ></meta>
+
+        <meta
+          property="description"
+          content="Explore and purchase licenses for a diverse selection of songs from talented artists in our marketplace, all powered by the convenience and security of cryptocurrencies."
+        />
+
+        <meta
+          property="og:description"
+          content="Explore and purchase licenses for a diverse selection of songs from talented artists in our marketplace, all powered by the convenience and security of cryptocurrencies."
         />
       </Head>
 
