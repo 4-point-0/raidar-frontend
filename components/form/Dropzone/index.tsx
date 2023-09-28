@@ -16,7 +16,7 @@ import {
   DropzoneProps as MantineDropzoneProps,
 } from "@mantine/dropzone";
 
-import { Upload, X } from "tabler-icons-react";
+import { Check, Upload, X } from "tabler-icons-react";
 
 import { MAX_FILE_SIZE } from "@/components/artist/Album/AlbumForm/AlbumContext";
 
@@ -29,6 +29,7 @@ interface DropzoneProps extends Partial<MantineDropzoneProps> {
   formValue?: FileWithPath[];
   isLoading: boolean;
   dropzone: Omit<MantineDropzoneProps, "children">;
+  isSong: boolean;
 }
 
 export const Dropzone = ({
@@ -39,6 +40,7 @@ export const Dropzone = ({
   previewUrl,
   dropzone,
   isLoading,
+  isSong,
 }: DropzoneProps) => {
   const [aspectRatio, setAspectRatio] = useState<number>();
   const openRef = useRef<() => void>(null);
@@ -82,7 +84,6 @@ export const Dropzone = ({
             borderColor: error ? theme.colors.red[6] : undefined,
             borderWidth: 1,
             background: uploadedImage ? "transparent !important" : undefined,
-            backgroundColor: uploadedImage ? undefined : theme.colors.gray[3],
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -102,8 +103,6 @@ export const Dropzone = ({
               : theme.colors.dark[9],
             backgroundColor:
               previewUrl && theme.fn.rgba(theme.colors.gray[8], 0.5),
-            // maxWidth: "40%",
-            // minWidth: 400,
             margin: "0 auto",
             borderRadius: theme.radius.xl,
             padding: theme.spacing.sm,
@@ -116,6 +115,7 @@ export const Dropzone = ({
           >
             <MantineDropzone.Accept>
               <Upload size={50} color={theme.colors[theme.primaryColor][6]} />
+              <Check size={50} color={theme.colors[theme.primaryColor][6]} />
             </MantineDropzone.Accept>
             <MantineDropzone.Reject>
               <X size={50} color="red.6" />
@@ -125,10 +125,10 @@ export const Dropzone = ({
             </MantineDropzone.Idle>
 
             <Text size="xl" inline color="gray.6">
-              {title}
+              {previewUrl && isSong ? `SONG UPLOADED SUCCESSFULLY` : title}
             </Text>
             <Text size="sm" inline mt={7} color="gray.6">
-              {description}
+              {previewUrl && isSong ? <Check size={25} /> : description}
             </Text>
           </Stack>
         </Box>

@@ -401,6 +401,7 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
                   onDrop: handleImageDrop,
                   disabled: isMutating > 0,
                 }}
+                isSong={false}
               />
               {/* {documents
                 ? documents.map((document: any) => (
@@ -438,6 +439,7 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
                   onDrop: handleSongDrop,
                   disabled: isMutating > 0,
                 }}
+                isSong={true}
               />
             </Box>
             <Group mt="xl">
