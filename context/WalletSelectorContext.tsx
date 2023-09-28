@@ -1,6 +1,5 @@
 import type { AccountState, WalletSelector } from "@near-wallet-selector/core";
 import { setupWalletSelector } from "@near-wallet-selector/core";
-import { setupDefaultWallets } from "@near-wallet-selector/default-wallets";
 import { setupMathWallet } from "@near-wallet-selector/math-wallet";
 import { setupMeteorWallet } from "@near-wallet-selector/meteor-wallet";
 import type { WalletSelectorModal } from "@near-wallet-selector/modal-ui";
@@ -9,7 +8,6 @@ import { setupNearWallet } from "@near-wallet-selector/near-wallet";
 import { setupNightly } from "@near-wallet-selector/nightly";
 import { setupNightlyConnect } from "@near-wallet-selector/nightly-connect";
 import { setupSender } from "@near-wallet-selector/sender";
-import { setupWalletConnect } from "@near-wallet-selector/wallet-connect";
 import * as nearApi from "near-api-js";
 import { ContractCodeView } from "near-api-js/lib/providers/provider";
 import React, {
@@ -21,15 +19,9 @@ import React, {
 } from "react";
 import { distinctUntilChanged, map } from "rxjs";
 
-import {
-  RAIDAR_CONTRACT_ID,
-  getConnectionConfig,
-  IS_TESTNET,
-  NO_DEPOSIT,
-  THIRTY_TGAS,
-} from "../utils/near";
 import { setupLedger } from "@near-wallet-selector/ledger";
 import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
+import { NO_DEPOSIT, THIRTY_TGAS, getConnectionConfig } from "../utils/near";
 
 declare global {
   interface Window {
@@ -46,13 +38,13 @@ interface WalletSelectorContextValue {
   //   nearConnection: nearApi.Near | null;
   //   provider: nearApi.providers.JsonRpcProvider | null;
   //   viewMethod: (contractId: string, method: string, args: any) => Promise<any>;
-  //   callMethod: (
-  //     contractId: string,
-  //     method: string,
-  //     args?: any,
-  //     deposit?: string,
-  //     gas?: string
-  //   ) => Promise<void | nearApi.providers.FinalExecutionOutcome>;
+  callMethod: (
+    contractId: string,
+    method: string,
+    args?: any,
+    deposit?: string,
+    gas?: string
+  ) => Promise<void | nearApi.providers.FinalExecutionOutcome>;
   //   getViewCode(contractId: string): Promise<ContractCodeView | undefined>;
 }
 
@@ -149,21 +141,21 @@ export const WalletSelectorContextProvider = ({ children }: any) => {
       network: "testnet",
       modules: [
         setupNearWallet(),
-    setupMyNearWallet(),
-    setupSender(),
-    setupMathWallet(),
-    setupNightly(),
-    setupMeteorWallet(),
-    setupLedger(),
-    setupNightlyConnect({
-      url: "wss://relay.nightly.app/app",
-      appMetadata: {
-        additionalInfo: "",
-        application: "NEAR Wallet Selector",
-        description: "Example dApp used by NEAR Wallet Selector",
-        icon: "https://near.org/wp-content/uploads/2020/09/cropped-favicon-192x192.png",
-      },
-    }),
+        setupMyNearWallet(),
+        setupSender(),
+        setupMathWallet(),
+        setupNightly(),
+        setupMeteorWallet(),
+        setupLedger(),
+        setupNightlyConnect({
+          url: "wss://relay.nightly.app/app",
+          appMetadata: {
+            additionalInfo: "",
+            application: "NEAR Wallet Selector",
+            description: "Example dApp used by NEAR Wallet Selector",
+            icon: "https://near.org/wp-content/uploads/2020/09/cropped-favicon-192x192.png",
+          },
+        }),
       ],
     });
 
@@ -220,7 +212,7 @@ export const WalletSelectorContextProvider = ({ children }: any) => {
         accounts,
         accountId,
         // nearConnection,
-        // callMethod,
+        callMethod,
         // viewMethod,
         // provider,
         // getViewCode,

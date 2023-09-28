@@ -162,6 +162,7 @@ export type SongDto = {
   pka: string;
   price: string;
   licence?: LicenceDto;
+  token_contract_id: number;
 };
 
 export type BuySongDto = {
@@ -169,6 +170,8 @@ export type BuySongDto = {
   buyerId: string;
   txHash: string;
 };
+
+export type StreamableFile = {};
 
 export type CreateAlbumDto = {
   title: string;

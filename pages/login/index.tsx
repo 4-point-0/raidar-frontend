@@ -7,6 +7,7 @@ import {
   Stack,
   Text,
   createStyles,
+  useMantineTheme,
 } from "@mantine/core";
 import { useRouter } from "next/router";
 import { FcGoogle } from "react-icons/fc";
@@ -47,9 +48,11 @@ export const Login = ({
   providers,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
-  const { theme, classes } = useStyles();
+  const { classes } = useStyles();
 
   const callbackUrl = (router.query.callbackUrl as string) || "/marketplace";
+
+  const theme = useMantineTheme();
 
   const handleSignIn = (provider?: ClientSafeProvider) => {
     return () => {

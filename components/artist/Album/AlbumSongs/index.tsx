@@ -14,7 +14,7 @@ import {
   createStyles,
   rem,
 } from "@mantine/core";
-import { AlertCircle, Plus, Wallet } from "tabler-icons-react";
+import { AlertCircle, Check, Plus, Wallet } from "tabler-icons-react";
 
 import ImageWithBlurredShadow from "@/components/ImageBlurShadow";
 import { useWalletSelector } from "@/context/WalletSelectorContext";
@@ -79,6 +79,17 @@ const AlbumSongs = () => {
 
   const { selector, modal, accountId } = useWalletSelector();
 
+  const { errorCode, errorMessage, transactionHashes } = router.query;
+
+  const removeQueryParam = (paramToRemove: string[]) => {
+    const { pathname, query } = router;
+    const params = new URLSearchParams(query as any);
+    paramToRemove.forEach((param) => params.delete(param));
+    router.replace({ pathname, query: params.toString() }, undefined, {
+      shallow: true,
+    });
+  };
+
   const { data: album } = useAlbumControllerFindOne({
     pathParams: {
       id: albumId as string,
@@ -140,6 +151,35 @@ const AlbumSongs = () => {
           {album?.pka}
         </Title>
 
+        {transactionHashes && (
+          <Alert my={"md"} icon={<Check size={16} />} title="Success">
+            Transaction has been successfully signed.
+          </Alert>
+        )}
+
+        {/* {errorCode && errorCode === "userRejected" && (
+          <Alert
+            
+            my={"md"}
+            icon={<AlertCircle size={16} />}
+            title="Transaction rejected by user"
+            color="red"
+          >
+            You rejected the transaction.
+          </Alert>
+        )} */}
+
+        {errorCode && errorCode !== "userRejected" && errorMessage && (
+          <Alert
+            my={"md"}
+            icon={<AlertCircle size={16} />}
+            title="Something went wrong"
+            color="red"
+          >
+            Something went wrong, please try again.
+          </Alert>
+        )}
+
         {!accountId && (
           <Alert
             icon={<AlertCircle size="1rem" />}
@@ -174,6 +214,12 @@ const AlbumSongs = () => {
             color="red"
             opacity={0.9}
             onClick={() => {
+              removeQueryParam([
+                "errorCode",
+                "errorMessage",
+                "transactionHashes",
+              ]);
+
               if (!accountId) {
                 modal.show();
                 return;

@@ -469,6 +469,69 @@ export const useSongControllerBuySong = (
   );
 };
 
+export type SongControllerGetNftMediaPathParams = {
+  tokenId: string;
+};
+
+export type SongControllerGetNftMediaError = Fetcher.ErrorWrapper<undefined>;
+
+export type SongControllerGetNftMediaVariables = {
+  pathParams: SongControllerGetNftMediaPathParams;
+} & RaidarContext["fetcherOptions"];
+
+export const fetchSongControllerGetNftMedia = (
+  variables: SongControllerGetNftMediaVariables,
+  signal?: AbortSignal
+) =>
+  raidarFetch<
+    Schemas.StreamableFile,
+    SongControllerGetNftMediaError,
+    undefined,
+    {},
+    {},
+    SongControllerGetNftMediaPathParams
+  >({
+    url: "/api/v1/song/{tokenId}/media",
+    method: "get",
+    ...variables,
+    signal,
+  });
+
+export const useSongControllerGetNftMedia = <TData = Schemas.StreamableFile>(
+  variables: SongControllerGetNftMediaVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.StreamableFile,
+      SongControllerGetNftMediaError,
+      TData
+    >,
+    "queryKey" | "queryFn"
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } =
+    useRaidarContext(options);
+  return reactQuery.useQuery<
+    Schemas.StreamableFile,
+    SongControllerGetNftMediaError,
+    TData
+  >(
+    queryKeyFn({
+      path: "/api/v1/song/{tokenId}/media",
+      operationId: "songControllerGetNftMedia",
+      variables,
+    }),
+    ({ signal }) =>
+      fetchSongControllerGetNftMedia(
+        { ...fetcherOptions, ...variables },
+        signal
+      ),
+    {
+      ...options,
+      ...queryOptions,
+    }
+  );
+};
+
 export type AlbumControllerFindAllArtistAlbumsQueryParams = {
   take?: number;
   skip?: number;
@@ -1016,6 +1079,11 @@ export type QueryOperation =
       path: "/api/v1/song/user/songs";
       operationId: "songControllerFindAllUserSongs";
       variables: SongControllerFindAllUserSongsVariables;
+    }
+  | {
+      path: "/api/v1/song/{tokenId}/media";
+      operationId: "songControllerGetNftMedia";
+      variables: SongControllerGetNftMediaVariables;
     }
   | {
       path: "/api/v1/album/me";

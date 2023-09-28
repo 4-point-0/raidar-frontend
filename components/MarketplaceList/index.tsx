@@ -1,10 +1,15 @@
 import { MarketplaceFilters } from "@/components/MarketplaceFilters";
 import { userPlayerContext } from "@/context/PlayerContext";
 import { useWalletSelector } from "@/context/WalletSelectorContext";
-import { MarketplaceControllerFindAllResponse } from "@/services/api/raidar/raidarComponents";
+import { useFindUser } from "@/hooks/useFindUser";
+import {
+  MarketplaceControllerFindAllResponse,
+  fetchSongControllerBuySong,
+} from "@/services/api/raidar/raidarComponents";
 import { SongDto } from "@/services/api/raidar/raidarSchemas";
 import {
   ActionIcon,
+  Alert,
   Avatar,
   Box,
   Button,
@@ -18,9 +23,12 @@ import {
   createStyles,
   rem,
 } from "@mantine/core";
-import { useState } from "react";
+import BN from "bn.js";
+import { parseNearAmount } from "near-api-js/lib/utils/format";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import Tilt from "react-parallax-tilt";
-import { PlayerPlay } from "tabler-icons-react";
+import { AlertCircle, Check, PlayerPlay } from "tabler-icons-react";
 import ImageWithBlurredShadow from "../ImageBlurShadow";
 
 const useStyles = createStyles((theme) => ({
@@ -82,19 +90,82 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
   const { classes } = useStyles();
   const [currentResults, setCurrentResults] = useState<SongDto[]>(data.results);
 
-  const { selector, modal, accountId } = useWalletSelector();
+  const { selector, modal, accountId, callMethod } = useWalletSelector();
+
+  const { user } = useFindUser();
 
   const { setSong } = userPlayerContext();
+
+  const router = useRouter();
+  const { errorCode, errorMessage, transactionHashes } = router.query;
 
   const updatingResults = (data: { results: SongDto[] }) => {
     setCurrentResults(data.results);
   };
 
-  const buySong = async (songId: string) => {
+  const removeQueryParam = (paramToRemove: string[]) => {
+    const { pathname, query } = router;
+    const params = new URLSearchParams(query as any);
+    paramToRemove.forEach((param) => params.delete(param));
+    router.replace({ pathname, query: params.toString() }, undefined, {
+      shallow: true,
+    });
+  };
+
+  useEffect(() => {
+    if (transactionHashes) {
+      const dataString = localStorage.getItem("raidar-cart");
+      if (!dataString) return;
+
+      try {
+        const data = JSON.parse(dataString);
+        const songId = data.songId;
+        const userId = data.userId;
+
+        if (!songId || !userId) return;
+
+        fetchSongControllerBuySong({
+          body: {
+            songId,
+            txHash: transactionHashes as string,
+            buyerId: userId,
+          },
+        });
+      } catch {}
+    }
+  }, []);
+
+  const buySong = async (song: SongDto) => {
+    removeQueryParam(["errorCode", "errorMessage", "transactionHashes"]);
+
     if (!accountId) {
       modal.show();
       return;
     }
+
+    const storageCost = parseNearAmount("0.1");
+    const price = parseNearAmount(song.price);
+    const deposit = new BN(storageCost as string)
+      .add(new BN(price as string))
+      .toString();
+
+    localStorage.setItem(
+      "raidar-cart",
+      JSON.stringify({
+        songId: song.id,
+        userId: user?.id,
+      })
+    );
+
+    await callMethod(
+      "raidar-dev.testnet",
+      "buy_nft",
+      {
+        token_id: song.token_contract_id.toString(),
+      },
+      deposit as any,
+      "30000000000000" as any
+    );
   };
 
   const features = currentResults.map((song: SongDto) => (
@@ -192,7 +263,7 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
           mt="xl"
           className={classes.button}
           onClick={() => {
-            buySong(song.id);
+            buySong(song);
           }}
         >
           <Group spacing="xs">
@@ -218,6 +289,34 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
         </Text>
 
         <MarketplaceFilters onUpdatedResults={updatingResults} />
+
+        {transactionHashes && (
+          <Alert my={"md"} icon={<Check size={16} />} title="Success">
+            Transaction has been successfully signed.
+          </Alert>
+        )}
+        {/* 
+        {errorCode && errorCode === "userRejected" && (
+          <Alert
+            my={"md"}
+            icon={<AlertCircle size={16} />}
+            title="Transaction rejected by user"
+            color="red"
+          >
+            You rejected the transaction.
+          </Alert>
+        )} */}
+
+        {errorCode && errorCode !== "userRejected" && errorMessage && (
+          <Alert
+            my={"md"}
+            icon={<AlertCircle size={16} />}
+            title="Something went wrong"
+            color="red"
+          >
+            Something went wrong, please try again.
+          </Alert>
+        )}
 
         <SimpleGrid
           cols={3}

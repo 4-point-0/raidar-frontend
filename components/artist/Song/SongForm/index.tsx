@@ -1,9 +1,10 @@
 import {
+  Alert,
   Box,
   Button,
-  Card,
   Group,
   NumberInput,
+  Paper,
   Select,
   Slider,
   Stack,
@@ -32,6 +33,7 @@ import { useIsMutating } from "@tanstack/react-query";
 
 import { getFileUrl } from "@/utils/file";
 
+import { useWalletSelector } from "@/context/WalletSelectorContext";
 import { countryKeys } from "@/datasets/forms/country-keys";
 import { genreKeys } from "@/datasets/forms/genre-keys";
 import { languageKeys } from "@/datasets/forms/language-keys";
@@ -42,8 +44,9 @@ import {
   useFileControllerUploadFile,
   useSongControllerCreateSong,
 } from "@/services/api/raidar/raidarComponents";
+import { parseNearAmount } from "near-api-js/lib/utils/format";
 import { useState } from "react";
-import { Check } from "tabler-icons-react";
+import { AlertCircle, Check } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -73,6 +76,8 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
   const router = useRouter();
   const { classes } = useStyles();
   const albumId = albumIdProp || router.query.id;
+
+  const { callMethod } = useWalletSelector();
 
   // const albumDataQuery = useAlbumControllerFindOne({
   //   pathParams: {
@@ -305,7 +310,7 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
     // ].filter(Boolean) as string[];
 
     try {
-      await createSong.mutateAsync({
+      const result = await createSong.mutateAsync({
         body: {
           title: title,
           album_id: albumId as string,
@@ -328,9 +333,29 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
         },
       });
 
-      notifications.success({
-        title: "Song sucessfully created",
-      });
+      const songPriceInYoctoNear = parseNearAmount(result.price) as string;
+
+      const data = {
+        token_id: result.token_contract_id.toString(),
+        name: result.title,
+        description: `${result.title} by ${result.pka}`,
+        extra: null,
+        price: songPriceInYoctoNear,
+      };
+
+      callMethod(
+        "raidar-dev.testnet",
+        "mint_nft",
+        {
+          data,
+        },
+        parseNearAmount("1") as any,
+        "30000000000000" as any
+      );
+
+      // notifications.success({
+      //   title: "Song sucessfully created",
+      // });
     } catch (error) {
       console.error(error);
       notifications.error({
@@ -340,13 +365,18 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
   };
 
   return (
-    <Card
+    <Paper
     // withBorder
     // padding="xl"
     // radius="xl"
     // shadow="sm"
     // className={classes.card}
     >
+      <Alert mb={"md"} icon={<AlertCircle size="1rem" />} title="Important">
+        Please make sure to have at least 1 NEAR in your wallet to pay for
+        creation of the NFT.
+      </Alert>
+
       <FormProvider form={form}>
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack>
@@ -586,7 +616,7 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
           </Stack>
         </form>
       </FormProvider>
-    </Card>
+    </Paper>
   );
 };
 
