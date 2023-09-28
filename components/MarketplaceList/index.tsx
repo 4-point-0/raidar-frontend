@@ -5,12 +5,14 @@ import { useFindUser } from "@/hooks/useFindUser";
 import {
   MarketplaceControllerFindAllResponse,
   fetchSongControllerBuySong,
+  useSongControllerFindAllUserSongs,
 } from "@/services/api/raidar/raidarComponents";
 import { SongDto } from "@/services/api/raidar/raidarSchemas";
 import {
   ActionIcon,
   Alert,
   Avatar,
+  Badge,
   Box,
   Button,
   Container,
@@ -92,6 +94,12 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
 
   const { selector, modal, accountId, callMethod } = useWalletSelector();
 
+  const {
+    data: ownedSongs,
+    isLoading,
+    error,
+  } = useSongControllerFindAllUserSongs({});
+
   const { user } = useFindUser();
 
   const { setSong } = userPlayerContext();
@@ -101,6 +109,10 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
 
   const updatingResults = (data: { results: SongDto[] }) => {
     setCurrentResults(data.results);
+  };
+
+  const checkIfOwned = (songId: string) => {
+    return ownedSongs?.results?.find((song) => song.id === songId) != null;
   };
 
   const removeQueryParam = (paramToRemove: string[]) => {
@@ -259,18 +271,41 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
         </Text>
       </Group>
       <Group>
-        <Button
-          mt="xl"
-          className={classes.button}
-          onClick={() => {
-            buySong(song);
-          }}
-        >
-          <Group spacing="xs">
-            <Text>Buy for {song.price}</Text>{" "}
-            <Image width={14} src={"/images/near-logo-white.svg"} />
-          </Group>
-        </Button>
+        {checkIfOwned(song.id) ? (
+          <Badge
+            pl={2}
+            mt={"lg"}
+            size="lg"
+            color="teal"
+            radius="xl"
+            leftSection={
+              <ActionIcon
+                size="xs"
+                color="blue"
+                radius="xl"
+                variant="transparent"
+              >
+                <Check size={rem(20)} />
+              </ActionIcon>
+            }
+          >
+            Owned
+          </Badge>
+        ) : (
+          <Button
+            disabled={checkIfOwned(song.id)}
+            mt="xl"
+            className={classes.button}
+            onClick={() => {
+              buySong(song);
+            }}
+          >
+            <Group spacing="xs">
+              <Text>Buy for {song.price}</Text>{" "}
+              <Image width={14} src={"/images/near-logo-white.svg"} />
+            </Group>
+          </Button>
+        )}
       </Group>
     </Box>
   ));
