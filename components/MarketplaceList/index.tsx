@@ -99,6 +99,7 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
     data: ownedSongs,
     isLoading,
     error,
+    refetch,
   } = useSongControllerFindAllUserSongs({});
 
   const { user } = useFindUser();
@@ -126,26 +127,32 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
   };
 
   useEffect(() => {
-    if (transactionHashes) {
-      const dataString = localStorage.getItem("raidar-cart");
-      if (!dataString) return;
+    const notifyBuy = async () => {
+      if (transactionHashes) {
+        const dataString = localStorage.getItem("raidar-cart");
+        if (!dataString) return;
 
-      try {
-        const data = JSON.parse(dataString);
-        const songId = data.songId;
-        const userId = data.userId;
+        try {
+          const data = JSON.parse(dataString);
+          const songId = data.songId;
+          const userId = data.userId;
 
-        if (!songId || !userId) return;
+          if (!songId || !userId) return;
 
-        fetchSongControllerBuySong({
-          body: {
-            songId,
-            txHash: transactionHashes as string,
-            buyerId: userId,
-          },
-        });
-      } catch {}
-    }
+          await fetchSongControllerBuySong({
+            body: {
+              songId,
+              txHash: transactionHashes as string,
+              buyerId: userId,
+            },
+          });
+
+          refetch();
+        } catch {}
+      }
+    };
+
+    notifyBuy();
   }, []);
 
   const buySong = async (song: SongDto) => {
