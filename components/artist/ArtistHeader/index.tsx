@@ -100,7 +100,14 @@ export const ArtistHeader = () => {
       <Header height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
           <a href="/marketplace">
-            <Image src="/images/berklee-college.png" width={150} />
+            <Image
+              src={
+                theme.colorScheme === "light"
+                  ? "images/berklee-college-light.png"
+                  : "images/berklee-college-dark.png"
+              }
+              width={150}
+            />
           </a>
           <Group
             sx={{ height: "100%" }}
@@ -148,7 +155,14 @@ export const ArtistHeader = () => {
         padding="md"
         title={
           <a href="/marketplace">
-            <Image src="/images/berklee-college.png" width={150} />
+            <Image
+              src={
+                theme.colorScheme === "light"
+                  ? "images/berklee-college-light.png"
+                  : "images/berklee-college-dark.png"
+              }
+              width={150}
+            />
           </a>
         }
         className={classes.hiddenDesktop}

@@ -6,6 +6,7 @@ import {
   MediaQuery,
   Stack,
   Text,
+  createStyles,
 } from "@mantine/core";
 import { useRouter } from "next/router";
 import { FcGoogle } from "react-icons/fc";
@@ -16,6 +17,15 @@ import { getProviders } from "next-auth/react";
 
 import { redirectIfActiveSession } from "@/utils/auth";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+
+const useStyles = createStyles((theme) => ({
+  button: {
+    backgroundColor: theme.colors.red[5],
+    ...theme.fn.hover({
+      backgroundColor: theme.colors.red[8],
+    }),
+  },
+}));
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const { redirect } = await redirectIfActiveSession(ctx);
@@ -37,6 +47,7 @@ export const Login = ({
   providers,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
+  const { theme, classes } = useStyles();
 
   const callbackUrl = (router.query.callbackUrl as string) || "/marketplace";
 
@@ -76,7 +87,7 @@ export const Login = ({
 
             <Button
               mt="xl"
-              color={theme.colors.red[5]}
+              className={classes.button}
               variant="filled"
               radius="xl"
               size="md"
@@ -102,7 +113,11 @@ export const Login = ({
               <Image
                 mx="auto"
                 mb={20}
-                src="images/berklee-college.png"
+                src={
+                  theme.colorScheme === "light"
+                    ? "images/berklee-college-light.png"
+                    : "images/berklee-college-dark.png"
+                }
                 width={150}
               />
             </Box>
@@ -122,7 +137,7 @@ export const Login = ({
 
             <Button
               mt="xl"
-              color="red"
+              className={classes.button}
               variant="filled"
               radius="xl"
               size="md"
@@ -138,7 +153,7 @@ export const Login = ({
                   padding: "2px",
                 }}
               >
-                <FcGoogle style={{ width: "22px", height: "22px" }} />
+                <FcGoogle size={18} style={{ marginTop: "2px" }} />
               </Box>
             </Button>
             <Box mt={20} sx={{ textAlign: "center" }}>
@@ -148,7 +163,11 @@ export const Login = ({
               <Image
                 mx="auto"
                 mb={20}
-                src="images/berklee-college.png"
+                src={
+                  theme.colorScheme === "light"
+                    ? "images/berklee-college-light.png"
+                    : "images/berklee-college-dark.png"
+                }
                 width={150}
               />
             </Box>
