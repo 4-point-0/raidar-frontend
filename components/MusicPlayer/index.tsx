@@ -1,29 +1,23 @@
 import { userPlayerContext } from "@/context/PlayerContext";
 import {
   ActionIcon,
-  Box,
   Card,
   CloseButton,
-  Grid,
   Group,
-  Image,
   MediaQuery,
-  Progress,
   Slider,
   Stack,
   Text,
 } from "@mantine/core";
-import { useState, useRef, useEffect } from "react";
-import {
-  BsFillSkipBackwardFill,
-  BsFillSkipForwardFill,
-  BsPause,
-  BsPlay,
-} from "react-icons/bs";
+import { useMediaQuery } from "@mantine/hooks";
+import { useEffect, useRef, useState } from "react";
+import { BsPause, BsPlay } from "react-icons/bs";
 import ImageWithBlurredShadow from "../ImageBlurShadow";
 
 export const MusicPlayer = () => {
   const { song, setSong, setIsVisible } = userPlayerContext();
+
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const [value, setValue] = useState(0);
   const [endValue, setEndValue] = useState(0);
@@ -71,16 +65,16 @@ export const MusicPlayer = () => {
 
   return (
     <Card sx={{ width: "100%" }}>
-      <Group>
+      <Group spacing={isMobile ? "0" : "md"}>
         <ImageWithBlurredShadow
           src={song?.art.url ?? ""}
           alt={song?.title ?? ""}
-          height={80}
-          width={80}
+          height={isMobile ? 60 : 80}
+          width={isMobile ? 60 : 80}
         />
 
         <Stack ml="md" spacing="xs">
-          <Text fz="lg" fw={600}>
+          <Text fz={isMobile ? "sm" : "lg"} fw={600}>
             {song?.title}
           </Text>
           <Text fz="sm">{song?.pka}</Text>
@@ -114,7 +108,7 @@ export const MusicPlayer = () => {
 
         <CloseButton
           ml="auto"
-          mr="xl"
+          mr={isMobile ? "xs" : "xl"}
           variant="light"
           size="xl"
           onClick={closePlayer}
