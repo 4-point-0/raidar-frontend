@@ -1,6 +1,6 @@
 import SongDetails from "@/components/SongDetails";
 import { useRouter } from "next/router";
-import { Loader } from "@mantine/core";
+import { Container, Loader } from "@mantine/core";
 import { useSongControllerFindOne } from "@/services/api/raidar/raidarComponents";
 
 export const Song = () => {
@@ -15,7 +15,11 @@ export const Song = () => {
   });
 
   if (!song) {
-    return <Loader color="red" />;
+    return (
+      <Container size="xs" py="sm">
+        <Loader color="red" ml={"40%"} mt={"60%"} size={80} />
+      </Container>
+    );
   }
 
   return <SongDetails song={song} />;
