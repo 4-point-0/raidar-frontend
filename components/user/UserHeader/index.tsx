@@ -1,16 +1,16 @@
 import { AccountDetails } from "@/components/AccountDetails";
 import ThemeTogglerButton from "@/components/ThemeTogglerButton";
 import {
-  createStyles,
-  Header,
-  Group,
-  Divider,
   Box,
   Burger,
+  Divider,
   Drawer,
-  ScrollArea,
-  rem,
+  Group,
+  Header,
   Image,
+  ScrollArea,
+  createStyles,
+  rem,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useRouter } from "next/router";
@@ -99,7 +99,7 @@ export const UserHeader = () => {
     <Box pb={40}>
       <Header height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
-          <a href="/marketplace">
+          <a href="/marketplace" style={{ width: "30%" }}>
             <Image
               src={
                 theme.colorScheme === "light"
@@ -132,7 +132,14 @@ export const UserHeader = () => {
             </a>
           </Group>
 
-          <Group className={classes.hiddenMobile}>
+          <Group
+            className={classes.hiddenMobile}
+            sx={{
+              width: "30%",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
             <AccountDetails />
             <ThemeTogglerButton />
             <Image
