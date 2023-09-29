@@ -26,7 +26,10 @@ import {
   rem,
 } from "@mantine/core";
 import BN from "bn.js";
-import { parseNearAmount } from "near-api-js/lib/utils/format";
+import {
+  formatNearAmount,
+  parseNearAmount,
+} from "near-api-js/lib/utils/format";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -109,6 +112,8 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
   const router = useRouter();
   const { errorCode, errorMessage, transactionHashes } = router.query;
 
+  const storageCost = parseNearAmount("0.1");
+
   const updatingResults = (data: { results: SongDto[] }) => {
     setCurrentResults(data.results);
   };
@@ -155,6 +160,15 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
     notifyBuy();
   }, []);
 
+  const songFullPrice = (song: SongDto) => {
+    const price = parseNearAmount(song.price);
+    const deposit = new BN(storageCost as string)
+      .add(new BN(price as string))
+      .toString();
+
+    return formatNearAmount(deposit);
+  };
+
   const buySong = async (song: SongDto) => {
     removeQueryParam(["errorCode", "errorMessage", "transactionHashes"]);
 
@@ -163,7 +177,6 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
       return;
     }
 
-    const storageCost = parseNearAmount("0.1");
     const price = parseNearAmount(song.price);
     const deposit = new BN(storageCost as string)
       .add(new BN(price as string))
@@ -264,6 +277,14 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
         <b>Album</b>
         {` ${song.album?.title}`}
       </Text>
+      <Text fz="sm" c="dimmed" mt="sm">
+        <b>Price</b>
+        {` ${song.price}`} Ⓝ
+      </Text>
+      <Text fz="sm" c="dimmed" mt="sm">
+        <b>Storage Price</b>
+        {` ${formatNearAmount(storageCost as string)}`} Ⓝ
+      </Text>
       <Group>
         <Avatar size="md" radius="xl" mt="md" color="red">
           {song.album?.pka?.charAt(0)}
@@ -303,7 +324,7 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
             }}
           >
             <Group spacing="xs">
-              <Text>Buy for {song.price}</Text>{" "}
+              <Text>Buy for {songFullPrice(song)}</Text>{" "}
               <Image width={14} src={"/images/near-logo-white.svg"} />
             </Group>
           </Button>
