@@ -55,11 +55,11 @@ const useStyles = createStyles((theme) => ({
 
 const UserSongList = () => {
   const { classes } = useStyles();
-  const { data: albums } = useAlbumControllerFindAllArtistAlbums({});
   const theme = useMantineTheme();
-  const router = useRouter();
 
-  const { data, isLoading, error } = useSongControllerFindAllUserSongs({});
+  console.log("evo mene evo mene");
+
+  const { data, isLoading } = useSongControllerFindAllUserSongs({});
 
   const items = (data?.results ?? []).map((song: any, i: number) => (
     <Group
