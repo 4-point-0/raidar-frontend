@@ -168,8 +168,8 @@ export const Login = ({
                 mb={20}
                 src={
                   theme.colorScheme === "light"
-                    ? "images/berklee-college-light.png"
-                    : "images/berklee-college-dark.png"
+                    ? "images/built-on-near-black.svg"
+                    : "images/built-on-near-white.svg"
                 }
                 width={150}
               />
