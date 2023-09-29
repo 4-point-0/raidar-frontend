@@ -12,11 +12,7 @@ import {
 } from "@mantine/core";
 
 import ImageWithBlurredShadow from "@/components/ImageBlurShadow";
-import {
-  useAlbumControllerFindAllArtistAlbums,
-  useSongControllerFindAllUserSongs,
-} from "@/services/api/raidar/raidarComponents";
-import { useRouter } from "next/router";
+import { SongControllerFindAllUserSongsResponse } from "@/services/api/raidar/raidarComponents";
 
 const useStyles = createStyles((theme) => ({
   item: {
@@ -53,13 +49,13 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const UserSongList = () => {
-  const { classes } = useStyles();
-  const { data: albums } = useAlbumControllerFindAllArtistAlbums({});
-  const theme = useMantineTheme();
-  const router = useRouter();
+interface UserSongListProps {
+  data: SongControllerFindAllUserSongsResponse | undefined;
+}
 
-  const { data, isLoading, error } = useSongControllerFindAllUserSongs({});
+const UserSongList = ({ data }: UserSongListProps) => {
+  const { classes } = useStyles();
+  const theme = useMantineTheme();
 
   const items = (data?.results ?? []).map((song: any, i: number) => (
     <Group
@@ -111,12 +107,6 @@ const UserSongList = () => {
       <Text c="dimmed" className={classes.description} ta="center" mt="md">
         You have {data?.results ? data?.results.length : 0} song licenses
       </Text>
-
-      {isLoading && (
-        <Text c="dimmed" className={classes.description} ta="center" mt="md">
-          Loading...
-        </Text>
-      )}
 
       <SimpleGrid
         mt="xl"

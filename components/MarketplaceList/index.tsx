@@ -304,7 +304,7 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
             leftSection={
               <ActionIcon
                 size="xs"
-                color="blue"
+                color="teal"
                 radius="xl"
                 variant="transparent"
               >
