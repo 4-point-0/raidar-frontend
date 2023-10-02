@@ -1,6 +1,7 @@
 import { AccountDetails } from "@/components/AccountDetails";
 import ThemeTogglerButton from "@/components/ThemeTogglerButton";
 import {
+  Anchor,
   Box,
   Burger,
   Divider,
@@ -135,6 +136,16 @@ export const ArtistHeader = () => {
             >
               My Albums
             </Link>
+            <Link
+              href="/documentation"
+              className={`${
+                pathname === "/documentation"
+                  ? classes.activeLink
+                  : classes.link
+              }`}
+            >
+              Documentation
+            </Link>
           </Group>
 
           <Group
@@ -147,14 +158,16 @@ export const ArtistHeader = () => {
           >
             <AccountDetails />
             <ThemeTogglerButton />
-            <Image
-              src={
-                theme.colorScheme === "light"
-                  ? "/images/built-on-near-black.svg"
-                  : "/images/built-on-near-white.svg"
-              }
-              width={120}
-            />
+            <Anchor<"a"> c="dimmed" href={"https://near.org/"}>
+              <Image
+                src={
+                  theme.colorScheme === "light"
+                    ? "/images/built-on-near-black.svg"
+                    : "/images/built-on-near-white.svg"
+                }
+                width={120}
+              />
+            </Anchor>
           </Group>
 
           <Burger
@@ -199,6 +212,14 @@ export const ArtistHeader = () => {
           >
             My Albums
           </Link>
+          <Link
+            href="/documentation"
+            className={`${
+              pathname === "/documentation" ? classes.activeLink : classes.link
+            }`}
+          >
+            Documentation
+          </Link>
           <Divider
             my="sm"
             color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
@@ -207,14 +228,16 @@ export const ArtistHeader = () => {
           <Group position="center" grow pb="xl" px="md">
             <AccountDetails />
             <ThemeTogglerButton />
-            <Image
-              src={
-                theme.colorScheme === "light"
-                  ? "/images/built-on-near-black.svg"
-                  : "/images/built-on-near-white.svg"
-              }
-              width={120}
-            />
+            <Anchor<"a"> c="dimmed" href={"https://near.org/"}>
+              <Image
+                src={
+                  theme.colorScheme === "light"
+                    ? "/images/built-on-near-black.svg"
+                    : "/images/built-on-near-white.svg"
+                }
+                width={120}
+              />
+            </Anchor>
           </Group>
         </ScrollArea>
       </Drawer>
