@@ -75,6 +75,19 @@ export default function App({
           property="og:description"
           content="Explore and purchase licenses for a diverse selection of songs from talented artists in our marketplace, all powered by the convenience and security of cryptocurrencies."
         />
+
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/raidar-favicon.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/raidar-favicon.png"
+        />
       </Head>
 
       <SessionProvider>
