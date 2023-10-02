@@ -82,7 +82,7 @@ export const Login = ({
             >
               <Image
                 mx="auto"
-                src="images/login-image2.png"
+                src="images/login-image.png"
                 width={300}
                 alt="Login Image"
               />
@@ -110,18 +110,15 @@ export const Login = ({
               </Box>
             </Button>
             <Box mt={20} sx={{ textAlign: "center" }}>
-              <Text mb={15} c="dimmed">
-                Powered By
-              </Text>
               <Image
                 mx="auto"
                 mb={20}
                 src={
                   theme.colorScheme === "light"
-                    ? "images/berklee-college-light.png"
-                    : "images/berklee-college-dark.png"
+                    ? "images/built-on-near-black.svg"
+                    : "images/built-on-near-white.svg"
                 }
-                width={150}
+                width={180}
               />
             </Box>
           </Stack>
@@ -134,7 +131,7 @@ export const Login = ({
                 mx="auto"
                 width={600}
                 fit="contain"
-                src="images/login-image2.png"
+                src="images/login-image.png"
               />
             </Box>
 
@@ -160,9 +157,6 @@ export const Login = ({
               </Box>
             </Button>
             <Box mt={20} sx={{ textAlign: "center" }}>
-              <Text mb={15} c="dimmed">
-                Powered By
-              </Text>
               <Image
                 mx="auto"
                 mb={20}
@@ -171,7 +165,7 @@ export const Login = ({
                     ? "images/built-on-near-black.svg"
                     : "images/built-on-near-white.svg"
                 }
-                width={150}
+                width={180}
               />
             </Box>
           </Stack>
