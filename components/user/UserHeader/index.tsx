@@ -110,14 +110,7 @@ export const UserHeader = () => {
       <Header height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
           <Link href="/marketplace" style={{ width: "30%" }}>
-            <Image
-              src={
-                theme.colorScheme === "light"
-                  ? "/images/berklee-college-light.png"
-                  : "/images/berklee-college-dark.png"
-              }
-              width={150}
-            />
+            <Image src={"/images/raidar-logo.png"} width={120} />
           </Link>
           <Group
             sx={{ height: "100%" }}
@@ -139,6 +132,16 @@ export const UserHeader = () => {
               }`}
             >
               My Songs
+            </Link>
+            <Link
+              href="/documentation"
+              className={`${
+                pathname === "/documentation"
+                  ? classes.activeLink
+                  : classes.link
+              }`}
+            >
+              Documentation
             </Link>
           </Group>
 
@@ -177,14 +180,7 @@ export const UserHeader = () => {
         padding="md"
         title={
           <Link href="/marketplace">
-            <Image
-              src={
-                theme.colorScheme === "light"
-                  ? "/images/berklee-college-light.png"
-                  : "/images/berklee-college-dark.png"
-              }
-              width={150}
-            />
+            <Image src={"/images/raidar-logo.png"} width={120} />
           </Link>
         }
         className={classes.hiddenDesktop}
@@ -210,6 +206,14 @@ export const UserHeader = () => {
             }`}
           >
             My Songs
+          </Link>
+          <Link
+            href="/documentation"
+            className={`${
+              pathname === "/documentation" ? classes.activeLink : classes.link
+            }`}
+          >
+            Documentation
           </Link>
           <Divider
             my="sm"
