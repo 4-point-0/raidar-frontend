@@ -16,9 +16,7 @@ export const SimilarSongsList: React.FC<SimilarSongsListProps> = ({
 
   const isMobile = useMediaQuery("(max-width: 768px)");
 
-  const { data: marketplaceData } = useMarketplaceControllerFindAll({
-    queryParams: { genre: songGenre },
-  });
+  const { data: marketplaceData } = useMarketplaceControllerFindAll({});
 
   return (
     <Carousel
@@ -32,7 +30,12 @@ export const SimilarSongsList: React.FC<SimilarSongsListProps> = ({
     >
       {marketplaceData?.results.map((song, index) => {
         return (
-          <Carousel.Slide key={index}>
+          <Carousel.Slide
+            key={index}
+            sx={{
+              cursor: "pointer",
+            }}
+          >
             <Box onClick={() => router.push(`/artist/song/${song.id}`)}>
               <ImageWithBlurredShadow
                 src={song.art.url}

@@ -1,7 +1,9 @@
+import * as nearApi from "near-api-js";
+import { providers } from "near-api-js";
 import { AccountView } from "near-api-js/lib/providers/provider";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { providers } from "near-api-js";
 
+import { getConnectionConfig } from "@/utils/near";
 import { useWalletSelector } from "./WalletSelectorContext";
 
 interface UseAccount {
@@ -24,6 +26,14 @@ export const AccountProvider = ({ children }: any) => {
     const { network } = selector.options;
     const provider = new providers.JsonRpcProvider({ url: network.nodeUrl });
 
+    const { connect, keyStores } = nearApi;
+    const nearConnection = await connect(
+      getConnectionConfig(new keyStores.BrowserLocalStorageKeyStore())
+    );
+
+    const account = await nearConnection.account(accountId);
+    const result = await account.getAccountBalance();
+
     return provider
       .query<AccountView>({
         request_type: "view_account",
@@ -33,6 +43,7 @@ export const AccountProvider = ({ children }: any) => {
       .then((data) => ({
         ...data,
         account_id: accountId,
+        amount: result.available,
       }));
   }, [accountId, selector.options]);
 

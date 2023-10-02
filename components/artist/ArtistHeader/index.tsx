@@ -1,19 +1,21 @@
 import { AccountDetails } from "@/components/AccountDetails";
 import ThemeTogglerButton from "@/components/ThemeTogglerButton";
 import {
-  createStyles,
-  Header,
-  Group,
-  Divider,
   Box,
   Burger,
+  Divider,
   Drawer,
-  ScrollArea,
-  rem,
+  Group,
+  Header,
   Image,
+  ScrollArea,
+  createStyles,
+  rem,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -95,11 +97,19 @@ export const ArtistHeader = () => {
   const router = useRouter();
   const pathname = router.pathname;
 
+  useEffect(() => {
+    router.events.on("routeChangeComplete", closeDrawer);
+
+    return () => {
+      router.events.off("routeChangeComplete", closeDrawer);
+    };
+  }, []);
+
   return (
     <Box pb={40}>
       <Header height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
-          <a href="/marketplace">
+          <Link href="/marketplace" style={{ width: "30%" }}>
             <Image
               src={
                 theme.colorScheme === "light"
@@ -108,21 +118,21 @@ export const ArtistHeader = () => {
               }
               width={150}
             />
-          </a>
+          </Link>
           <Group
             sx={{ height: "100%" }}
             spacing={0}
             className={classes.hiddenMobile}
           >
-            <a
+            <Link
               href="/marketplace"
               className={`${
                 pathname === "/marketplace" ? classes.activeLink : classes.link
               }`}
             >
               Marketplace
-            </a>
-            <a
+            </Link>
+            <Link
               href="/artist/albums"
               className={`${
                 pathname === "/artist/albums"
@@ -131,10 +141,17 @@ export const ArtistHeader = () => {
               }`}
             >
               My Albums
-            </a>
+            </Link>
           </Group>
 
-          <Group className={classes.hiddenMobile}>
+          <Group
+            className={classes.hiddenMobile}
+            sx={{
+              width: "30%",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
             <AccountDetails />
             <ThemeTogglerButton />
             <Image
@@ -161,7 +178,7 @@ export const ArtistHeader = () => {
         size="100%"
         padding="md"
         title={
-          <a href="/marketplace">
+          <Link href="/marketplace">
             <Image
               src={
                 theme.colorScheme === "light"
@@ -170,7 +187,7 @@ export const ArtistHeader = () => {
               }
               width={150}
             />
-          </a>
+          </Link>
         }
         className={classes.hiddenDesktop}
         zIndex={1000000}
@@ -180,22 +197,22 @@ export const ArtistHeader = () => {
             my="sm"
             color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
           />
-          <a
+          <Link
             href="/marketplace"
             className={`${
               pathname === "/marketplace" ? classes.activeLink : classes.link
             }`}
           >
             Marketplace
-          </a>
-          <a
+          </Link>
+          <Link
             href="/artist/albums"
             className={`${
               pathname === "/artist/albums" ? classes.activeLink : classes.link
             }`}
           >
             My Albums
-          </a>
+          </Link>
           <Divider
             my="sm"
             color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
