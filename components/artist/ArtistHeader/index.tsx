@@ -135,6 +135,16 @@ export const ArtistHeader = () => {
             >
               My Albums
             </Link>
+            <Link
+              href="/documentation"
+              className={`${
+                pathname === "/documentation"
+                  ? classes.activeLink
+                  : classes.link
+              }`}
+            >
+              Documentation
+            </Link>
           </Group>
 
           <Group
@@ -198,6 +208,14 @@ export const ArtistHeader = () => {
             }`}
           >
             My Albums
+          </Link>
+          <Link
+            href="/documentation"
+            className={`${
+              pathname === "/documentation" ? classes.activeLink : classes.link
+            }`}
+          >
+            Documentation
           </Link>
           <Divider
             my="sm"
