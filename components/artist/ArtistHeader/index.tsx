@@ -1,6 +1,7 @@
 import { AccountDetails } from "@/components/AccountDetails";
 import ThemeTogglerButton from "@/components/ThemeTogglerButton";
 import {
+  Anchor,
   Box,
   Burger,
   Divider,
@@ -157,14 +158,16 @@ export const ArtistHeader = () => {
           >
             <AccountDetails />
             <ThemeTogglerButton />
-            <Image
-              src={
-                theme.colorScheme === "light"
-                  ? "/images/built-on-near-black.svg"
-                  : "/images/built-on-near-white.svg"
-              }
-              width={120}
-            />
+            <Anchor<"a"> c="dimmed" href={"https://near.org/"}>
+              <Image
+                src={
+                  theme.colorScheme === "light"
+                    ? "/images/built-on-near-black.svg"
+                    : "/images/built-on-near-white.svg"
+                }
+                width={120}
+              />
+            </Anchor>
           </Group>
 
           <Burger
@@ -225,14 +228,16 @@ export const ArtistHeader = () => {
           <Group position="center" grow pb="xl" px="md">
             <AccountDetails />
             <ThemeTogglerButton />
-            <Image
-              src={
-                theme.colorScheme === "light"
-                  ? "/images/built-on-near-black.svg"
-                  : "/images/built-on-near-white.svg"
-              }
-              width={120}
-            />
+            <Anchor<"a"> c="dimmed" href={"https://near.org/"}>
+              <Image
+                src={
+                  theme.colorScheme === "light"
+                    ? "/images/built-on-near-black.svg"
+                    : "/images/built-on-near-white.svg"
+                }
+                width={120}
+              />
+            </Anchor>
           </Group>
         </ScrollArea>
       </Drawer>
