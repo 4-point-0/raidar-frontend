@@ -133,7 +133,7 @@ export const WalletSelectorContextProvider = ({ children }: any) => {
     setNearConnection(nearConnection);
 
     const _selector = await setupWalletSelector({
-      network: "mainnet",
+      network: "testnet",
       modules: [
         setupNearWallet(),
         setupMyNearWallet(),
@@ -146,7 +146,7 @@ export const WalletSelectorContextProvider = ({ children }: any) => {
     });
 
     const _modal = setupModal(_selector, {
-      contractId: "raidar.near",
+      contractId: "raidar-dev.testnet",
     });
     const state = _selector.store.getState();
 
