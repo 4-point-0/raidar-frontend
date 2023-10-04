@@ -191,7 +191,7 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
     );
 
     await callMethod(
-      "raidar.near",
+      "raidar-dev.testnet",
       "buy_nft",
       {
         token_id: song.token_contract_id.toString(),
