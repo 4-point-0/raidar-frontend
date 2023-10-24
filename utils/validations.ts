@@ -12,7 +12,7 @@ export const RESTRICTIONS = {
 const albumSharedValidations = {
   title: (value?: string) => {
     if (!value) {
-      return "Album name is required";
+      return "Playlist name is required";
     }
 
     return value.length < RESTRICTIONS.title.min

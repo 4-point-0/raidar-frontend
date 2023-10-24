@@ -114,7 +114,7 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
       router.push("/artist/albums");
     },
     onError: () => {
-      notifications.error({ title: "Error while creating album" });
+      notifications.error({ title: "Error while creating song" });
     },
   });
 
