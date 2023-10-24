@@ -274,7 +274,7 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
         {` ${song.genre}`}
       </Text>
       <Text fz="sm" c="dimmed" mt="sm">
-        <b>Album</b>
+        <b>Playlist</b>
         {` ${song.album?.title}`}
       </Text>
       <Text fz="sm" c="dimmed" mt="sm">

@@ -124,7 +124,7 @@ const ArtistAlbums = () => {
 
         <Box ml="md">
           <Text fw={700} fz="lg" className={classes.itemTitle}>
-            Add Album
+            Add Playlist
           </Text>
         </Box>
       </Group>
@@ -175,11 +175,12 @@ const ArtistAlbums = () => {
   return (
     <Container>
       <Title order={2} className={classes.title} ta="center" mt="sm">
-        My Albums
+        My Playlists
       </Title>
 
       <Text c="dimmed" className={classes.description} ta="center" mt="md">
-        You have {albums?.results ? albums?.results.length : 0} published albums
+        You have {albums?.results ? albums?.results.length : 0} published
+        playlists
       </Text>
 
       <SimpleGrid
