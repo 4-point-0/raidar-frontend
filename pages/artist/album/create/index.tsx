@@ -34,7 +34,7 @@ export const CreateAlbum = () => {
   return (
     <Container size="lg" py="sm">
       <Title ta="center" className={classes.title}>
-        Create new Album
+        Create new playlist
       </Title>
 
       <Text c="dimmed" className={classes.description} ta="center" mt="xl">

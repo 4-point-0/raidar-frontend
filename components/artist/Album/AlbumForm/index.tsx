@@ -75,15 +75,15 @@ export const AlbumForm = (): any => {
 
   const createAlbum = useAlbumControllerCreateAlbum({
     onMutate: () => {
-      notifications.create({ title: "Creating album" });
+      notifications.create({ title: "Creating playlist" });
     },
     onSuccess: () => {
-      notifications.success({ title: "Album created" });
+      notifications.success({ title: "Playlist created" });
       router.push("/artist/albums");
     },
     onError: () => {
-      notifications.error({ title: "Error while creating album" });
-      console.error("Error while creating album");
+      notifications.error({ title: "Error while creating playlist" });
+      console.error("Error while creating playlist");
     },
   });
 
@@ -171,7 +171,7 @@ export const AlbumForm = (): any => {
     }
 
     notifications.create({
-      title: "Creating album",
+      title: "Creating Playlist",
     });
 
     const { title, pka, image } = values;
@@ -186,14 +186,14 @@ export const AlbumForm = (): any => {
       });
 
       notifications.success({
-        title: "Album sucessfully created",
+        title: "Playlist sucessfully created",
       });
 
       modals.closeAll();
     } catch (error) {
       console.error(error);
       notifications.error({
-        title: "Error while creating album",
+        title: "Error while creating Playlist",
       });
     }
   };
@@ -232,7 +232,7 @@ export const AlbumForm = (): any => {
             <Grid gutter="md">
               <Grid.Col>
                 <Box h={SECONDARY_COL_HEIGHT}>
-                  <Field withAsterisk label="Album Title">
+                  <Field withAsterisk label="Playlist Title">
                     <TextInput mt="xs" {...form.getInputProps("title")} />
                   </Field>
                   <Field withAsterisk label="Artist Name" mt="lg">
@@ -248,7 +248,7 @@ export const AlbumForm = (): any => {
                     leftIcon={<Check size={14} />}
                     disabled={isMutating > 0}
                   >
-                    Create Album
+                    Create Playlist
                   </Button>
                 </Box>
               </Grid.Col>

@@ -134,7 +134,7 @@ export const ArtistHeader = () => {
                   : classes.link
               }`}
             >
-              My Albums
+              My Playlists
             </Link>
             <Link
               href="/documentation"
@@ -210,7 +210,7 @@ export const ArtistHeader = () => {
               pathname === "/artist/albums" ? classes.activeLink : classes.link
             }`}
           >
-            My Albums
+            My Playlists
           </Link>
           <Link
             href="/documentation"
