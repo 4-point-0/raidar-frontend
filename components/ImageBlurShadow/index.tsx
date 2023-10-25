@@ -1,5 +1,5 @@
 import { Box, Image } from "@mantine/core";
-import React, { useState } from "react";
+import React from "react";
 
 interface ImageWithBlurredShadowProps {
   src: string;

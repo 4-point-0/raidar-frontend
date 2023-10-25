@@ -57,7 +57,6 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export const AlbumForm = ({ setNewAlbumCreated = () => {} }: any): any => {
-  const router = useRouter();
   const { classes, theme } = useStyles();
   const removeFile = useFileControllerRemove({});
 

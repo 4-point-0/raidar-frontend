@@ -17,7 +17,6 @@ import {
   Button,
   Container,
   Group,
-  Image,
   Overlay,
   SimpleGrid,
   Text,
@@ -96,7 +95,7 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
   const { classes } = useStyles();
   const [currentResults, setCurrentResults] = useState<SongDto[]>(data.results);
 
-  const { selector, modal, accountId, callMethod } = useWalletSelector();
+  const { modal, accountId, callMethod } = useWalletSelector();
 
   const {
     data: ownedSongs,
@@ -279,11 +278,11 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
       </Text>
       <Text fz="sm" c="dimmed" mt="sm">
         <b>Price</b>
-        {` ${song.price}`} Ⓝ
+        {` ${song.price}`} $
       </Text>
       <Text fz="sm" c="dimmed" mt="sm">
         <b>Storage Price</b>
-        {` ${formatNearAmount(storageCost as string)}`} Ⓝ
+        {` ${formatNearAmount(storageCost as string)}`} $
       </Text>
       <Group>
         <Avatar size="md" radius="xl" mt="md" color="red">
@@ -324,8 +323,8 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
             }}
           >
             <Group spacing="xs">
-              <Text>Buy for {songFullPrice(song)}</Text>{" "}
-              <Image width={14} src={"/images/near-logo-white.svg"} />
+              <Text>Buy for {songFullPrice(song)} $</Text>
+              {/* <Image width={14} src={"/images/near-logo-white.svg"} /> */}
             </Group>
           </Button>
         )}
