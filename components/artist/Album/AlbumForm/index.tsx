@@ -56,7 +56,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export const AlbumForm = (): any => {
+export const AlbumForm = ({ setNewAlbumCreated = () => {} }: any): any => {
   const router = useRouter();
   const { classes, theme } = useStyles();
   const removeFile = useFileControllerRemove({});
@@ -79,7 +79,7 @@ export const AlbumForm = (): any => {
     },
     onSuccess: () => {
       notifications.success({ title: "Playlist created" });
-      router.push("/artist/albums");
+      setNewAlbumCreated(true);
     },
     onError: () => {
       notifications.error({ title: "Error while creating playlist" });
@@ -261,7 +261,7 @@ export const AlbumForm = (): any => {
                     leftIcon={<Trash size={14} />}
                     disabled={isMutating > 0}
                   >
-                    ResetForm
+                    Reset Form
                   </Button>
                 </Box>
               </Grid.Col>

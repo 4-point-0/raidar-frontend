@@ -19,8 +19,8 @@ import { useAlbumControllerFindAllArtistAlbums } from "@/services/api/raidar/rai
 import { AlbumDto } from "@/services/api/raidar/raidarSchemas";
 import { useMediaQuery } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
-import { useRouter } from "next/router";
 import AlbumForm from "../AlbumForm";
+import { useEffect, useState } from "react";
 
 const useStyles = createStyles((theme) => ({
   item: {
@@ -59,9 +59,16 @@ const useStyles = createStyles((theme) => ({
 
 const ArtistAlbums = () => {
   const { classes } = useStyles();
-  const { data: albums } = useAlbumControllerFindAllArtistAlbums({});
+  const { data: albums, refetch } = useAlbumControllerFindAllArtistAlbums({});
   const theme = useMantineTheme();
-  const router = useRouter();
+
+  const [newAlbumCreated, setNewAlbumCreated] = useState(false);
+
+  useEffect(() => {
+    if (newAlbumCreated) {
+      refetch();
+    }
+  }, [newAlbumCreated]);
 
   const isMobile = useMediaQuery("(max-width: 768px)");
 
@@ -72,7 +79,7 @@ const ArtistAlbums = () => {
           modals.open({
             fullScreen: isMobile,
             title: `Create new playlist`,
-            children: <AlbumForm />,
+            children: <AlbumForm setNewAlbumCreated={setNewAlbumCreated} />,
           });
         }}
         mb="lg"
