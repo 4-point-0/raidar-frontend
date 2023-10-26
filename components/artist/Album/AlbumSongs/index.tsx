@@ -13,6 +13,7 @@ import {
   Title,
   createStyles,
   rem,
+  useMantineTheme,
 } from "@mantine/core";
 import { AlertCircle, Check, Plus, Wallet } from "tabler-icons-react";
 
@@ -25,6 +26,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { useRouter } from "next/router";
 import SongForm from "../../Song/SongForm";
+import Link from "next/link";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -72,6 +74,7 @@ const useStyles = createStyles((theme) => ({
 const AlbumSongs = () => {
   const { classes } = useStyles();
   const router = useRouter();
+  const theme = useMantineTheme();
 
   const albumId = router.query.id;
 
@@ -117,9 +120,20 @@ const AlbumSongs = () => {
         <Text fw={700} fz="md" className={classes.itemTitle} c="dimmed">
           {formatDuration(song.length)}
         </Text>
-        <Anchor href={`/artist/song/${song.id}`} color="red" fw={700}>
+
+        <Button
+          href={`/artist/song/${song.id}`}
+          fw={700}
+          size="md"
+          component={Link}
+          style={{
+            backgroundColor: "transparent",
+            color: theme.colors.red[6],
+            textAlign: "left",
+          }}
+        >
           Check Song
-        </Anchor>
+        </Button>
       </div>
     </div>
   ));

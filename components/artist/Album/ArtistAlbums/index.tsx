@@ -3,6 +3,7 @@
 import {
   Anchor,
   Box,
+  Button,
   Container,
   Group,
   SimpleGrid,
@@ -21,6 +22,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import AlbumForm from "../AlbumForm";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 const useStyles = createStyles((theme) => ({
   item: {
@@ -172,9 +174,19 @@ const ArtistAlbums = () => {
           {album.pka}
         </Text>
 
-        <Anchor href={`/artist/album/${album.id}`} color="red" fw={700}>
+        <Button
+          href={`/artist/album/${album.id}`}
+          fw={700}
+          size="md"
+          component={Link}
+          style={{
+            backgroundColor: "transparent",
+            color: theme.colors.red[6],
+            textAlign: "left",
+          }}
+        >
           View Songs
-        </Anchor>
+        </Button>
       </Box>
     </Group>
   ));
