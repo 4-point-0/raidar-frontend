@@ -277,12 +277,12 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
         {` ${song.album?.title}`}
       </Text>
       <Text fz="sm" c="dimmed" mt="sm">
-        <b>Price</b>
-        {` ${song.price}`} $
+        <b>Price in NEAR</b>
+        {` ${songFullPrice(song)}`} Ⓝ
       </Text>
       <Text fz="sm" c="dimmed" mt="sm">
         <b>Storage Price</b>
-        {` ${formatNearAmount(storageCost as string)}`} $
+        {` ${song.storagePriceUsd}`} $
       </Text>
       <Group>
         <Avatar size="md" radius="xl" mt="md" color="red">
@@ -323,8 +323,11 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
             }}
           >
             <Group spacing="xs">
-              <Text>Buy for {songFullPrice(song)} $</Text>
-              {/* <Image width={14} src={"/images/near-logo-white.svg"} /> */}
+              {song.priceInUsd ? (
+                <Text>Buy for {parseFloat(song.priceInUsd).toFixed(2)} $</Text>
+              ) : (
+                "0"
+              )}
             </Group>
           </Button>
         )}

@@ -160,6 +160,8 @@ export type SongDto = {
   recording_location: string;
   art: FileDto;
   pka: string;
+  priceInUsd?: string;
+  storagePriceUsd?: string;
   price: string;
   licence?: LicenceDto;
   token_contract_id: number;
