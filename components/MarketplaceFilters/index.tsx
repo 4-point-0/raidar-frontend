@@ -85,8 +85,6 @@ export const MarketplaceFilters = ({
 
     const filterQueryString = filterParams.join("&");
 
-    console.log(filterQueryString);
-
     fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/v1/marketplace/songs?${filterQueryString}`,
       {

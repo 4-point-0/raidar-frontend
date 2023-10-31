@@ -45,7 +45,7 @@ import {
   useSongControllerCreateSong,
 } from "@/services/api/raidar/raidarComponents";
 import { parseNearAmount } from "near-api-js/lib/utils/format";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AlertCircle, Check } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
@@ -67,6 +67,7 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
   const [uploadedImage, setUploadedImage] = useState<UploadedFileValue | null>(
     null
   );
+  const [audioError, setAudioError] = useState<any>("");
   const { reset } = useForm();
 
   const router = useRouter();
@@ -100,6 +101,12 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
       price: 0,
     },
   });
+
+  useEffect(() => {
+    // if (audioError) {
+    console.log("audioError", audioError);
+    // }
+  }, [audioError]);
 
   const handleResetForm = () => {
     reset();
@@ -158,6 +165,7 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
 
   const handleSongDrop = async (files: FileWithPath[]) => {
     const file = files[0];
+    setAudioError(false);
 
     const { song } = form.values;
 
@@ -179,14 +187,13 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
       });
     } catch (error) {
       form.setFieldValue("song", undefined);
+      setAudioError(error);
 
       form.setFieldError(
         "song",
         (error as unknown as { stack?: { message?: string } })?.stack
           ?.message || "Failed to upload song"
       );
-
-      console.error(error);
     }
   };
 
@@ -281,6 +288,17 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
         Please make sure to have at least 1 NEAR in your wallet to pay for
         creation of the NFT.
       </Alert>
+
+      {audioError ? (
+        <Alert
+          mb={"md"}
+          icon={<AlertCircle size="1rem" />}
+          title="Error while uploading audio file"
+          color="red"
+        >
+          {audioError.stack.message}
+        </Alert>
+      ) : null}
 
       <FormProvider form={form}>
         <form onSubmit={form.onSubmit(handleSubmit)}>
