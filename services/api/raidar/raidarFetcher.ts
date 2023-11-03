@@ -2,7 +2,7 @@ import FormData from "form-data";
 import { getSession } from "next-auth/react";
 import { RaidarContext } from "./raidarContext";
 
-const baseUrl = "https://raidar.us"; // TODO add your baseUrl
+const baseUrl = "https://api.raidar.us"; // TODO add your baseUrl
 
 export type ErrorWrapper<TError> =
   | TError
@@ -24,7 +24,7 @@ export async function raidarFetch<
   TBody extends {} | FormData | undefined | null,
   THeaders extends {},
   TQueryParams extends {},
-  TPathParams extends {}
+  TPathParams extends {},
 >({
   url,
   method,
