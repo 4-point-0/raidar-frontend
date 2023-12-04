@@ -12,7 +12,7 @@ export default defineConfig({
   raidar: {
     from: {
       source: "url",
-      url: `https://raidar.us/swagger-json`,
+      url: `https://api.raidar.us/swagger-json`,
     },
     outputDir: "services/api/raidar",
     to: async (context) => {
