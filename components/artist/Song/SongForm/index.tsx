@@ -44,12 +44,12 @@ import {
   useFileControllerUploadFile,
   useSongControllerCreateSong,
 } from "@/services/api/raidar/raidarComponents";
+import createPDF from "@/utils/createPDF";
 import { parseNearAmount } from "near-api-js/lib/utils/format";
 import { useRef, useState } from "react";
 import { AlertCircle, Check } from "tabler-icons-react";
-import createPDF from "@/utils/createPDF";
 
-import SignatureCanvas, { SignatureCanvasMethods } from "../../../SignaturePad";
+import SignatureCanvas from "../../../SignaturePad";
 
 const useStyles = createStyles((theme) => ({
   button: {
@@ -280,7 +280,7 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
         };
 
         callMethod(
-          "raidar.near",
+          process.env.NEXT_PUBLIC_CONTRACT_NAME as string,
           "mint_nft",
           {
             data,

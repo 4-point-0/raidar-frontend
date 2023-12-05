@@ -9,7 +9,8 @@ import {
   fetchUserControllerFindMe,
   useSongControllerFindAllUserSongs,
 } from "@/services/api/raidar/raidarComponents";
-import { SongDto, UserDto } from "@/services/api/raidar/raidarSchemas";
+import { SongDto } from "@/services/api/raidar/raidarSchemas";
+import createPDF from "@/utils/createPDF";
 import {
   ActionIcon,
   Alert,
@@ -19,14 +20,14 @@ import {
   Button,
   Container,
   Group,
+  Modal,
   Overlay,
   SimpleGrid,
   Text,
+  TextInput,
   Title,
   createStyles,
   rem,
-  Modal,
-  TextInput,
 } from "@mantine/core";
 import BN from "bn.js";
 import {
@@ -39,8 +40,7 @@ import { useEffect, useRef, useState } from "react";
 import Tilt from "react-parallax-tilt";
 import { AlertCircle, Check, InfoCircle, PlayerPlay } from "tabler-icons-react";
 import ImageWithBlurredShadow from "../ImageBlurShadow";
-import SignatureCanvas, { SignatureCanvasMethods } from "../SignaturePad";
-import createPDF from "@/utils/createPDF";
+import SignatureCanvas from "../SignaturePad";
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -218,7 +218,7 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
     );
 
     await callMethod(
-      "raidar.near",
+      process.env.NEXT_PUBLIC_CONTRACT_NAME as string,
       "buy_nft",
       {
         token_id: song.token_contract_id.toString(),
