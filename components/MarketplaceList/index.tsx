@@ -4,10 +4,12 @@ import { useWalletSelector } from "@/context/WalletSelectorContext";
 import { useFindUser } from "@/hooks/useFindUser";
 import {
   MarketplaceControllerFindAllResponse,
+  fetchContractControllerFindOne,
   fetchSongControllerBuySong,
+  fetchUserControllerFindMe,
   useSongControllerFindAllUserSongs,
 } from "@/services/api/raidar/raidarComponents";
-import { SongDto } from "@/services/api/raidar/raidarSchemas";
+import { SongDto, UserDto } from "@/services/api/raidar/raidarSchemas";
 import {
   ActionIcon,
   Alert,
@@ -23,6 +25,8 @@ import {
   Title,
   createStyles,
   rem,
+  Modal,
+  TextInput,
 } from "@mantine/core";
 import BN from "bn.js";
 import {
@@ -31,10 +35,12 @@ import {
 } from "near-api-js/lib/utils/format";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Tilt from "react-parallax-tilt";
 import { AlertCircle, Check, InfoCircle, PlayerPlay } from "tabler-icons-react";
 import ImageWithBlurredShadow from "../ImageBlurShadow";
+import SignatureCanvas, { SignatureCanvasMethods } from "../SignaturePad";
+import createPDF from "@/utils/createPDF";
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -95,7 +101,29 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
   const { classes } = useStyles();
   const [currentResults, setCurrentResults] = useState<SongDto[]>(data.results);
 
+  const [modalOpened, setModalOpened] = useState(false);
+  const [selectedSong, setSelectedSong] = useState<SongDto | null>(null);
+  const [descriptionOfUse, setDescriptionOfUseValue] = useState<string>("");
+
   const { modal, accountId, callMethod } = useWalletSelector();
+
+  const signatureCanvasRef = useRef<SignatureCanvas>(null);
+
+  const signatureDataUrl = signatureCanvasRef.current?.getSignatureImage();
+
+  const getUserData = async () => {
+    const userData = await fetchUserControllerFindMe({});
+    return userData;
+  };
+
+  const getContractData = async (songId: string) => {
+    const contractData = await fetchContractControllerFindOne({
+      pathParams: {
+        id: songId,
+      },
+    });
+    return contractData;
+  };
 
   const {
     data: ownedSongs,
@@ -197,6 +225,76 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
       },
       deposit as any,
       "30000000000000" as any
+    );
+  };
+
+  const handleCreatePdf = async (
+    songId?: string,
+    descriptionOfUse?: string
+    // userMail?: string
+  ) => {
+    try {
+      const userData = await getUserData();
+      console.log("userData", userData);
+
+      if (selectedSong) {
+        const contractData = await getContractData(selectedSong.id);
+        console.log("contractData", contractData);
+
+        createPDF(
+          songId, // songId
+          undefined, // title
+          undefined, // pka
+          undefined, // length
+          undefined, // price
+          descriptionOfUse, // descriptionOfUse
+          userData.email, // userMail
+          signatureDataUrl, // signatureDataUrl
+          contractData.pdfUrl, //pdfLink
+          true // isBought
+        );
+      } else {
+        throw new Error("Selected song is null or undefined.");
+      }
+    } catch (err) {
+      console.error("error", err);
+    }
+  };
+
+  const signatureModal = () => {
+    return (
+      <Modal
+        opened={modalOpened}
+        onClose={() => setModalOpened(false)}
+        title="Confirm the purchase"
+        centered
+      >
+        <Text>
+          Please provide your signature for the purchase contract?{" "}
+          {selectedSong && selectedSong.id}
+        </Text>
+        <SignatureCanvas ref={signatureCanvasRef} />
+        <TextInput
+          mt="md"
+          placeholder="In what purpose will this audio be used?"
+          onChange={(event) =>
+            setDescriptionOfUseValue(event.currentTarget.value)
+          }
+        />
+        <Button
+          color="red"
+          mt="md"
+          onClick={async () => {
+            // buySong(song)
+            if (selectedSong) {
+              handleCreatePdf(selectedSong.id, descriptionOfUse);
+            }
+            // console.log("result", result);
+          }}
+        >
+          Continue payment
+        </Button>
+      </Modal>
     );
   };
 
@@ -318,8 +416,13 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
             disabled={checkIfOwned(song.id)}
             mt="xl"
             className={classes.button}
+            // onClick={() => {
+            //   // buySong(song);
+            // }}
             onClick={() => {
-              buySong(song);
+              setModalOpened(true);
+              setSelectedSong(song);
+              handleCreatePdf();
             }}
           >
             <Group spacing="xs">
@@ -398,6 +501,8 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
         >
           {features}
         </SimpleGrid>
+
+        {signatureModal()}
       </Container>
     </>
   );
