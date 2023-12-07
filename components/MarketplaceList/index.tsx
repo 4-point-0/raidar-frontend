@@ -269,10 +269,7 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
         title="Confirm the purchase"
         centered
       >
-        <Text>
-          Please provide your signature for the purchase contract?
-          {selectedSong && selectedSong.id}
-        </Text>
+        <Text>Please provide your signature for the purchase contract?</Text>
         <SignatureCanvas ref={signatureCanvasRef} />
         <TextInput
           mt="md"
