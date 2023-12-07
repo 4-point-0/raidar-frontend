@@ -19,19 +19,17 @@ export default async function createPDF(
     const today = new Date();
     const toWords = new ToWords();
 
-    const numericPrice = price ? Number(price) : 0; // Convert price to number, default to 0 if undefined or invalid
-    const priceInWords = toWords.convert(numericPrice); // Convert the numeric price to words
+    const numericPrice = price ? Number(price) : 0;
+    const priceInWords = toWords.convert(numericPrice);
 
-    const formUrl =
-      isBought && pdfLink
-        ? pdfLink
-        : "/documentation/RDR-Sync-License-Template.pdf";
+    const formUrl = isBought
+      ? pdfLink
+      : "/documentation/RDR-Sync-License-Template.pdf";
 
-    // const formUrl = "/documentation/RDR-Sync-License-Template.pdf";
-    const formPdfBytes = await fetch(formUrl).then((res) => res.arrayBuffer());
+    const formPdfBytes = await fetch(`${formUrl}`).then((res) =>
+      res.arrayBuffer()
+    );
     const pdfDoc = await PDFDocument.load(formPdfBytes);
-
-    console.log("signatureDataUrl", signatureDataUrl);
 
     const signatureImageBytes = Buffer.from(
       signatureDataUrl.split(",")[1],
@@ -77,8 +75,8 @@ export default async function createPDF(
     if (!isBought) {
       //left page corner in the PDF file reserved for the Artist signature
       thirdPage.drawImage(authorSignature, {
-        x: 50,
-        y: 50,
+        x: 80,
+        y: 60,
         width: pngDims.width,
         height: pngDims.height,
       });
@@ -90,18 +88,18 @@ export default async function createPDF(
       form.getTextField("compositionName").setText(title);
       form.getTextField("writtersPercentageText").setText("Zero Percentage");
       form.getTextField("writtersPercentageNumber").setText("0");
-      // form.getTextField("titleOfPictureMedia").setText("Title");
+      form.getTextField("titleOfPictureMedia").setText(title);
       form.getTextField("program").setText("n/a");
-      form.getTextField("performedBy").setText(pka);
-      form.getTextField("duration").setText(length);
+      form.getTextField("performedBy").setText(`${pka}`);
+      form.getTextField("duration").setText(`${length} seconds`);
       form.getTextField("synopsis").setText("n/a");
       form.getTextField("costText").setText(`${priceInWords} USD`);
       form.getTextField("costNumber").setText(price?.toString());
     } else {
       //right page corner in the PDF file reserved for the Buyer signature
       thirdPage.drawImage(authorSignature, {
-        x: thirdPage.getWidth() - pngDims.width - 5, // subtract image width from page width and adjust with a small margin
-        y: 50,
+        x: thirdPage.getWidth() - pngDims.width - 150, // subtract image width from page width and adjust with a small margin
+        y: 80,
         width: pngDims.width,
         height: pngDims.height,
       });
@@ -129,8 +127,6 @@ export default async function createPDF(
     const response = await fetchContractControllerCreateContract({
       body: requestBody as any,
     });
-
-    console.log("response", response);
   } catch (error) {
     console.error("Error details:", error);
   }
