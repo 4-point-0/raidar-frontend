@@ -41,7 +41,7 @@ class SignatureCanvas extends React.Component<{}, {}> {
   //   }
   // };
 
-  //Receive just the temorary signature image
+  //Receive the temporary signature image
   getSignatureImage = () => {
     if (
       this.signaturePadRef.current &&
@@ -63,9 +63,23 @@ class SignatureCanvas extends React.Component<{}, {}> {
   render() {
     return (
       <div>
-        <SignaturePad ref={this.signaturePadRef} />
+        <div
+          style={{
+            borderRadius: "1px",
+            border: "1px solid #ccc",
+            marginTop: "3px",
+          }}
+        >
+          <SignaturePad
+            ref={this.signaturePadRef}
+            options={{
+              backgroundColor: "white",
+              penColor: "black",
+            }}
+          />
+        </div>
         {/* <Button onClick={this.saveImage}>Save as PNG</Button> */}
-        <Button color="red" onClick={this.clearCanvas}>
+        <Button color="red" onClick={this.clearCanvas} mt="md">
           Clear Signature
         </Button>
       </div>
