@@ -83,8 +83,6 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
 
   const signatureCanvasRef = useRef<SignatureCanvas>(null);
 
-  const signatureDataUrl = signatureCanvasRef.current?.getSignatureImage();
-
   const form = useForm<any>({
     validateInputOnChange: true,
     initialValues: {
@@ -233,64 +231,56 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
     const formattedDate = new Date(selectedDate).toISOString();
 
     try {
-      if (signatureDataUrl) {
-        const result = await createSong.mutateAsync({
-          body: {
-            title: title,
-            album_id: albumId as string,
-            genre: genre,
-            mood: [mood],
-            tags: [tags],
-            length: length as unknown as number,
-            bpm: bpm as unknown as number,
-            instrumental: instrumental ? true : false,
-            languages: [languages],
-            vocal_ranges: [vocalRanges],
-            musical_key: musicalKey,
-            music_id: song?.response?.id as string,
-            recording_date: formattedDate,
-            recording_country: recordingCountry,
-            recording_location: recordingLocation,
-            art_id: image?.response?.id as string,
-            pka: pka || "Missing PKA info",
-            price: price as unknown as number,
-          },
-        });
+      const result = await createSong.mutateAsync({
+        body: {
+          title: title,
+          album_id: albumId as string,
+          genre: genre,
+          mood: [mood],
+          tags: [tags],
+          length: length as unknown as number,
+          bpm: bpm as unknown as number,
+          instrumental: instrumental ? true : false,
+          languages: [languages],
+          vocal_ranges: [vocalRanges],
+          musical_key: musicalKey,
+          music_id: song?.response?.id as string,
+          recording_date: formattedDate,
+          recording_country: recordingCountry,
+          recording_location: recordingLocation,
+          art_id: image?.response?.id as string,
+          pka: pka || "Missing PKA info",
+          price: price as unknown as number,
+        },
+      });
 
-        if (result && result.id && pka && length && price) {
-          handleCreatePdf(
-            result.id,
-            result.title,
-            pka,
-            result.length,
-            result.price
-          );
-        } else {
-          throw new Error("Missing necessary data for creating PDF");
-        }
+      await handleCreatePdf(
+        result.id,
+        result.title,
+        pka,
+        result.length,
+        result.price
+      );
 
-        const songPriceInYoctoNear = parseNearAmount(result.price) as string;
+      const songPriceInYoctoNear = parseNearAmount(result.price) as string;
 
-        const data = {
-          token_id: result.token_contract_id.toString(),
-          name: result.title,
-          description: `${result.title} by ${result.pka}`,
-          extra: null,
-          price: songPriceInYoctoNear,
-        };
+      const data = {
+        token_id: result.token_contract_id.toString(),
+        name: result.title,
+        description: `${result.title} by ${result.pka}`,
+        extra: null,
+        price: songPriceInYoctoNear,
+      };
 
-        callMethod(
-          process.env.NEXT_PUBLIC_CONTRACT_NAME as string,
-          "mint_nft",
-          {
-            data,
-          },
-          parseNearAmount("1") as any,
-          "30000000000000" as any
-        );
-      } else {
-        notifications.error({ title: "Please provide a signature first!" });
-      }
+      callMethod(
+        process.env.NEXT_PUBLIC_CONTRACT_NAME as string,
+        "mint_nft",
+        {
+          data,
+        },
+        parseNearAmount("1") as any,
+        "30000000000000" as any
+      );
     } catch (error) {
       console.error(error);
       notifications.error({
@@ -306,41 +296,19 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
     length: string,
     price: string
   ) => {
-    console.log("signatureDataUrl", signatureDataUrl);
-
-    // if (signatureDataUrl) {
-    //   fetch(`/api/createPDF/createPDF`, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       title: title,
-    //       pka: pka,
-    //       length: length,
-    //       price: price,
-    //       signatureDataUrl: signatureDataUrl,
-    //     }),
-    //   })
-    //     .then((response) => response.json())
-    //     .then((data) => console.log(data))
-    //     .catch((error) => console.error("Error:", error));
-    // }
-
-    if (signatureDataUrl) {
-      createPDF(
-        songId, // songId
-        title, // title
-        pka, // pka
-        length, // length
-        price, // price
-        undefined, // descriptionOfUse
-        undefined, // userMail
-        signatureDataUrl, // signatureDataUrl
-        undefined, //pdfLink
-        false // isBought
-      );
-    }
+    const signatureDataUrl = signatureCanvasRef.current?.getSignatureImage();
+    await createPDF(
+      songId, // songId
+      title, // title
+      pka, // pka
+      length, // length
+      price, // price
+      undefined, // descriptionOfUse
+      undefined, // userMail
+      signatureDataUrl, // signatureDataUrl
+      undefined, //pdfLink
+      false // isBought
+    );
   };
 
   return (
@@ -550,34 +518,7 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
               </Field>
             </Group>
             <h3>Sign the document</h3>
-            {/* <SignaturePad
-              width={100}
-              height={150}
-              options={{
-                minWidth: 100,
-                maxWidth: 100,
-                penColor: "rgb(0, 0, 0)",
-              }}
-            /> */}
-            {/* <SignaturePad
-              ref={(ref) => (signaturePadRef = ref)}
-              options={{
-                minWidth: 1,
-                maxWidth: 1,
-                penColor: "rgb(0, 0, 0)",
-              }}
-            /> */}
-
             <SignatureCanvas ref={signatureCanvasRef} />
-
-            {/* <Button onClick={saveImage}>Save as PNG</Button> */}
-            {/* <Button
-              className={classes.button}
-              color="red"
-              onClick={handleClear}
-            >
-              Clear Signature
-            </Button> */}
             <Group>
               <Button
                 className={classes.button}
@@ -597,15 +538,6 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
               >
                 Reset Form
               </Button>
-
-              {/* <Button
-                className={classes.button}
-                onClick={async () => {
-                  await handleCreatePdf();
-                }}
-              >
-                Create PDF
-              </Button> */}
             </Group>
           </Stack>
         </form>
