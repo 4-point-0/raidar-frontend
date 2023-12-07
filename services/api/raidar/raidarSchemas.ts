@@ -198,3 +198,27 @@ export type AlbumDto = {
   cover: FileDto;
   songs: SongDto[];
 };
+
+export type ContractDto = {
+  id: string;
+  /**
+   * @format date-time
+   */
+  created_at: string;
+  /**
+   * @format date-time
+   */
+  updated_at: string;
+  created_by_id: string;
+  updated_by_id: string;
+  artistId: string;
+  /**
+   * ID of the customer who purchased the song, if applicable
+   */
+  customerId?: string;
+  songId: string;
+  /**
+   * URL to the PDF of the contract. Initially signed by the artist, later can be the version signed by the customer.
+   */
+  pdfUrl: string;
+};

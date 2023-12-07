@@ -2,7 +2,7 @@ import FormData from "form-data";
 import { getSession } from "next-auth/react";
 import { RaidarContext } from "./raidarContext";
 
-const baseUrl = "https://raidar.us"; // TODO add your baseUrl
+const baseUrl = "https://api.raidar.us"; // TODO add your baseUrl
 
 export type ErrorWrapper<TError> =
   | TError
@@ -74,12 +74,18 @@ export async function raidarFetch<
     if (isFileUpload) {
       delete requestHeaders["Content-Type"];
 
-      const { file, tags } = body as any;
+      const { file, tags, songId } = body as any;
+
+      console.log("songid", songId);
 
       formData.append("file", file);
 
       if (tags) {
         formData.append("tags", tags.toString());
+      }
+
+      if (songId) {
+        formData.append("songId", songId.toString());
       }
     }
 

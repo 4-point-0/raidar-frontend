@@ -1054,6 +1054,350 @@ export const useMarketplaceControllerFindOneSong = <TData = Schemas.SongDto>(
   );
 };
 
+export type ContractControllerCreateContractError =
+  Fetcher.ErrorWrapper<undefined>;
+
+export type ContractControllerCreateContractRequestBody = {
+  /**
+   * ID of the song associated with the contract
+   */
+  songId: string;
+  /**
+   * File to upload
+   *
+   * @format binary
+   */
+  file: Blob;
+};
+
+export type ContractControllerCreateContractVariables = {
+  body: ContractControllerCreateContractRequestBody;
+} & RaidarContext["fetcherOptions"];
+
+export const fetchContractControllerCreateContract = (
+  variables: ContractControllerCreateContractVariables,
+  signal?: AbortSignal
+) =>
+  raidarFetch<
+    Schemas.ContractDto,
+    ContractControllerCreateContractError,
+    ContractControllerCreateContractRequestBody,
+    {},
+    {},
+    {}
+  >({ url: "/api/v1/contract", method: "post", ...variables, signal });
+
+export const useContractControllerCreateContract = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.ContractDto,
+      ContractControllerCreateContractError,
+      ContractControllerCreateContractVariables
+    >,
+    "mutationFn"
+  >
+) => {
+  const { fetcherOptions } = useRaidarContext();
+  return reactQuery.useMutation<
+    Schemas.ContractDto,
+    ContractControllerCreateContractError,
+    ContractControllerCreateContractVariables
+  >(
+    (variables: ContractControllerCreateContractVariables) =>
+      fetchContractControllerCreateContract({
+        ...fetcherOptions,
+        ...variables,
+      }),
+    options
+  );
+};
+
+export type ContractControllerFindOnePathParams = {
+  /**
+   * Song ID
+   */
+  id: string;
+};
+
+export type ContractControllerFindOneError = Fetcher.ErrorWrapper<undefined>;
+
+export type ContractControllerFindOneVariables = {
+  pathParams: ContractControllerFindOnePathParams;
+} & RaidarContext["fetcherOptions"];
+
+export const fetchContractControllerFindOne = (
+  variables: ContractControllerFindOneVariables,
+  signal?: AbortSignal
+) =>
+  raidarFetch<
+    Schemas.ContractDto,
+    ContractControllerFindOneError,
+    undefined,
+    {},
+    {},
+    ContractControllerFindOnePathParams
+  >({ url: "/api/v1/contract/{id}", method: "get", ...variables, signal });
+
+export const useContractControllerFindOne = <TData = Schemas.ContractDto>(
+  variables: ContractControllerFindOneVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.ContractDto,
+      ContractControllerFindOneError,
+      TData
+    >,
+    "queryKey" | "queryFn"
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } =
+    useRaidarContext(options);
+  return reactQuery.useQuery<
+    Schemas.ContractDto,
+    ContractControllerFindOneError,
+    TData
+  >(
+    queryKeyFn({
+      path: "/api/v1/contract/{id}",
+      operationId: "contractControllerFindOne",
+      variables,
+    }),
+    ({ signal }) =>
+      fetchContractControllerFindOne(
+        { ...fetcherOptions, ...variables },
+        signal
+      ),
+    {
+      ...options,
+      ...queryOptions,
+    }
+  );
+};
+
+export type ContractControllerFindAllBaseArtistContractsQueryParams = {
+  limit?: number;
+  page?: number;
+};
+
+export type ContractControllerFindAllBaseArtistContractsError =
+  Fetcher.ErrorWrapper<undefined>;
+
+export type ContractControllerFindAllBaseArtistContractsResponse = {
+  total: number;
+  take: number;
+  skip: number;
+  count: number;
+  results: Schemas.ContractDto[];
+};
+
+export type ContractControllerFindAllBaseArtistContractsVariables = {
+  queryParams?: ContractControllerFindAllBaseArtistContractsQueryParams;
+} & RaidarContext["fetcherOptions"];
+
+export const fetchContractControllerFindAllBaseArtistContracts = (
+  variables: ContractControllerFindAllBaseArtistContractsVariables,
+  signal?: AbortSignal
+) =>
+  raidarFetch<
+    ContractControllerFindAllBaseArtistContractsResponse,
+    ContractControllerFindAllBaseArtistContractsError,
+    undefined,
+    {},
+    ContractControllerFindAllBaseArtistContractsQueryParams,
+    {}
+  >({
+    url: "/api/v1/contract/artist/base",
+    method: "get",
+    ...variables,
+    signal,
+  });
+
+export const useContractControllerFindAllBaseArtistContracts = <
+  TData = ContractControllerFindAllBaseArtistContractsResponse
+>(
+  variables: ContractControllerFindAllBaseArtistContractsVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      ContractControllerFindAllBaseArtistContractsResponse,
+      ContractControllerFindAllBaseArtistContractsError,
+      TData
+    >,
+    "queryKey" | "queryFn"
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } =
+    useRaidarContext(options);
+  return reactQuery.useQuery<
+    ContractControllerFindAllBaseArtistContractsResponse,
+    ContractControllerFindAllBaseArtistContractsError,
+    TData
+  >(
+    queryKeyFn({
+      path: "/api/v1/contract/artist/base",
+      operationId: "contractControllerFindAllBaseArtistContracts",
+      variables,
+    }),
+    ({ signal }) =>
+      fetchContractControllerFindAllBaseArtistContracts(
+        { ...fetcherOptions, ...variables },
+        signal
+      ),
+    {
+      ...options,
+      ...queryOptions,
+    }
+  );
+};
+
+export type ContractControllerFindAllSignedArtistContractsQueryParams = {
+  limit?: number;
+  page?: number;
+};
+
+export type ContractControllerFindAllSignedArtistContractsError =
+  Fetcher.ErrorWrapper<undefined>;
+
+export type ContractControllerFindAllSignedArtistContractsResponse = {
+  total: number;
+  take: number;
+  skip: number;
+  count: number;
+  results: Schemas.ContractDto[];
+};
+
+export type ContractControllerFindAllSignedArtistContractsVariables = {
+  queryParams?: ContractControllerFindAllSignedArtistContractsQueryParams;
+} & RaidarContext["fetcherOptions"];
+
+export const fetchContractControllerFindAllSignedArtistContracts = (
+  variables: ContractControllerFindAllSignedArtistContractsVariables,
+  signal?: AbortSignal
+) =>
+  raidarFetch<
+    ContractControllerFindAllSignedArtistContractsResponse,
+    ContractControllerFindAllSignedArtistContractsError,
+    undefined,
+    {},
+    ContractControllerFindAllSignedArtistContractsQueryParams,
+    {}
+  >({
+    url: "/api/v1/contract/artist/signed",
+    method: "get",
+    ...variables,
+    signal,
+  });
+
+export const useContractControllerFindAllSignedArtistContracts = <
+  TData = ContractControllerFindAllSignedArtistContractsResponse
+>(
+  variables: ContractControllerFindAllSignedArtistContractsVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      ContractControllerFindAllSignedArtistContractsResponse,
+      ContractControllerFindAllSignedArtistContractsError,
+      TData
+    >,
+    "queryKey" | "queryFn"
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } =
+    useRaidarContext(options);
+  return reactQuery.useQuery<
+    ContractControllerFindAllSignedArtistContractsResponse,
+    ContractControllerFindAllSignedArtistContractsError,
+    TData
+  >(
+    queryKeyFn({
+      path: "/api/v1/contract/artist/signed",
+      operationId: "contractControllerFindAllSignedArtistContracts",
+      variables,
+    }),
+    ({ signal }) =>
+      fetchContractControllerFindAllSignedArtistContracts(
+        { ...fetcherOptions, ...variables },
+        signal
+      ),
+    {
+      ...options,
+      ...queryOptions,
+    }
+  );
+};
+
+export type ContractControllerFindAllUserContractsQueryParams = {
+  limit?: number;
+  page?: number;
+};
+
+export type ContractControllerFindAllUserContractsError =
+  Fetcher.ErrorWrapper<undefined>;
+
+export type ContractControllerFindAllUserContractsResponse = {
+  total: number;
+  take: number;
+  skip: number;
+  count: number;
+  results: Schemas.ContractDto[];
+};
+
+export type ContractControllerFindAllUserContractsVariables = {
+  queryParams?: ContractControllerFindAllUserContractsQueryParams;
+} & RaidarContext["fetcherOptions"];
+
+export const fetchContractControllerFindAllUserContracts = (
+  variables: ContractControllerFindAllUserContractsVariables,
+  signal?: AbortSignal
+) =>
+  raidarFetch<
+    ContractControllerFindAllUserContractsResponse,
+    ContractControllerFindAllUserContractsError,
+    undefined,
+    {},
+    ContractControllerFindAllUserContractsQueryParams,
+    {}
+  >({
+    url: "/api/v1/contract/user/signed",
+    method: "get",
+    ...variables,
+    signal,
+  });
+
+export const useContractControllerFindAllUserContracts = <
+  TData = ContractControllerFindAllUserContractsResponse
+>(
+  variables: ContractControllerFindAllUserContractsVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      ContractControllerFindAllUserContractsResponse,
+      ContractControllerFindAllUserContractsError,
+      TData
+    >,
+    "queryKey" | "queryFn"
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } =
+    useRaidarContext(options);
+  return reactQuery.useQuery<
+    ContractControllerFindAllUserContractsResponse,
+    ContractControllerFindAllUserContractsError,
+    TData
+  >(
+    queryKeyFn({
+      path: "/api/v1/contract/user/signed",
+      operationId: "contractControllerFindAllUserContracts",
+      variables,
+    }),
+    ({ signal }) =>
+      fetchContractControllerFindAllUserContracts(
+        { ...fetcherOptions, ...variables },
+        signal
+      ),
+    {
+      ...options,
+      ...queryOptions,
+    }
+  );
+};
+
 export type QueryOperation =
   | {
       path: "/api/v1/google/sign-in-backend";
@@ -1109,4 +1453,24 @@ export type QueryOperation =
       path: "/api/v1/marketplace/song/{id}";
       operationId: "marketplaceControllerFindOneSong";
       variables: MarketplaceControllerFindOneSongVariables;
+    }
+  | {
+      path: "/api/v1/contract/{id}";
+      operationId: "contractControllerFindOne";
+      variables: ContractControllerFindOneVariables;
+    }
+  | {
+      path: "/api/v1/contract/artist/base";
+      operationId: "contractControllerFindAllBaseArtistContracts";
+      variables: ContractControllerFindAllBaseArtistContractsVariables;
+    }
+  | {
+      path: "/api/v1/contract/artist/signed";
+      operationId: "contractControllerFindAllSignedArtistContracts";
+      variables: ContractControllerFindAllSignedArtistContractsVariables;
+    }
+  | {
+      path: "/api/v1/contract/user/signed";
+      operationId: "contractControllerFindAllUserContracts";
+      variables: ContractControllerFindAllUserContractsVariables;
     };

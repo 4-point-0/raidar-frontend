@@ -44,9 +44,12 @@ import {
   useFileControllerUploadFile,
   useSongControllerCreateSong,
 } from "@/services/api/raidar/raidarComponents";
+import createPDF from "@/utils/createPDF";
 import { parseNearAmount } from "near-api-js/lib/utils/format";
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { AlertCircle, Check } from "tabler-icons-react";
+
+import SignatureCanvas from "../../../SignaturePad";
 
 const useStyles = createStyles((theme) => ({
   button: {
@@ -78,6 +81,8 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
 
   const isMutating = useIsMutating();
 
+  const signatureCanvasRef = useRef<SignatureCanvas>(null);
+
   const form = useForm<any>({
     validateInputOnChange: true,
     initialValues: {
@@ -101,12 +106,6 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
       price: 0,
     },
   });
-
-  useEffect(() => {
-    // if (audioError) {
-    console.log("audioError", audioError);
-    // }
-  }, [audioError]);
 
   const handleResetForm = () => {
     reset();
@@ -255,6 +254,14 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
         },
       });
 
+      await handleCreatePdf(
+        result.id,
+        result.title,
+        pka,
+        result.length,
+        result.price
+      );
+
       const songPriceInYoctoNear = parseNearAmount(result.price) as string;
 
       const data = {
@@ -266,7 +273,7 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
       };
 
       callMethod(
-        "raidar.near",
+        process.env.NEXT_PUBLIC_CONTRACT_NAME as string,
         "mint_nft",
         {
           data,
@@ -280,6 +287,28 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
         title: "Error while creating song",
       });
     }
+  };
+
+  const handleCreatePdf = async (
+    songId: string,
+    title: string,
+    pka: string,
+    length: string,
+    price: string
+  ) => {
+    const signatureDataUrl = signatureCanvasRef.current?.getSignatureImage();
+    await createPDF(
+      songId, // songId
+      title, // title
+      pka, // pka
+      length, // length
+      price, // price
+      undefined, // descriptionOfUse
+      undefined, // userMail
+      signatureDataUrl, // signatureDataUrl
+      undefined, //pdfLink
+      false // isBought
+    );
   };
 
   return (
@@ -322,7 +351,6 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
                 isSong={false}
               />
             </Box>
-
             <Box mx="auto" mt="xl">
               <Dropzone
                 title="Upload Song"
@@ -366,7 +394,6 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
                 />
               </Field>
             </Group>
-
             <Field withAsterisk label="Mood">
               <TextInput
                 mt="xs"
@@ -374,7 +401,6 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
                 {...form.getInputProps("mood")}
               />
             </Field>
-
             <Field withAsterisk label="Tags">
               <TextInput
                 mt="xs"
@@ -382,7 +408,6 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
                 {...form.getInputProps("tags")}
               />
             </Field>
-
             <Group>
               <Field withAsterisk label="Song Length (in seconds)">
                 <TextInput
@@ -405,7 +430,6 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
                 />
               </Field>
             </Group>
-
             <Field withAsterisk label="Recording Date">
               <DateInput
                 color="red"
@@ -417,7 +441,6 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
                 })}
               />
             </Field>
-
             <Field withAsterisk label="Instrumental">
               <Switch
                 color="red"
@@ -425,7 +448,6 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
                 {...form.getInputProps("instrumental")}
               />
             </Field>
-
             <Field withAsterisk label="Languages">
               <Select
                 searchable
@@ -435,7 +457,6 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
                 {...form.getInputProps("languages")}
               />
             </Field>
-
             <Field withAsterisk label="Vocal Ranges">
               <Select
                 searchable
@@ -445,7 +466,6 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
                 {...form.getInputProps("vocalRanges")}
               />
             </Field>
-
             <Group>
               <Field withAsterisk label="Musical key">
                 <Select
@@ -475,7 +495,7 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
                 />
               </Field>
 
-              <Field withAsterisk label="Price in NEAR">
+              <Field withAsterisk label="Price in USD">
                 <NumberInput
                   mt="xs"
                   defaultValue={0.05}
@@ -487,7 +507,7 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
                   parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
                   formatter={(value) =>
                     !Number.isNaN(parseFloat(value))
-                      ? `${value} NEAR`.replace(
+                      ? `${value} USD`.replace(
                           /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
                           ","
                         )
@@ -497,7 +517,8 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
                 />
               </Field>
             </Group>
-
+            <h3>Sign the document</h3>
+            <SignatureCanvas ref={signatureCanvasRef} />
             <Group>
               <Button
                 className={classes.button}
