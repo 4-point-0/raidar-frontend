@@ -221,4 +221,16 @@ export type ContractDto = {
    * URL to the PDF of the contract. Initially signed by the artist, later can be the version signed by the customer.
    */
   pdfUrl: string;
+  /**
+   * Name of the artist who created the song
+   */
+  artistName?: string;
+  /**
+   * Name of the customer who purchased the song, if applicable
+   */
+  customerName?: string;
+  /**
+   * Name of the song associated with the contract
+   */
+  songName: string;
 };
