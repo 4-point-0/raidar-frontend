@@ -1398,6 +1398,98 @@ export const useContractControllerFindAllUserContracts = <
   );
 };
 
+export type StripeControllerCreateSessionPathParams = {
+  songId: string;
+};
+
+export type StripeControllerCreateSessionError =
+  Fetcher.ErrorWrapper<undefined>;
+
+export type StripeControllerCreateSessionVariables = {
+  pathParams: StripeControllerCreateSessionPathParams;
+} & RaidarContext["fetcherOptions"];
+
+export const fetchStripeControllerCreateSession = (
+  variables: StripeControllerCreateSessionVariables,
+  signal?: AbortSignal
+) =>
+  raidarFetch<
+    undefined,
+    StripeControllerCreateSessionError,
+    undefined,
+    {},
+    {},
+    StripeControllerCreateSessionPathParams
+  >({
+    url: "/api/v1/stripe/session/{songId}",
+    method: "post",
+    ...variables,
+    signal,
+  });
+
+export const useStripeControllerCreateSession = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      undefined,
+      StripeControllerCreateSessionError,
+      StripeControllerCreateSessionVariables
+    >,
+    "mutationFn"
+  >
+) => {
+  const { fetcherOptions } = useRaidarContext();
+  return reactQuery.useMutation<
+    undefined,
+    StripeControllerCreateSessionError,
+    StripeControllerCreateSessionVariables
+  >(
+    (variables: StripeControllerCreateSessionVariables) =>
+      fetchStripeControllerCreateSession({ ...fetcherOptions, ...variables }),
+    options
+  );
+};
+
+export type StripeControllerChargeCapturedError =
+  Fetcher.ErrorWrapper<undefined>;
+
+export type StripeControllerChargeCapturedVariables =
+  RaidarContext["fetcherOptions"];
+
+export const fetchStripeControllerChargeCaptured = (
+  variables: StripeControllerChargeCapturedVariables,
+  signal?: AbortSignal
+) =>
+  raidarFetch<
+    undefined,
+    StripeControllerChargeCapturedError,
+    undefined,
+    {},
+    {},
+    {}
+  >({ url: "/api/v1/stripe/webhook", method: "post", ...variables, signal });
+
+export const useStripeControllerChargeCaptured = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      undefined,
+      StripeControllerChargeCapturedError,
+      StripeControllerChargeCapturedVariables
+    >,
+    "mutationFn"
+  >
+) => {
+  const { fetcherOptions } = useRaidarContext();
+  return reactQuery.useMutation<
+    undefined,
+    StripeControllerChargeCapturedError,
+    StripeControllerChargeCapturedVariables
+  >(
+    (variables: StripeControllerChargeCapturedVariables) =>
+      fetchStripeControllerChargeCaptured({ ...fetcherOptions, ...variables }),
+    options
+  );
+};
+
 export type QueryOperation =
   | {
       path: "/api/v1/google/sign-in-backend";

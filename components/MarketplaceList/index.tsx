@@ -6,7 +6,7 @@ import {
   MarketplaceControllerFindAllResponse,
   fetchContractControllerFindOne,
   fetchSongControllerBuySong,
-  fetchUserControllerFindMe,
+  fetchStripeControllerCreateSession,
   useSongControllerFindAllUserSongs,
 } from "@/services/api/raidar/raidarComponents";
 import { SongDto } from "@/services/api/raidar/raidarSchemas";
@@ -27,6 +27,8 @@ import {
   rem,
   Modal,
   TextInput,
+  Flex,
+  HoverCard,
 } from "@mantine/core";
 import BN from "bn.js";
 import {
@@ -41,6 +43,7 @@ import { AlertCircle, Check, InfoCircle, PlayerPlay } from "tabler-icons-react";
 import ImageWithBlurredShadow from "../ImageBlurShadow";
 import SignatureCanvas from "../SignaturePad";
 import createPDF from "@/utils/createPDF";
+import { useSession } from "next-auth/react";
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -101,9 +104,13 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
   const { classes } = useStyles();
   const [currentResults, setCurrentResults] = useState<SongDto[]>(data.results);
 
+  const { data: session } = useSession();
+
   const [modalOpened, setModalOpened] = useState(false);
   const [selectedSong, setSelectedSong] = useState<SongDto | null>(null);
   const [descriptionOfUse, setDescriptionOfUseValue] = useState<string>("");
+  const [paymentMethod, setPaymentMethod] = useState<string>("");
+  const [signatureData, setSignatureData] = useState<any>(null);
 
   const { modal, accountId, callMethod } = useWalletSelector();
 
@@ -171,6 +178,14 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
     notifyBuy();
   }, []);
 
+  useEffect(() => {
+    if (signatureData && selectedSong) {
+      paymentMethod === "near"
+        ? buySongNear(selectedSong)
+        : buySongUsd(selectedSong);
+    }
+  }, [signatureData, selectedSong, paymentMethod]);
+
   const songFullPrice = (song: SongDto) => {
     const price = parseNearAmount(song.price);
     const deposit = new BN(storageCost as string)
@@ -180,7 +195,7 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
     return formatNearAmount(deposit);
   };
 
-  const buySong = async (song: SongDto) => {
+  const buySongNear = async (song: SongDto) => {
     removeQueryParam(["errorCode", "errorMessage", "transactionHashes"]);
 
     if (!accountId) {
@@ -214,9 +229,31 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
     );
   };
 
-  const getUserData = async () => {
-    const userData = await fetchUserControllerFindMe({});
-    return userData;
+  const buySongUsd = async (song: SongDto) => {
+    const response: any = await fetchStripeControllerCreateSession({
+      pathParams: { songId: song.id },
+    });
+
+    if (signatureData) {
+      localStorage.setItem("selectedSong", JSON.stringify(selectedSong));
+      localStorage.setItem(
+        "descriptionOfUse",
+        JSON.stringify(descriptionOfUse)
+      );
+      localStorage.setItem("signature", JSON.stringify(signatureData));
+      localStorage.setItem("userData", JSON.stringify(session?.user?.email));
+
+      if (selectedSong) {
+        const data = (await getContractData(selectedSong.id)) as any;
+        localStorage.setItem("contractData", JSON.stringify(data));
+      }
+
+      if (response) {
+        router.push(response.url);
+      }
+    } else {
+      alert("please provide signature");
+    }
   };
 
   const getContractData = async (songId: string) => {
@@ -234,9 +271,8 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
   ) => {
     try {
       const signatureDataUrl = signatureCanvasRef.current?.getSignatureImage();
-      const userData = await getUserData();
 
-      if (selectedSong) {
+      if (selectedSong && session?.user?.email) {
         const { data } = (await getContractData(selectedSong.id)) as any;
 
         const { pdfUrl } = data;
@@ -248,7 +284,7 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
           undefined, // length
           undefined, // price
           descriptionOfUse, // descriptionOfUse
-          userData.email, // userMail
+          session?.user?.email, // userMail
           signatureDataUrl, // signatureDataUrl
           pdfUrl, // pdfLink
           true // isBought
@@ -278,13 +314,38 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
             setDescriptionOfUseValue(event.currentTarget.value)
           }
         />
-        <Button
+        {/* <Button
           color="red"
           mt="md"
           disabled={!descriptionOfUse}
           onClick={async () => {
             if (selectedSong) {
-              buySong(selectedSong);
+              console.log("paymentMethod", paymentMethod);
+              console.log("songId", selectedSong.id);
+              setSignatureData(signatureCanvasRef.current?.getSignatureImage());
+
+              console.log("signatureImage", signatureData);
+
+              // setSignatureData(signatureImage);
+              console.log("signature", signatureData);
+
+              paymentMethod === "near"
+                ? buySongNear(selectedSong)
+                : buySongUsd(selectedSong);
+              setModalOpened(false);
+            }
+          }}
+        >
+          Continue payment
+        </Button> */}
+        <Button
+          color="red"
+          mt="md"
+          disabled={!descriptionOfUse}
+          onClick={() => {
+            if (selectedSong) {
+              // Set signature data, triggering useEffect
+              setSignatureData(signatureCanvasRef.current?.getSignatureImage());
               setModalOpened(false);
             }
           }}
@@ -409,23 +470,55 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
             Owned
           </Badge>
         ) : (
-          <Button
-            disabled={checkIfOwned(song.id)}
-            mt="xl"
-            className={classes.button}
-            onClick={() => {
-              setModalOpened(true);
-              setSelectedSong(song);
-            }}
-          >
-            <Group spacing="xs">
-              {song.priceInUsd ? (
-                <Text>Buy for {parseFloat(song.priceInUsd).toFixed(2)} $</Text>
-              ) : (
-                "0"
-              )}
-            </Group>
-          </Button>
+          <HoverCard width={200} shadow="md" radius="md" closeDelay={1}>
+            <HoverCard.Target>
+              <Button className={classes.button} mt="xl">
+                Buy for {parseFloat(song.priceInUsd || "0").toFixed(2)} $
+              </Button>
+            </HoverCard.Target>
+            <HoverCard.Dropdown>
+              <Text size="sm">
+                <Flex
+                  mih={30}
+                  bg="var(--mantine-color-body)"
+                  gap="md"
+                  justify="center"
+                  align="center"
+                  direction="column"
+                  wrap="wrap"
+                >
+                  <Button
+                    disabled={checkIfOwned(song.id)}
+                    mt="ms"
+                    className={classes.button}
+                    onClick={() => {
+                      setPaymentMethod("near");
+                      setModalOpened(true);
+                      setSelectedSong(song);
+                    }}
+                  >
+                    <Group spacing="xs">
+                      {song.priceInUsd ? <Text>Pay with NEAR</Text> : "0"}
+                    </Group>
+                  </Button>
+                  <Button
+                    disabled={checkIfOwned(song.id)}
+                    mt="sm"
+                    className={classes.button}
+                    onClick={() => {
+                      setPaymentMethod("usd");
+                      setModalOpened(true);
+                      setSelectedSong(song);
+                    }}
+                  >
+                    <Group spacing="xs">
+                      {song.priceInUsd ? <Text>Pay with USD</Text> : "0"}
+                    </Group>
+                  </Button>
+                </Flex>
+              </Text>
+            </HoverCard.Dropdown>
+          </HoverCard>
         )}
 
         <Button
