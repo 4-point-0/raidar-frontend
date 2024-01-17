@@ -39,7 +39,13 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import Tilt from "react-parallax-tilt";
-import { AlertCircle, Check, InfoCircle, PlayerPlay } from "tabler-icons-react";
+import {
+  AlertCircle,
+  Check,
+  InfoCircle,
+  PlayerPlay,
+  Forbid2,
+} from "tabler-icons-react";
 import ImageWithBlurredShadow from "../ImageBlurShadow";
 import SignatureCanvas from "../SignaturePad";
 import createPDF from "@/utils/createPDF";
@@ -121,7 +127,7 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
     isLoading,
     error,
     refetch,
-  } = useSongControllerFindAllUserSongs({});
+  } = useSongControllerFindAllUserSongs({ queryParams: { take: 1000 } });
 
   const { user } = useFindUser();
 
@@ -449,26 +455,48 @@ export const MarketplaceList = ({ data }: MarketplaceListProps) => {
         </Text>
       </Group>
       <Group>
-        {checkIfOwned(song.id) ? (
-          <Badge
-            pl={2}
-            mt={"lg"}
-            size="lg"
-            color="teal"
-            radius="xl"
-            leftSection={
-              <ActionIcon
-                size="xs"
-                color="teal"
-                radius="xl"
-                variant="transparent"
-              >
-                <Check size={rem(20)} />
-              </ActionIcon>
-            }
-          >
-            Owned
-          </Badge>
+        {checkIfOwned(song.id) || user?.roles.includes("artist") ? (
+          user?.roles.includes("artist") ? (
+            <Badge
+              pl={2}
+              mt={"lg"}
+              size="lg"
+              color="red"
+              radius="xl"
+              leftSection={
+                <ActionIcon
+                  size="xs"
+                  color="red"
+                  radius="xl"
+                  variant="transparent"
+                >
+                  <Forbid2 size={rem(20)} />
+                </ActionIcon>
+              }
+            >
+              Switch to buyer to purchase songs
+            </Badge>
+          ) : (
+            <Badge
+              pl={2}
+              mt={"lg"}
+              size="lg"
+              color="teal"
+              radius="xl"
+              leftSection={
+                <ActionIcon
+                  size="xs"
+                  color="teal"
+                  radius="xl"
+                  variant="transparent"
+                >
+                  <Check size={rem(20)} />
+                </ActionIcon>
+              }
+            >
+              Owned
+            </Badge>
+          )
         ) : (
           <HoverCard width={200} shadow="md" radius="md" closeDelay={1}>
             <HoverCard.Target>
