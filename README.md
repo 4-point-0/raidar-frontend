@@ -37,7 +37,3 @@ API hooks, functions and types are genereated from the API Swagger files. APIs a
 ```bash
 npm run api:codegen:client
 ```
-
-## Project URLs
-
-[Production](https://app.raidar.us/)
