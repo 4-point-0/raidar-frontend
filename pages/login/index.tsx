@@ -11,11 +11,9 @@ import {
 } from "@mantine/core";
 import { useRouter } from "next/router";
 import { FcGoogle } from "react-icons/fc";
-
+import FastAuthButton from "../../components/FastAuth/FastAuthButton";
 import { ClientSafeProvider, signIn } from "next-auth/react";
-
 import { getProviders } from "next-auth/react";
-
 import { redirectIfActiveSession } from "@/utils/auth";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 
@@ -30,13 +28,10 @@ const useStyles = createStyles((theme) => ({
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const { redirect } = await redirectIfActiveSession(ctx);
-
   if (redirect) {
     return { redirect };
   }
-
   const providers = await getProviders();
-
   return {
     props: {
       providers,
@@ -49,11 +44,9 @@ export const Login = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
   const { classes } = useStyles();
-
   const callbackUrl = (router.query.callbackUrl as string) || "/marketplace";
-
   const theme = useMantineTheme();
-
+  
   const handleSignIn = (provider?: ClientSafeProvider) => {
     return () => {
       signIn(provider?.id, {
@@ -64,30 +57,14 @@ export const Login = ({
   };
 
   return (
-    <Container sx={{}}>
-      <Container
-        mt="20%"
-        sx={{
-          borderRadius: "30px",
-          padding: "1%",
-          border: "none",
-        }}
-      >
+    <Container>
+      <Container mt="20%" sx={{ borderRadius: "30px", padding: "1%", border: "none" }}>
+        
         <MediaQuery largerThan="sm" styles={{ display: "none" }}>
           <Stack align={"center"}>
-            <Box
-              sx={{
-                width: "100vw",
-              }}
-            >
-              <Image
-                mx="auto"
-                src="images/login-image.png"
-                width={300}
-                alt="Login Image"
-              />
+            <Box sx={{ width: "100vw" }}>
+              <Image mx="auto" src="images/login-image.png" width={300} alt="Login Image" />
             </Box>
-
             <Button
               mt="xl"
               className={classes.button}
@@ -97,18 +74,11 @@ export const Login = ({
               onClick={handleSignIn(providers?.google)}
             >
               Connect to Raidar with Google
-              <Box
-                ml={10}
-                sx={{
-                  width: "50",
-                  backgroundColor: "white",
-                  borderRadius: "50%",
-                  padding: "2px",
-                }}
-              >
+              <Box ml={10} sx={{ width: "50", backgroundColor: "white", borderRadius: "50%", padding: "2px" }}>
                 <FcGoogle style={{ width: "22px", height: "22px" }} />
               </Box>
             </Button>
+            <FastAuthButton contractId="YOUR_CONTRACT_ID_HERE" email="" isRecovery={true} />
             <Box mt={20} sx={{ textAlign: "center" }}>
               <Image
                 mx="auto"
@@ -127,14 +97,8 @@ export const Login = ({
         <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
           <Stack align={"center"}>
             <Box sx={{ width: "50vw" }}>
-              <Image
-                mx="auto"
-                width={600}
-                fit="contain"
-                src="images/login-image.png"
-              />
+              <Image mx="auto" width={600} fit="contain" src="images/login-image.png" />
             </Box>
-
             <Button
               mt="xl"
               className={classes.button}
@@ -144,18 +108,11 @@ export const Login = ({
               onClick={handleSignIn(providers?.google)}
             >
               Connect to Raidar with Google
-              <Box
-                ml={10}
-                sx={{
-                  width: "50",
-                  backgroundColor: "white",
-                  borderRadius: "50%",
-                  padding: "2px",
-                }}
-              >
+              <Box ml={10} sx={{ width: "50", backgroundColor: "white", borderRadius: "50%", padding: "2px" }}>
                 <FcGoogle size={18} style={{ marginTop: "2px" }} />
               </Box>
             </Button>
+            <FastAuthButton contractId="YOUR_CONTRACT_ID_HERE" email="" isRecovery={true} />
             <Box mt={20} sx={{ textAlign: "center" }}>
               <Image
                 mx="auto"
