@@ -21,6 +21,7 @@ import { Dropzone } from "@/components/form/Dropzone";
 import { Field } from "@/components/form/Field";
 import { notifications } from "@/utils/notifications";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 import {
   CreateFormValues,
@@ -197,6 +198,7 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
   };
 
   const handleSubmit = async (values: CreateFormValues) => {
+    const { data: session } = useSession();
     form.validate();
 
     if (!selectedDate) return;
@@ -272,15 +274,26 @@ export const SongForm = ({ albumIdProp }: SongFormProps): any => {
         price: songPriceInYoctoNear,
       };
 
-      callMethod(
-        process.env.NEXT_PUBLIC_CONTRACT_NAME as string,
-        "mint_nft",
-        {
-          data,
-        },
-        parseNearAmount("1") as any,
-        "30000000000000" as any
-      );
+      try {
+        await callMethod(
+          process.env.NEXT_PUBLIC_CONTRACT_NAME as string,
+          "mint_nft",
+          {
+            data,
+          },
+          parseNearAmount("1") as any,
+          "30000000000000" as any
+        );
+      } catch (mintError) {
+        // If minting fails, delete the song from DB
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/song/${result.id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${session?.token}`,
+          }
+        });
+        throw mintError; // Re-throw to trigger the outer catch block
+      }
     } catch (error) {
       console.error(error);
       notifications.error({
